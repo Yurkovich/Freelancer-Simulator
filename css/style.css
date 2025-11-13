@@ -91,6 +91,7 @@ body {
   align-items: center;
   gap: 1rem;
   color: var(--text-color);
+  font-family: 'Press Start 2P', monospace;
 }
 
 .icon:focus {
@@ -112,4 +113,57 @@ body {
   text-transform: uppercase;
   color: var(--text-color);
   text-shadow: 0 3px 0 #111c31;
+}
+
+.window {
+  position: absolute;
+  width: 500px;
+  max-height: 80vh;
+  background: #19263b;
+  border: 6px solid #314a74;
+  box-shadow: 0 12px 0 #101829, 0 12px 22px rgba(0, 0, 0, 0.45);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+}
+
+.window.hidden {
+  display: none;
+}
+
+.window-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: rgba(20, 30, 52, 0.9);
+  border-bottom: 4px solid #314a74;
+  color: var(--accent);
+  font-size: 0.65rem;
+}
+
+.window-body {
+  padding: 1.6rem 1.4rem;
+  font-size: 0.7rem;
+  color: var(--text-color);
+  line-height: 1.7;
+  overflow-y: auto;
+}
+
+.window-close {
+  background: #f55b7d;
+  border: 0;
+  color: #fff;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.6rem;
+}
+
+.message {
+  line-height: 1.6;
 }
