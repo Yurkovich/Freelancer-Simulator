@@ -1,9 +1,13 @@
 import { ORDERS } from "./config.js"
 import { UI_SELECTORS, MESSAGES, GAME_CONSTANTS } from "./constants.js"
+import { SkillsManager } from "./skills.js"
+import { LearningManager } from "./learning.js"
 
 export class AppsManager {
   constructor(gameState) {
     this.gameState = gameState
+    this.skillsManager = new SkillsManager(gameState)
+    this.learningManager = new LearningManager(gameState, this.skillsManager)
     this.activeOrder = null
     this.availableOrders = [...ORDERS]
   }
@@ -23,6 +27,8 @@ export class AppsManager {
       UI_SELECTORS.PORTFOLIO_WINDOW,
       UI_SELECTORS.WZCODE_WINDOW,
       UI_SELECTORS.BROWSER_WINDOW,
+      UI_SELECTORS.SKILLS_WINDOW,
+      UI_SELECTORS.LEARNING_WINDOW,
     ]
 
     windowIds.forEach((id) => {
@@ -36,6 +42,8 @@ export class AppsManager {
       portfolio: UI_SELECTORS.PORTFOLIO_WINDOW,
       wzcode: UI_SELECTORS.WZCODE_WINDOW,
       browser: UI_SELECTORS.BROWSER_WINDOW,
+      skills: UI_SELECTORS.SKILLS_WINDOW,
+      learning: UI_SELECTORS.LEARNING_WINDOW,
     }
 
     const windowId = windowMap[appName]
@@ -46,12 +54,23 @@ export class AppsManager {
     const renderMap = {
       wzcode: () => this.renderWZCode(),
       browser: () => this.renderBrowser(),
+      skills: () => this.renderSkills(),
+      learning: () => this.renderLearning(),
     }
 
     const renderFunction = renderMap[appName]
     if (renderFunction) {
       renderFunction()
     }
+  }
+
+  renderSkills() {
+    const body = document.getElementById(UI_SELECTORS.SKILLS_BODY)
+    body.innerHTML = this.skillsManager.renderSkillsWindow()
+  }
+
+  renderLearning() {
+    this.learningManager.render()
   }
 
   renderBrowser() {
@@ -68,9 +87,11 @@ export class AppsManager {
 
   createNoOrdersMessage() {
     return `
-      <div class="message">
-        <strong>Krork - биржа фриланса</strong><br><br>
-        ${MESSAGES.NO_ORDERS}
+      <div class="browser-content">
+        <div class="message">
+          <strong>Krork - биржа фриланса</strong><br><br>
+          ${MESSAGES.NO_ORDERS}
+        </div>
       </div>
     `
   }
@@ -81,22 +102,32 @@ export class AppsManager {
       .join("")
 
     return `
-      <div class="message">
-        <strong>Krork - биржа фриланса</strong><br>
-        Выбери заказ и начни работать!
+      <div class="browser-content">
+        <div class="message">
+          <strong>Krork - биржа фриланса</strong><br>
+          Выбери заказ и начни работать!
+        </div>
+        <div class="kwork-orders">
+          ${ordersHtml}
+        </div>
       </div>
-      ${ordersHtml}
     `
   }
 
   createOrderCard(order) {
     return `
-      <div style="border: 2px solid #314a74; padding: 1rem; margin-bottom: 1rem; background: rgba(12, 22, 41, 0.5);">
-        <strong>${order.title}</strong><br>
-        ${order.description}<br><br>
-        <strong>Оплата:</strong> ${order.reward} ₽<br>
-        <strong>Время:</strong> ${order.timeRequired}ч | <strong>Энергия:</strong> ${order.energyCost}<br><br>
-        <button class="take-order-btn" data-order-id="${order.id}" style="padding: 0.5rem 1rem; background: #53f5c8; border: none; cursor: pointer; font-family: inherit; font-size: 0.6rem;">
+      <div class="kwork-order">
+        <div class="kwork-order-header">
+          <strong>${order.title}</strong>
+          <span style="color: var(--accent)">${order.reward} ₽</span>
+        </div>
+        <div class="kwork-order-meta">
+          ${order.description}<br>
+          <span style="color: var(--muted);">
+            Время: ${order.timeRequired}ч | Энергия: ${order.energyCost}
+          </span>
+        </div>
+        <button class="window-action kwork-apply-btn take-order-btn" data-order-id="${order.id}">
           Взять заказ
         </button>
       </div>
@@ -236,10 +267,17 @@ export class AppsManager {
   }
 
   completeOrder(state) {
+    const reward = this.activeOrder.reward
+    const skillName = this.activeOrder.skill
+
     this.gameState.updateState({
-      money: state.money + this.activeOrder.reward,
+      money: state.money + reward,
     })
-    alert(`${MESSAGES.ORDER_COMPLETED} +${this.activeOrder.reward} ₽`)
+
+    const xpGain = this.skillsManager.calculateXPGain(reward)
+    this.skillsManager.addXP(skillName, xpGain)
+
+    alert(`${MESSAGES.ORDER_COMPLETED} +${reward} ₽`)
     this.activeOrder = null
   }
 }

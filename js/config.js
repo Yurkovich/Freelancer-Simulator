@@ -1,3 +1,5 @@
+import { SKILL_NAMES } from "./constants.js"
+
 export const ORDERS = [
   {
     id: 1,
@@ -6,21 +8,24 @@ export const ORDERS = [
     reward: 3000,
     timeRequired: 4,
     energyCost: 40,
+    skill: SKILL_NAMES.LAYOUT,
   },
   {
     id: 2,
-    title: "Визитка для фотографа",
-    description: "Портфолио с галереей работ",
-    reward: 4000,
-    timeRequired: 5,
-    energyCost: 50,
+    title: "Сайт на Workpress",
+    description: "Блог с готовой темой и настройками",
+    reward: 5000,
+    timeRequired: 6,
+    energyCost: 55,
+    skill: SKILL_NAMES.WORKPRESS,
   },
   {
     id: 3,
-    title: "Сайт для салона красоты",
-    description: "Многостраничный сайт с записью онлайн",
-    reward: 8000,
-    timeRequired: 8,
-    energyCost: 70,
+    title: "Консультация клиента",
+    description: "Помочь определиться с требованиями к проекту",
+    reward: 2000,
+    timeRequired: 3,
+    energyCost: 30,
+    skill: SKILL_NAMES.FREELANCE,
   },
 ]

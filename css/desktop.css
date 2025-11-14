@@ -1,0 +1,83 @@
+#desktop-screen {
+  flex-direction: column;
+  background: linear-gradient(180deg, #35538a, #1b2f59);
+  padding: 1.2rem 2rem 2rem;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.4rem;
+  border: 4px solid rgba(0, 0, 0, 0.3);
+  background: rgba(9, 17, 36, 0.6);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: var(--accent);
+  text-shadow: 0 4px 0 #102039;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.hud .stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-color);
+}
+
+.hud .stat span {
+  color: var(--accent);
+}
+
+.desktop-area {
+  flex: 1;
+  border: 6px solid rgba(2, 7, 19, 0.6);
+  background: repeating-linear-gradient(45deg, rgba(13, 26, 52, 0.95), rgba(13, 26, 52, 0.95) 12px, rgba(9, 18, 38, 0.95) 12px, rgba(9, 18, 38, 0.95) 24px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 2rem;
+  align-content: start;
+  padding: 2rem;
+  position: relative;
+}
+
+.icon {
+  width: 120px;
+  height: 120px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-color);
+}
+
+.icon:focus {
+  outline: 2px dashed var(--accent);
+  outline-offset: 6px;
+}
+
+.icon-sprite {
+  width: 100px;
+  height: 100px;
+  background: var(--accent);
+  border: 6px solid #0f1a32;
+  box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.35), inset 6px 6px 0 rgba(255, 255, 255, 0.18);
+  position: relative;
+}
+
+.icon-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--text-color);
+  text-shadow: 0 3px 0 #111c31;
+}

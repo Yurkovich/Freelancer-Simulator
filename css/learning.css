@@ -1,0 +1,49 @@
+.learning-activity-card,
+.sleep-option {
+  border: 4px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 22, 41, 0.85);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.learning-activity-header,
+.sleep-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--accent);
+  font-size: 0.65rem;
+}
+
+.learning-activity-meta,
+.sleep-option-meta {
+  font-size: 0.6rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.learning-activity-cost {
+  font-size: 0.55rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.learning-activity-card button,
+.sleep-option button {
+  margin-top: 0.4rem;
+  align-self: flex-start;
+}
+
+.sleep-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+#learning-window,
+#sleep-window {
+  width: clamp(320px, 45vw, 560px);
+}

@@ -14,6 +14,24 @@ class GameState {
       maxEnergy: GAME_CONSTANTS.MAX_ENERGY,
       health: GAME_CONSTANTS.INITIAL_HEALTH,
       satiety: GAME_CONSTANTS.INITIAL_SATIETY,
+      skills: this.createInitialSkills(),
+    }
+  }
+
+  createInitialSkills() {
+    return {
+      layout: {
+        level: GAME_CONSTANTS.INITIAL_SKILL_LEVEL,
+        xp: GAME_CONSTANTS.INITIAL_SKILL_XP,
+      },
+      workpress: {
+        level: GAME_CONSTANTS.INITIAL_SKILL_LEVEL,
+        xp: GAME_CONSTANTS.INITIAL_SKILL_XP,
+      },
+      freelance: {
+        level: GAME_CONSTANTS.INITIAL_SKILL_LEVEL,
+        xp: GAME_CONSTANTS.INITIAL_SKILL_XP,
+      },
     }
   }
 

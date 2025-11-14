@@ -43,7 +43,13 @@ class Game {
   }
 
   isAppAvailable(app) {
-    const availableApps = ["portfolio", "wzcode", "browser"]
+    const availableApps = [
+      "portfolio",
+      "wzcode",
+      "browser",
+      "skills",
+      "learning",
+    ]
     return availableApps.includes(app)
   }
 

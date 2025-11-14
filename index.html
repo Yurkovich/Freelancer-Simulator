@@ -8,12 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/desktop.css">
+  <link rel="stylesheet" href="css/windows.css">
+  <link rel="stylesheet" href="css/skills.css">
+  <link rel="stylesheet" href="css/learning.css">
+  <link rel="stylesheet" href="css/browser.css">
 </head>
 
 <body>
   <div class="game-container">
-    <div class="desktop">
+    <div class="scanline"></div>
+
+    <section id="desktop-screen" class="screen active">
       <div class="hud">
         <div class="stat">День: <span id="stat-day">1</span></div>
         <div class="stat">Время: <span id="stat-time">09:00</span></div>
@@ -34,12 +41,20 @@
           <div class="icon-sprite"></div>
           <span class="icon-label">Портфолио</span>
         </button>
+        <button class="icon" data-app="skills">
+          <div class="icon-sprite"></div>
+          <span class="icon-label">Навыки</span>
+        </button>
+        <button class="icon" data-app="learning">
+          <div class="icon-sprite"></div>
+          <span class="icon-label">Обучение</span>
+        </button>
         <button class="icon" data-app="telehlam">
           <div class="icon-sprite"></div>
           <span class="icon-label">Telehlam</span>
         </button>
       </div>
-    </div>
+    </section>
 
     <div class="window hidden" id="portfolio-window">
       <div class="window-header">
@@ -73,6 +88,24 @@
         <button class="window-close">×</button>
       </div>
       <div class="window-body" id="browser-body">
+      </div>
+    </div>
+
+    <div class="window hidden" id="skills-window">
+      <div class="window-header">
+        <span>Навыки</span>
+        <button class="window-close">×</button>
+      </div>
+      <div class="window-body" id="skills-body">
+      </div>
+    </div>
+
+    <div class="window hidden" id="learning-window">
+      <div class="window-header">
+        <span>Обучение</span>
+        <button class="window-close">×</button>
+      </div>
+      <div class="window-body" id="learning-body">
       </div>
     </div>
   </div>
