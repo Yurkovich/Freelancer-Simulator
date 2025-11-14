@@ -41,6 +41,7 @@ export const UI_SELECTORS = {
   LEARNING_WINDOW: "learning-window",
   TELEHLAM_WINDOW: "telehlam-window",
   SLEEP_WINDOW: "sleep-window",
+  CHARACTER_WINDOW: "character-window",
   WZCODE_BODY: "wzcode-body",
   BROWSER_BODY: "browser-body",
   SKILLS_BODY: "skills-body",
@@ -48,6 +49,7 @@ export const UI_SELECTORS = {
   TELEHLAM_BODY: "telehlam-body",
   SLEEP_BODY: "sleep-body",
   PORTFOLIO_BODY: "portfolio-body",
+  CHARACTER_BODY: "character-body",
 }
 
 export const MESSAGES = {

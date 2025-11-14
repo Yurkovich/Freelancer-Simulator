@@ -4,6 +4,7 @@ import { SkillsManager } from "./skills.js"
 import { LearningManager } from "./learning.js"
 import { BrowserManager } from "./browser.js"
 import { TimeManager } from "./time.js"
+import { CharacterManager } from "./character.js"
 import { UIManager } from "./ui.js"
 
 export class AppsManager {
@@ -14,6 +15,7 @@ export class AppsManager {
     this.learningManager = new LearningManager(gameState, this.skillsManager)
     this.browserManager = new BrowserManager(gameState, this)
     this.timeManager = new TimeManager(gameState)
+    this.characterManager = new CharacterManager(gameState)
     this.activeOrder = null
     this.availableOrders = [...ORDERS]
   }
@@ -37,6 +39,7 @@ export class AppsManager {
       UI_SELECTORS.LEARNING_WINDOW,
       UI_SELECTORS.TELEHLAM_WINDOW,
       UI_SELECTORS.SLEEP_WINDOW,
+      UI_SELECTORS.CHARACTER_WINDOW,
     ]
 
     windowIds.forEach((id) => {
@@ -54,6 +57,7 @@ export class AppsManager {
       learning: UI_SELECTORS.LEARNING_WINDOW,
       telehlam: UI_SELECTORS.TELEHLAM_WINDOW,
       sleep: UI_SELECTORS.SLEEP_WINDOW,
+      character: UI_SELECTORS.CHARACTER_WINDOW,
     }
 
     const windowId = windowMap[appName]
@@ -69,6 +73,7 @@ export class AppsManager {
       telehlam: () => this.renderTelehlam(),
       sleep: () => this.renderSleep(),
       portfolio: () => this.renderPortfolio(),
+      character: () => this.renderCharacter(),
     }
 
     const renderFunction = renderMap[appName]
@@ -201,6 +206,10 @@ export class AppsManager {
 
   renderLearning() {
     this.learningManager.render()
+  }
+
+  renderCharacter() {
+    this.characterManager.render()
   }
 
   createOrderCard(order) {
