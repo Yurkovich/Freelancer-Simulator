@@ -1,15 +1,61 @@
 export class UIManager {
+  constructor() {
+    this.toastQueue = []
+    this.maxToasts = 1
+    this.toastDuration = 3000
+  }
+
   showToast(message) {
-    const toast = document.getElementById("toast")
-    if (!toast) return
+    const container = document.getElementById("toast-container")
+    if (!container) return
 
+    const toast = document.createElement("div")
+    toast.className = "toast"
     toast.innerHTML = message
-    toast.classList.add("show")
 
-    const displayDuration = 3000
+    toast.addEventListener("click", () => {
+      this.removeToast(toast)
+    })
+
+    if (this.toastQueue.length >= this.maxToasts) {
+      const oldestToast = this.toastQueue.shift()
+      if (oldestToast && oldestToast.parentElement) {
+        oldestToast.remove()
+      }
+    }
+
+    container.appendChild(toast)
+    this.toastQueue.push(toast)
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        toast.classList.add("show")
+      })
+    })
+
     setTimeout(() => {
-      toast.classList.remove("show")
-    }, displayDuration)
+      if (this.toastQueue.includes(toast)) {
+        this.removeToast(toast)
+      }
+    }, this.toastDuration)
+  }
+
+  removeToast(toast) {
+    if (!toast || !toast.parentElement) return
+
+    const index = this.toastQueue.indexOf(toast)
+    if (index > -1) {
+      this.toastQueue.splice(index, 1)
+    }
+
+    toast.classList.remove("show")
+    toast.classList.add("hide")
+
+    setTimeout(() => {
+      if (toast.parentElement) {
+        toast.remove()
+      }
+    }, 300)
   }
 
   closeWindow(windowId) {
