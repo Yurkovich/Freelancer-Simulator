@@ -1,11 +1,13 @@
 import GameState from "./state.js"
 import { AppsManager } from "./apps.js"
-import { MESSAGES, GAME_CONSTANTS } from "./constants.js"
+import { MESSAGES } from "./constants.js"
+import { UIManager } from "./ui.js"
 
 class Game {
   constructor() {
     this.gameState = new GameState()
     this.appsManager = new AppsManager(this.gameState)
+    this.ui = new UIManager()
   }
 
   init() {
@@ -22,7 +24,6 @@ class Game {
   attachEventListeners() {
     this.attachIconListeners()
     this.attachWindowCloseListeners()
-    this.attachTestButtonListener()
   }
 
   attachIconListeners() {
@@ -38,7 +39,7 @@ class Game {
     if (this.isAppAvailable(app)) {
       this.appsManager.openApp(app)
     } else {
-      alert(MESSAGES.APP_IN_DEVELOPMENT)
+      this.ui.showToast(MESSAGES.APP_IN_DEVELOPMENT)
     }
   }
 
@@ -49,6 +50,8 @@ class Game {
       "browser",
       "skills",
       "learning",
+      "sleep",
+      "telehlam",
     ]
     return availableApps.includes(app)
   }
@@ -65,26 +68,6 @@ class Game {
     if (window) {
       window.classList.add("hidden")
     }
-  }
-
-  attachTestButtonListener() {
-    const testBtn = document.getElementById("test-time-btn")
-    if (testBtn) {
-      testBtn.addEventListener("click", () => this.handleTestButton())
-    }
-  }
-
-  handleTestButton() {
-    const state = this.gameState.getState()
-    const timeToAdd = 2
-    const energyToAdd = 20
-    const moneyToAdd = 500
-
-    this.gameState.addTime(timeToAdd)
-    this.gameState.updateState({
-      energy: Math.min(GAME_CONSTANTS.MAX_ENERGY, state.energy + energyToAdd),
-      money: state.money + moneyToAdd,
-    })
   }
 }
 

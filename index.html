@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/skills.css">
   <link rel="stylesheet" href="css/learning.css">
   <link rel="stylesheet" href="css/browser.css">
+  <link rel="stylesheet" href="css/icons.css">
 </head>
 
 <body>
@@ -25,7 +26,10 @@
         <div class="stat">День: <span id="stat-day">1</span></div>
         <div class="stat">Время: <span id="stat-time">09:00</span></div>
         <div class="stat">Энергия: <span id="stat-energy">100%</span></div>
+        <div class="stat">Здоровье: <span id="stat-health">100/100</span></div>
+        <div class="stat">Сытость: <span id="stat-satiety">100%</span></div>
         <div class="stat">Баланс: <span id="stat-money">5000 ₽</span></div>
+        <div class="stat">Репутация: <span id="stat-rep">0</span></div>
       </div>
 
       <div class="desktop-area">
@@ -53,6 +57,10 @@
           <div class="icon-sprite"></div>
           <span class="icon-label">Telehlam</span>
         </button>
+        <button class="icon" data-app="sleep">
+          <div class="icon-sprite"></div>
+          <span class="icon-label">Сон</span>
+        </button>
       </div>
     </section>
 
@@ -61,15 +69,7 @@
         <span>Портфолио</span>
         <button class="window-close">×</button>
       </div>
-      <div class="window-body">
-        <div class="message">
-          <strong>Мои работы:</strong><br><br>
-          Пока пусто. Выполняй заказы, чтобы заполнить портфолио!<br><br>
-          <button id="test-time-btn"
-            style="padding: 0.5rem 1rem; background: #53f5c8; border: none; cursor: pointer; font-family: inherit; font-size: 0.6rem;">
-            Тест: +2ч, +20 энергии, +500₽
-          </button>
-        </div>
+      <div class="window-body" id="portfolio-body">
       </div>
     </div>
 
@@ -108,6 +108,26 @@
       <div class="window-body" id="learning-body">
       </div>
     </div>
+
+    <div class="window hidden" id="telehlam-window">
+      <div class="window-header">
+        <span>Telehlam</span>
+        <button class="window-close">×</button>
+      </div>
+      <div class="window-body" id="telehlam-body">
+      </div>
+    </div>
+
+    <div class="window hidden" id="sleep-window">
+      <div class="window-header">
+        <span>Сон</span>
+        <button class="window-close">×</button>
+      </div>
+      <div class="window-body" id="sleep-body">
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
   </div>
 
   <script type="module" src="js/main.js"></script>

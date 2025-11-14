@@ -1,8 +1,10 @@
 import { GAME_CONSTANTS, MESSAGES, SKILL_LABELS } from "./constants.js"
+import { UIManager } from "./ui.js"
 
 export class SkillsManager {
   constructor(gameState) {
     this.gameState = gameState
+    this.ui = new UIManager()
   }
 
   addXP(skillName, amount) {
@@ -34,7 +36,9 @@ export class SkillsManager {
     skill.xp = skill.xp - this.calculateXPForNextLevel(skill.level - 1)
 
     const skillLabel = SKILL_LABELS[skillName]
-    alert(`${MESSAGES.LEVEL_UP} ${skillLabel} теперь ${skill.level} уровня!`)
+    this.ui.showToast(
+      `${MESSAGES.LEVEL_UP} ${skillLabel} теперь ${skill.level} уровня!`
+    )
   }
 
   calculateXPGain(reward) {
@@ -49,8 +53,7 @@ export class SkillsManager {
 
     return `
       <div class="message">
-        <strong>Навыки</strong><br>
-        Прокачивай навыки, выполняя заказы!
+        <strong>Прокачивай навыки, выполняя заказы!</strong><br>
       </div>
       <div class="skill-list">
         ${skillsHtml}

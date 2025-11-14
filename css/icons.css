@@ -1,0 +1,55 @@
+.icon[data-app="browser"] .icon-sprite {
+  background: url('../img/icons/browser.png') center/contain no-repeat;
+}
+
+.icon[data-app="wzcode"] .icon-sprite {
+  background: url('../img/icons/vscode.png') center/contain no-repeat;
+}
+
+.icon[data-app="telehlam"] .icon-sprite {
+  background: url('../img/icons/telegram.png') center/contain no-repeat;
+}
+
+.icon[data-app="portfolio"] .icon-sprite {
+  background: url('../img/icons/portfolio.png') center/contain no-repeat;
+}
+
+.icon[data-app="skills"] .icon-sprite {
+  background: url('../img/icons/skills.png') center/contain no-repeat;
+}
+
+.icon[data-app="trash"] .icon-sprite {
+  background: url('../img/icons/trash.png') center/contain no-repeat;
+}
+
+.icon[data-app="learning"] .icon-sprite {
+  background: url('../img/icons/learning.png') center/contain no-repeat;
+}
+
+.icon[data-app="sleep"] .icon-sprite {
+  background: url('../img/icons/sleep.png') center/contain no-repeat;
+}
+
+.icon[data-app="character"] .icon-sprite {
+  background: url('../img/icons/person.png') center/contain no-repeat;
+}
+
+.icon[data-app="sidejob"] .icon-sprite {
+  background: url('../img/icons/part-timeJob.png') center/contain no-repeat;
+}
+
+.icon[data-app="bills"] .icon-sprite {
+  background: url('../img/icons/bills.png') center/contain no-repeat;
+}
+
+.icon[data-app="shop"] .icon-sprite {
+  background: url('../img/icons/store.png') center/contain no-repeat;
+}
+
+.stat-icon {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 2px;
+}

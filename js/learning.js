@@ -1,193 +1,122 @@
-import {
-  GAME_CONSTANTS,
-  MESSAGES,
-  SKILL_LABELS,
-  SKILL_NAMES,
-} from "./constants.js"
-
-const LEARNING_ACTIVITIES = {
-  [SKILL_NAMES.LAYOUT]: [
-    {
-      id: "layout_basics",
-      name: "Основы HTML/CSS",
-      description: "Изучить базовые теги и свойства",
-      xp: 30,
-      time: 2,
-      energy: 20,
-    },
-    {
-      id: "layout_flexbox",
-      name: "Flexbox на практике",
-      description: "Освоить современную верстку",
-      xp: 50,
-      time: 3,
-      energy: 30,
-    },
-  ],
-  [SKILL_NAMES.WORKPRESS]: [
-    {
-      id: "wp_basics",
-      name: "Введение в Workpress",
-      description: "Установка и базовая настройка",
-      xp: 30,
-      time: 2,
-      energy: 20,
-    },
-    {
-      id: "wp_themes",
-      name: "Создание тем",
-      description: "Разработка кастомных тем",
-      xp: 50,
-      time: 3,
-      energy: 30,
-    },
-  ],
-  [SKILL_NAMES.FREELANCE]: [
-    {
-      id: "freelance_communication",
-      name: "Общение с клиентами",
-      description: "Как правильно вести переговоры",
-      xp: 30,
-      time: 2,
-      energy: 20,
-    },
-    {
-      id: "freelance_portfolio",
-      name: "Создание портфолио",
-      description: "Презентация своих работ",
-      xp: 50,
-      time: 3,
-      energy: 30,
-    },
-  ],
-}
+import { LEARNING_ACTIVITIES, SKILL_INFO } from "./config.js"
+import { SKILL_NAMES } from "./constants.js"
+import { UIManager } from "./ui.js"
 
 export class LearningManager {
   constructor(gameState, skillsManager) {
     this.gameState = gameState
     this.skillsManager = skillsManager
+    this.ui = new UIManager()
     this.selectedSkill = SKILL_NAMES.LAYOUT
   }
 
-  renderLearningWindow() {
-    return `
+  render() {
+    const learningBody = document.getElementById("learning-body")
+
+    learningBody.innerHTML = `
       <div class="message">
-        <strong>Обучение</strong><br>
-        Выбери навык и активность для изучения
+        <strong>Выберите навык для изучения:</strong>
       </div>
-      ${this.renderSkillTabs()}
-      ${this.renderActivities()}
+      <div class="skill-selector" id="skill-selector"></div>
+      <div class="learning-activities" id="learning-activities"></div>
     `
+
+    this.renderSkillSelector()
+    this.renderActivities()
   }
 
-  renderSkillTabs() {
-    const tabs = Object.entries(SKILL_LABELS)
-      .map(([skillKey, label]) => {
-        const isActive = this.selectedSkill === skillKey
-        return `
-          <button 
-            class="skill-tab ${isActive ? "active" : ""}" 
-            data-skill="${skillKey}"
-            style="padding: 0.5rem 1rem; background: ${
-              isActive ? "var(--accent)" : "rgba(49, 74, 116, 0.5)"
-            }; border: 2px solid ${
-          isActive ? "var(--accent)" : "rgba(255, 255, 255, 0.08)"
-        }; cursor: pointer; font-family: inherit; font-size: 0.55rem; margin: 0.5rem 0.25rem 0 0; color: ${
-          isActive ? "#0c182c" : "var(--text-color)"
-        };"
-          >
-            ${label}
-          </button>
-        `
-      })
-      .join("")
+  renderSkillSelector() {
+    const state = this.gameState.getState()
+    const selector = document.getElementById("skill-selector")
 
-    return `<div style="margin: 1rem 0;">${tabs}</div>`
-  }
-
-  renderActivities() {
-    const activities = LEARNING_ACTIVITIES[this.selectedSkill] || []
-
-    const activitiesHtml = activities
-      .map((activity) => this.createActivityCard(activity))
-      .join("")
-
-    return `<div>${activitiesHtml}</div>`
-  }
-
-  createActivityCard(activity) {
-    return `
-      <div class="learning-activity-card">
-        <div class="learning-activity-header">
-          <strong>${activity.name}</strong>
-          <span>+${activity.xp} XP</span>
-        </div>
-        <div class="learning-activity-meta">
-          ${activity.description}
-        </div>
-        <div class="learning-activity-cost">
-          ⏱ ${activity.time}ч | ⚡ ${activity.energy} энергии
-        </div>
+    const skillsHtml = Object.entries(SKILL_INFO)
+      .map(
+        ([key, info]) => `
         <button 
-          class="window-action learn-btn" 
-          data-activity-id="${activity.id}"
+          class="skill-selector-button ${
+            this.selectedSkill === key ? "active" : ""
+          }" 
+          data-skill="${key}"
         >
-          Изучить
+          ${info.label} (ур. ${state.skills[key].level})
         </button>
-      </div>
-    `
-  }
+      `
+      )
+      .join("")
 
-  attachHandlers() {
-    document.querySelectorAll(".skill-tab").forEach((btn) => {
+    selector.innerHTML = skillsHtml
+
+    selector.querySelectorAll("button").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         this.selectedSkill = e.target.dataset.skill
         this.render()
       })
     })
+  }
 
-    document.querySelectorAll(".learn-btn").forEach((btn) => {
+  renderActivities() {
+    const container = document.getElementById("learning-activities")
+
+    const activitiesHtml = Object.entries(LEARNING_ACTIVITIES)
+      .map(
+        ([key, activity]) => `
+        <div class="learning-activity-card">
+          <div class="learning-activity-header">
+            <strong>${activity.label}</strong>
+            <span>+${activity.xp} XP</span>
+          </div>
+          <div class="learning-activity-meta">
+            ${activity.description}
+          </div>
+          <div class="learning-activity-cost">
+            <img src="img/icons/clock.png" alt="⏱" class="stat-icon"> ${activity.time}ч | <img src="img/icons/energy.png" alt="⚡" class="stat-icon"> ${activity.energy} энергии
+          </div>
+          <button class="window-action" data-activity="${key}">
+            Начать
+          </button>
+        </div>
+      `
+      )
+      .join("")
+
+    container.innerHTML = activitiesHtml
+
+    container.querySelectorAll("button").forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        const activityId = e.target.dataset.activityId
-        this.startLearning(activityId)
+        const activityKey = e.target.dataset.activity
+        this.startLearning(activityKey)
       })
     })
   }
 
-  startLearning(activityId) {
-    const activity = this.findActivity(activityId)
-    if (!activity) return
-
+  startLearning(activityKey) {
+    const activity = LEARNING_ACTIVITIES[activityKey]
     const state = this.gameState.getState()
 
     if (state.energy < activity.energy) {
-      alert(MESSAGES.NO_ENERGY)
+      this.ui.showToast("⚡ Недостаточно энергии!")
       return
     }
 
+    state.energy -= activity.energy
     this.gameState.addTime(activity.time)
-    this.gameState.updateState({
-      energy: state.energy - activity.energy,
-    })
 
     this.skillsManager.addXP(this.selectedSkill, activity.xp)
 
-    alert(
-      `Изучено! +${activity.xp} XP к навыку ${SKILL_LABELS[this.selectedSkill]}`
+    this.ui.showToast(
+      `✅ Изучено! +${activity.xp} XP к навыку ${
+        SKILL_INFO[this.selectedSkill].label
+      }`
     )
-    this.render()
+
+    this.gameState.updateState(state)
+    this.closeWindow()
   }
 
-  findActivity(activityId) {
-    const activities = LEARNING_ACTIVITIES[this.selectedSkill] || []
-    return activities.find((a) => a.id === activityId)
-  }
-
-  render() {
-    const body = document.getElementById("learning-body")
-    if (body) {
-      body.innerHTML = this.renderLearningWindow()
-      this.attachHandlers()
+  closeWindow() {
+    const window = document.getElementById("learning-window")
+    if (window) {
+      window.classList.add("hidden")
     }
   }
 }

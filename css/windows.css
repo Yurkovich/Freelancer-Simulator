@@ -97,3 +97,34 @@
 .message {
   line-height: 1.6;
 }
+
+
+.window-body,
+.browser-content,
+.telegram-chat,
+.vscode-editor {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 768px) {
+
+  .window-body::-webkit-scrollbar,
+  .browser-content::-webkit-scrollbar,
+  .telegram-chat::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .window-body::-webkit-scrollbar-track,
+  .browser-content::-webkit-scrollbar-track,
+  .telegram-chat::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .window-body::-webkit-scrollbar-thumb,
+  .browser-content::-webkit-scrollbar-thumb,
+  .telegram-chat::-webkit-scrollbar-thumb {
+    background: rgba(83, 245, 200, 0.3);
+    border-radius: 2px;
+  }
+}
