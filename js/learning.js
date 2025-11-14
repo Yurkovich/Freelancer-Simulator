@@ -91,14 +91,17 @@ export class LearningManager {
 
   startLearning(activityKey) {
     const activity = LEARNING_ACTIVITIES[activityKey]
-    const state = this.gameState.getState()
+    let state = this.gameState.getState()
 
     if (state.energy < activity.energy) {
       this.ui.showToast("⚡ Недостаточно энергии!")
       return
     }
 
-    state.energy -= activity.energy
+    this.gameState.updateState({
+      energy: state.energy - activity.energy,
+    })
+
     this.gameState.addTime(activity.time)
 
     this.skillsManager.addXP(this.selectedSkill, activity.xp)
@@ -109,7 +112,6 @@ export class LearningManager {
       }`
     )
 
-    this.gameState.updateState(state)
     this.closeWindow()
   }
 
