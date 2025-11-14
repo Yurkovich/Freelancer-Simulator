@@ -15,10 +15,10 @@
   <div class="game-container">
     <div class="desktop">
       <div class="hud">
-        <div class="stat">День: <span>1</span></div>
-        <div class="stat">Время: <span>09:00</span></div>
-        <div class="stat">Энергия: <span>100%</span></div>
-        <div class="stat">Баланс: <span>5000 ₽</span></div>
+        <div class="stat">День: <span id="stat-day">1</span></div>
+        <div class="stat">Время: <span id="stat-time">09:00</span></div>
+        <div class="stat">Энергия: <span id="stat-energy">100%</span></div>
+        <div class="stat">Баланс: <span id="stat-money">5000 ₽</span></div>
       </div>
 
       <div class="desktop-area">
@@ -49,13 +49,17 @@
       <div class="window-body">
         <div class="message">
           <strong>Мои работы:</strong><br><br>
-          Пока пусто. Выполняй заказы, чтобы заполнить портфолио!
+          Пока пусто. Выполняй заказы, чтобы заполнить портфолио!<br><br>
+          <button id="test-time-btn"
+            style="padding: 0.5rem 1rem; background: #53f5c8; border: none; cursor: pointer; font-family: inherit; font-size: 0.6rem;">
+            Тест: +2ч, -20 энергии, +500₽
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 
 </html>
