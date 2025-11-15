@@ -344,7 +344,7 @@ body {
   }
 }
 
-.tu torial-developer {
+.tutorial-developer {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -374,9 +374,8 @@ body {
 
 @media (max-width: 768px) {
   .tutorial-developer {
-    display: none;
     top: auto;
-    bottom: calc(50% + 115px);
+    bottom: calc(50% + 180px);
     transform: translateX(-50%);
   }
 
