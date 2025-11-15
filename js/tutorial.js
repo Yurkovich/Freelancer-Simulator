@@ -153,12 +153,12 @@ export class TutorialManager {
         }
         ${
           step.action === "next" || step.action === "highlight"
-            ? '<button class="tutorial-btn tutorial-next" style="background: var(--accent); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.5rem; cursor: pointer; color: var(--text-color);">Далее</button>'
+            ? '<button class="tutorial-btn tutorial-next" style="background: var(--accent-strong); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.5rem; cursor: pointer; color: #0c182c;">Далее</button>'
             : ""
         }
         ${
           step.action === "click"
-            ? '<button class="tutorial-btn tutorial-next" style="background: var(--accent); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.5rem; cursor: pointer; color: var(--text-color);">Понятно</button>'
+            ? '<button class="tutorial-btn tutorial-next" style="background: var(--accent-strong); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.5rem; cursor: pointer; color: #0c182c;">Понятно</button>'
             : ""
         }
       </div>
