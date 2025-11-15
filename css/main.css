@@ -99,7 +99,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
   max-width: 600px;
   width: 100%;
   z-index: 2;
@@ -158,13 +157,18 @@ body {
   background: var(--window-bg);
   border: 4px solid var(--window-border);
   padding: 2rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .dialog-text {
   font-size: 0.65rem;
   line-height: 1.8;
-  min-height: 100px;
+  min-height: 120px;
   margin-bottom: 1.5rem;
+  flex: 1;
 }
 
 @media (max-width: 768px) {
@@ -337,5 +341,51 @@ body {
 
   50% {
     box-shadow: 0 0 0 4px var(--accent), 0 0 30px rgba(83, 245, 200, 0.8);
+  }
+}
+
+.tu torial-developer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateX(-320px);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tutorial-developer-photo {
+  width: 150px;
+  height: 200px;
+  border: 4px solid var(--accent);
+  image-rendering: pixelated;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+}
+
+.tutorial-developer-label {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--accent);
+  font-family: 'Press Start 2P', monospace;
+}
+
+@media (max-width: 768px) {
+  .tutorial-developer {
+    display: none;
+    top: auto;
+    bottom: calc(50% + 115px);
+    transform: translateX(-50%);
+  }
+
+  .tutorial-developer-photo {
+    width: 90px;
+    height: 120px;
+  }
+
+  .tutorial-developer-label {
+    font-size: 0.5rem;
   }
 }

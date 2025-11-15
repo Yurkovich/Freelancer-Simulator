@@ -93,6 +93,14 @@ export class TutorialManager {
     `
     document.body.appendChild(this.overlay)
 
+    this.developerPhoto = document.createElement("div")
+    this.developerPhoto.className = "tutorial-developer"
+    this.developerPhoto.innerHTML = `
+      <img src="img/Developer.png" alt="Разработчик" class="tutorial-developer-photo">
+      <div class="tutorial-developer-label">Разработчик</div>
+    `
+    document.body.appendChild(this.developerPhoto)
+
     this.tooltip = document.createElement("div")
     this.tooltip.id = "tutorial-tooltip"
     this.tooltip.style.cssText = `
@@ -104,11 +112,15 @@ export class TutorialManager {
       border: 4px solid var(--window-border);
       padding: 1.5rem;
       max-width: 400px;
+      min-height: 200px;
       z-index: 9999;
       font-family: 'Press Start 2P', monospace;
       color: var(--text-color);
       font-size: 0.6rem;
       line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     `
     document.body.appendChild(this.tooltip)
   }
@@ -127,11 +139,11 @@ export class TutorialManager {
     })
 
     this.tooltip.innerHTML = `
-      <div style="margin-bottom: 1rem;">
+      <div style="margin-bottom: 1rem; flex: 1; display: flex; flex-direction: column;">
         <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 0.5rem;">${
           step.title
         }</div>
-        <div id="tutorial-text"></div>
+        <div id="tutorial-text" style="min-height: 80px; flex: 1;"></div>
       </div>
       <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
         ${
@@ -230,6 +242,7 @@ export class TutorialManager {
 
     if (this.overlay) this.overlay.remove()
     if (this.tooltip) this.tooltip.remove()
+    if (this.developerPhoto) this.developerPhoto.remove()
 
     document.querySelectorAll(".tutorial-highlight").forEach((el) => {
       el.classList.remove("tutorial-highlight")

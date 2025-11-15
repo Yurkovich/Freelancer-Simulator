@@ -59,12 +59,13 @@ function attachAudioToggle(game) {
   if (!audioToggle) return
 
   const updateButton = () => {
+    const icon = audioToggle.querySelector(".audio-icon")
     if (game.audio.isMuted) {
-      audioToggle.textContent = "🔇"
       audioToggle.classList.add("muted")
+      if (icon) icon.style.opacity = "0.5"
     } else {
-      audioToggle.textContent = "🔊"
       audioToggle.classList.remove("muted")
+      if (icon) icon.style.opacity = "1"
     }
   }
 
