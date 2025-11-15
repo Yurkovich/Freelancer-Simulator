@@ -26,6 +26,10 @@ class GameState {
       lastBookDay: 0,
       kworkOrders: [],
       rejectedOrders: {},
+      activeChat: "course",
+      activeModule: null,
+      chatLogs: this.createInitialChatLogs(),
+      telehlamXPToday: {},
     }
   }
 
@@ -43,6 +47,43 @@ class GameState {
       }
       return skills
     }, {})
+  }
+
+  createInitialChatLogs() {
+    return {
+      course: {
+        [SKILL_NAMES.LAYOUT]: [
+          {
+            from: "mentor",
+            text: "Привет! Это модуль по верстке. Если возникнут вопросы - смело задавай!",
+          },
+        ],
+        [SKILL_NAMES.WORKPRESS]: [
+          {
+            from: "mentor",
+            text: "Добро пожаловать в модуль Workpress! Здесь ты научишься работать с CMS!",
+          },
+        ],
+        [SKILL_NAMES.FREELANCE]: [
+          {
+            from: "mentor",
+            text: "Привет! Это модуль по фрилансу. Тут тебе расскажут, как работать с заказчиками и находить клиентов!",
+          },
+        ],
+      },
+      mentor: [
+        {
+          from: "mentor",
+          text: "Привет! Я Альберт, твой куратор. Если возникнут вопросы по работе или учебе - пиши мне. Всегда рад помочь!",
+        },
+      ],
+      aroken: [
+        {
+          from: "aroken",
+          text: "Поздравляю с приобретением курса! Желаю тебе успехов в твоем становлении веб-разработчиком!",
+        },
+      ],
+    }
   }
 
   getState() {

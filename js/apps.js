@@ -5,6 +5,7 @@ import { LearningManager } from "./learning.js"
 import { BrowserManager } from "./browser.js"
 import { TimeManager } from "./time.js"
 import { CharacterManager } from "./character.js"
+import { TelehlamManager } from "./telehlam.js"
 import { UIManager } from "./ui.js"
 
 export class AppsManager {
@@ -16,6 +17,7 @@ export class AppsManager {
     this.browserManager = new BrowserManager(gameState, this)
     this.timeManager = new TimeManager(gameState)
     this.characterManager = new CharacterManager(gameState)
+    this.telehlamManager = new TelehlamManager(gameState, this.skillsManager)
     this.activeOrder = null
     this.availableOrders = [...ORDERS]
   }
@@ -70,7 +72,7 @@ export class AppsManager {
       browser: () => this.browserManager.render(),
       skills: () => this.renderSkills(),
       learning: () => this.renderLearning(),
-      telehlam: () => this.renderTelehlam(),
+      telehlam: () => this.telehlamManager.render(),
       sleep: () => this.renderSleep(),
       portfolio: () => this.renderPortfolio(),
       character: () => this.renderCharacter(),
@@ -187,16 +189,6 @@ export class AppsManager {
   handleSleep(hours, restore) {
     this.timeManager.sleep(hours, restore)
     this.closeAllWindows()
-  }
-
-  renderTelehlam() {
-    const body = document.getElementById(UI_SELECTORS.TELEHLAM_BODY)
-    body.innerHTML = `
-      <div class="message">
-        <strong>Telehlam</strong><br><br>
-        ${MESSAGES.APP_IN_DEVELOPMENT}
-      </div>
-    `
   }
 
   renderSkills() {
