@@ -63,11 +63,21 @@
   cursor: pointer;
   font-family: inherit;
   font-size: 0.6rem;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.window-action:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.window-action:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .window-action:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background: var(--muted);
 }
 
 .task-progress {

@@ -1,8 +1,7 @@
 export class UIManager {
   constructor() {
-    this.toastQueue = []
-    this.maxToasts = 1
-    this.toastDuration = 3000
+    this.currentToast = null
+    this.toastDuration = 2000
     this.screens = {
       menu: document.getElementById("menu-screen"),
       dialog: document.getElementById("dialog-screen"),
@@ -27,23 +26,22 @@ export class UIManager {
     const container = document.getElementById("toast-container")
     if (!container) return
 
+    if (this.currentToast && this.currentToast.parentElement) {
+      this.removeToast(this.currentToast, true)
+    }
+
+    this.playSoundForMessage(message)
+
     const toast = document.createElement("div")
     toast.className = "toast"
     toast.innerHTML = message
 
     toast.addEventListener("click", () => {
-      this.removeToast(toast)
+      this.removeToast(toast, true)
     })
 
-    if (this.toastQueue.length >= this.maxToasts) {
-      const oldestToast = this.toastQueue.shift()
-      if (oldestToast && oldestToast.parentElement) {
-        oldestToast.remove()
-      }
-    }
-
     container.appendChild(toast)
-    this.toastQueue.push(toast)
+    this.currentToast = toast
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -52,28 +50,43 @@ export class UIManager {
     })
 
     setTimeout(() => {
-      if (this.toastQueue.includes(toast)) {
-        this.removeToast(toast)
+      if (this.currentToast === toast) {
+        this.removeToast(toast, false)
       }
     }, this.toastDuration)
   }
 
-  removeToast(toast) {
+  playSoundForMessage(message) {
+    if (!window.audio) return
+
+    setTimeout(() => {
+      if (message.includes("✅") || message.includes("📦")) {
+        window.audio.playSound("success")
+      } else if (message.includes("⚠️") || message.includes("❌")) {
+        window.audio.playSound("error")
+      } else {
+        window.audio.playSound("notification")
+      }
+    }, 50)
+  }
+
+  removeToast(toast, immediate = false) {
     if (!toast || !toast.parentElement) return
 
-    const index = this.toastQueue.indexOf(toast)
-    if (index > -1) {
-      this.toastQueue.splice(index, 1)
+    if (this.currentToast === toast) {
+      this.currentToast = null
     }
 
     toast.classList.remove("show")
     toast.classList.add("hide")
 
+    const delay = immediate ? 100 : 300
+
     setTimeout(() => {
       if (toast.parentElement) {
         toast.remove()
       }
-    }, 300)
+    }, delay)
   }
 
   closeWindow(windowId) {

@@ -78,6 +78,17 @@ export class ShopManager {
       return
     }
 
+    if (item.satiety > 0 && state.satiety >= 100) {
+      this.ui.showToast("Сытость уже максимальная!")
+      return
+    }
+
+    const maxHealth = state.maxHealth || 100
+    if (item.health > 0 && state.health >= maxHealth) {
+      this.ui.showToast("Здоровье уже максимальное!")
+      return
+    }
+
     state.money -= item.price
     state.satiety = Math.min(100, state.satiety + item.satiety)
     state.energy = Math.min(state.maxEnergy, state.energy + item.energy)

@@ -11,17 +11,20 @@ export class SkillsManager {
     const state = this.gameState.getState()
     const skill = state.skills[skillName]
 
-    if (!skill) return
+    if (!skill) return false
 
     skill.xp += amount
 
     const xpForNextLevel = this.calculateXPForNextLevel(skill.level)
 
+    let leveledUp = false
     if (skill.xp >= xpForNextLevel) {
       this.levelUp(skill, skillName)
+      leveledUp = true
     }
 
     this.gameState.updateState({ skills: state.skills })
+    return leveledUp
   }
 
   calculateXPForNextLevel(level) {
@@ -34,6 +37,10 @@ export class SkillsManager {
   levelUp(skill, skillName) {
     skill.level += 1
     skill.xp = skill.xp - this.calculateXPForNextLevel(skill.level - 1)
+
+    if (window.audio) {
+      window.audio.playSound("levelUp")
+    }
 
     const skillLabel = SKILL_LABELS[skillName]
     this.ui.showToast(

@@ -38,18 +38,43 @@ export class DialogSystem {
     this.isTyping = true
     this.dialogTextEl.textContent = ""
     this.dialogNextEl.disabled = true
+    this.dialogNextEl.style.opacity = "0.5"
+    this.dialogNextEl.style.cursor = "not-allowed"
 
     let charIndex = 0
     const typingSpeed = 30
+    let timeoutId = null
+
+    const skipTyping = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+      this.dialogTextEl.textContent = text
+      this.isTyping = false
+      this.dialogNextEl.disabled = false
+      this.dialogNextEl.style.opacity = "1"
+      this.dialogNextEl.style.cursor = "pointer"
+      this.dialogTextEl.removeEventListener("click", skipTyping)
+    }
+
+    this.dialogTextEl.addEventListener("click", skipTyping, { once: true })
 
     const typeChar = () => {
       if (charIndex < text.length) {
         this.dialogTextEl.textContent += text[charIndex]
+
+        if (text[charIndex] !== " " && window.audio) {
+          window.audio.playSound("textBlip")
+        }
+
         charIndex++
-        setTimeout(typeChar, typingSpeed)
+        timeoutId = setTimeout(typeChar, typingSpeed)
       } else {
         this.isTyping = false
         this.dialogNextEl.disabled = false
+        this.dialogNextEl.style.opacity = "1"
+        this.dialogNextEl.style.cursor = "pointer"
+        this.dialogTextEl.removeEventListener("click", skipTyping)
       }
     }
 

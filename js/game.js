@@ -3,16 +3,19 @@ import { UIManager } from "./ui.js"
 import { DialogSystem } from "./dialog.js"
 import { AppsManager } from "./apps.js"
 import { TutorialManager } from "./tutorial.js"
+import { AudioManager } from "./audio.js"
 
 export class Game {
   constructor() {
     this.gameState = new GameState()
     this.ui = new UIManager()
+    this.audio = new AudioManager()
     this.dialogSystem = new DialogSystem(this.ui)
     this.appsManager = new AppsManager(this.gameState)
     this.tutorialManager = new TutorialManager(this.gameState, this.ui)
 
     window.appManager = this.appsManager
+    window.audio = this.audio
   }
 
   init() {
@@ -30,6 +33,9 @@ export class Game {
   setupMenuScreen() {
     const playButton = document.getElementById("play-button")
     playButton.addEventListener("click", () => {
+      this.audio.initAudioContext()
+      this.audio.playMusic("menu")
+      this.audio.playSound("click")
       this.ui.switchScreen("dialog")
       this.dialogSystem.showNextDialog()
     })
@@ -38,6 +44,8 @@ export class Game {
   }
 
   startGame() {
+    this.audio.stopMusic()
+    this.audio.playMusic("ambient")
     this.ui.switchScreen("desktop")
     this.gameState.updateUI()
 
@@ -46,7 +54,7 @@ export class Game {
     if (!state.tutorialCompleted) {
       setTimeout(() => {
         this.tutorialManager.start()
-      }, 700)
+      }, 500)
     }
   }
 }

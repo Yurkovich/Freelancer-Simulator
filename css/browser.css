@@ -209,7 +209,6 @@
   border-top: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Bills */
 .bills-list {
   display: flex;
   flex-direction: column;
@@ -263,8 +262,6 @@
   border-top: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-/*
- Sidejob and Bills windows */
 #sidejob-window,
 #bills-window {
   width: clamp(320px, 45vw, 560px);
@@ -280,11 +277,9 @@
   }
 }
 
-/* Sh
-op */
 .shop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
   margin-top: 1rem;
 }

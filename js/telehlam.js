@@ -319,9 +319,13 @@ export class TelehlamManager {
     const xpGain = 15
 
     state.telehlamXPToday[skillKey] = today
-    this.skillsManager.addXP(skillKey, xpGain)
+    const leveledUp = this.skillsManager.addXP(skillKey, xpGain)
 
-    this.ui.showToast(`+${xpGain} опыта в навыке ${SKILL_INFO[skillKey].label}`)
+    if (!leveledUp) {
+      this.ui.showToast(
+        `+${xpGain} опыта в навыке ${SKILL_INFO[skillKey].label}`
+      )
+    }
 
     this.gameState.updateState(state)
   }

@@ -552,6 +552,14 @@ export class AppsManager {
     let reputationGain = order.reputation || 1
     let message = `${MESSAGES.ORDER_COMPLETED} +${reward.toLocaleString()} ₽`
 
+    if (window.audio) {
+      if (daysLeft >= 0) {
+        window.audio.playSound("success")
+      } else {
+        window.audio.playSound("error")
+      }
+    }
+
     if (daysLeft < 0) {
       const penalty =
         Math.abs(daysLeft) * GAME_CONSTANTS.PENALTY_PER_OVERDUE_DAY

@@ -116,13 +116,15 @@ export class LearningManager {
       this.timeManager.addTime(activity.time)
     }
 
-    this.skillsManager.addXP(this.selectedSkill, activity.xp)
+    const leveledUp = this.skillsManager.addXP(this.selectedSkill, activity.xp)
 
-    this.ui.showToast(
-      `✅ Изучено! +${activity.xp} XP к навыку ${
-        SKILL_INFO[this.selectedSkill].label
-      }`
-    )
+    if (!leveledUp) {
+      this.ui.showToast(
+        `✅ Изучено! +${activity.xp} XP к навыку ${
+          SKILL_INFO[this.selectedSkill].label
+        }`
+      )
+    }
 
     this.closeWindow()
   }

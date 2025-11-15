@@ -23,10 +23,9 @@
     <div class="scanline"></div>
 
     <section class="screen active" id="menu-screen">
-      <div
-        style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 2rem;">
-        <h1 style="font-size: 1.5rem; color: var(--accent); text-align: center;">Симулятор Фрилансера</h1>
-        <p style="font-size: 0.6rem; color: var(--muted); text-align: center; max-width: 500px;">
+      <div class="menu-content">
+        <h1 class="menu-title">Симулятор Фрилансера</h1>
+        <p class="menu-subtitle">
           Начни свой путь веб-разработчика с нуля.<br>
           Учись, работай, зарабатывай!
         </p>
@@ -37,16 +36,11 @@
     </section>
 
     <section class="screen" id="dialog-screen">
-      <div
-        style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 2rem;">
-        <div
-          style="max-width: 600px; background: var(--window-bg); border: 4px solid var(--window-border); padding: 2rem;">
-          <p id="dialog-text" style="font-size: 0.65rem; line-height: 1.8; min-height: 100px; margin-bottom: 1.5rem;">
-          </p>
-          <button id="dialog-next" class="window-action" style="font-size: 0.6rem;">
-            Далее
-          </button>
-        </div>
+      <div class="dialog-container">
+        <p id="dialog-text" class="dialog-text"></p>
+        <button id="dialog-next" class="window-action" style="font-size: 0.6rem;">
+          Далее
+        </button>
       </div>
     </section>
 
@@ -59,6 +53,7 @@
         <div class="stat">Сытость: <span id="stat-satiety">100%</span></div>
         <div class="stat">Баланс: <span id="stat-money">100000 ₽</span></div>
         <div class="stat">Репутация: <span id="stat-rep">0</span></div>
+        <button id="audio-toggle" class="audio-toggle" title="Вкл/Выкл звук">🔊</button>
       </div>
 
       <div class="desktop-area">

@@ -131,7 +131,7 @@ export class TutorialManager {
         <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 0.5rem;">${
           step.title
         }</div>
-        <div>${step.text}</div>
+        <div id="tutorial-text"></div>
       </div>
       <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
         ${
@@ -166,7 +166,13 @@ export class TutorialManager {
     const skipBtn = this.tooltip.querySelector(".tutorial-skip")
 
     if (nextBtn) {
+      nextBtn.disabled = true
+      nextBtn.style.opacity = "0.5"
+      nextBtn.style.cursor = "not-allowed"
+
       nextBtn.addEventListener("click", () => {
+        if (nextBtn.disabled) return
+
         if (stepIndex < this.steps.length - 1) {
           this.showStep(stepIndex + 1)
         } else {
@@ -178,6 +184,43 @@ export class TutorialManager {
     if (skipBtn) {
       skipBtn.addEventListener("click", () => this.complete())
     }
+
+    this.typeText(step.text, () => {
+      if (nextBtn) {
+        nextBtn.disabled = false
+        nextBtn.style.opacity = "1"
+        nextBtn.style.cursor = "pointer"
+      }
+    })
+  }
+
+  typeText(text, onComplete) {
+    const textEl = document.getElementById("tutorial-text")
+    if (!textEl) {
+      if (onComplete) onComplete()
+      return
+    }
+
+    textEl.textContent = ""
+    let charIndex = 0
+    const typingSpeed = 20
+
+    const typeChar = () => {
+      if (charIndex < text.length) {
+        textEl.textContent += text[charIndex]
+
+        if (text[charIndex] !== " " && window.audio) {
+          window.audio.playSound("textBlip")
+        }
+
+        charIndex++
+        setTimeout(typeChar, typingSpeed)
+      } else {
+        if (onComplete) onComplete()
+      }
+    }
+
+    typeChar()
   }
 
   complete() {

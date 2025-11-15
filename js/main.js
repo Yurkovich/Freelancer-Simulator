@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   attachIconListeners(game)
   attachWindowCloseListeners()
+  attachAudioToggle(game)
 })
 
 function attachIconListeners(game) {
@@ -50,5 +51,35 @@ function attachWindowCloseListeners() {
         window.classList.add("hidden")
       }
     })
+  })
+}
+
+function attachAudioToggle(game) {
+  const audioToggle = document.getElementById("audio-toggle")
+  if (!audioToggle) return
+
+  const updateButton = () => {
+    if (game.audio.isMuted) {
+      audioToggle.textContent = "🔇"
+      audioToggle.classList.add("muted")
+    } else {
+      audioToggle.textContent = "🔊"
+      audioToggle.classList.remove("muted")
+    }
+  }
+
+  updateButton()
+
+  audioToggle.addEventListener("click", () => {
+    game.audio.initAudioContext()
+    game.audio.toggleMute()
+    updateButton()
+
+    if (!game.audio.isMuted && game.audio.music === null) {
+      const state = game.gameState.getState()
+      if (state.tutorialCompleted) {
+        game.audio.playMusic("ambient")
+      }
+    }
   })
 }
