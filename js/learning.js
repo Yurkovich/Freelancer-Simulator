@@ -3,11 +3,16 @@ import { SKILL_NAMES } from "./constants.js"
 import { UIManager } from "./ui.js"
 
 export class LearningManager {
-  constructor(gameState, skillsManager) {
+  constructor(gameState, skillsManager, timeManager = null) {
     this.gameState = gameState
     this.skillsManager = skillsManager
+    this.timeManager = timeManager
     this.ui = new UIManager()
     this.selectedSkill = SKILL_NAMES.LAYOUT
+  }
+
+  setTimeManager(timeManager) {
+    this.timeManager = timeManager
   }
 
   render() {
@@ -93,6 +98,11 @@ export class LearningManager {
     const activity = LEARNING_ACTIVITIES[activityKey]
     let state = this.gameState.getState()
 
+    if (!state.hasInternet) {
+      this.ui.showToast("⚠️ Нет интернета! Оплатите счет.")
+      return
+    }
+
     if (state.energy < activity.energy) {
       this.ui.showToast("⚡ Недостаточно энергии!")
       return
@@ -102,7 +112,9 @@ export class LearningManager {
       energy: state.energy - activity.energy,
     })
 
-    this.gameState.addTime(activity.time)
+    if (this.timeManager) {
+      this.timeManager.addTime(activity.time)
+    }
 
     this.skillsManager.addXP(this.selectedSkill, activity.xp)
 

@@ -259,3 +259,28 @@
     padding: 0.5rem 1rem;
   }
 }
+
+
+#stat-satiety.low {
+  color: orange !important;
+}
+
+#stat-satiety.critical {
+  color: var(--danger) !important;
+}
+
+#stat-energy.low {
+  color: orange !important;
+}
+
+#stat-energy.critical {
+  color: var(--danger) !important;
+}
+
+#stat-health.low {
+  color: orange !important;
+}
+
+#stat-health.critical {
+  color: var(--danger) !important;
+}

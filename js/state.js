@@ -1,8 +1,13 @@
-import { GAME_CONSTANTS, UI_SELECTORS, SKILL_NAMES } from "./constants.js"
+import {
+  GAME_CONSTANTS,
+  UI_SELECTORS,
+  SKILL_NAMES,
+  STORAGE_KEY,
+} from "./constants.js"
 
 class GameState {
   constructor() {
-    this.state = this.createInitialState()
+    this.state = this.loadState()
   }
 
   createInitialState() {
@@ -30,6 +35,82 @@ class GameState {
       activeModule: null,
       chatLogs: this.createInitialChatLogs(),
       telehlamXPToday: {},
+      bills: {
+        rent: { lastPaid: 0, due: 7 },
+        internet: { lastPaid: 0, due: 7 },
+      },
+      hasRent: true,
+      hasInternet: true,
+    }
+  }
+
+  deepMerge(target, source) {
+    const output = { ...target }
+
+    if (this.isObject(target) && this.isObject(source)) {
+      Object.keys(source).forEach((key) => {
+        if (this.isObject(source[key])) {
+          if (!(key in target)) {
+            output[key] = source[key]
+          } else {
+            output[key] = this.deepMerge(target[key], source[key])
+          }
+        } else {
+          output[key] = source[key]
+        }
+      })
+    }
+
+    return output
+  }
+
+  isObject(item) {
+    return item && typeof item === "object" && !Array.isArray(item)
+  }
+
+  migratePendingUpgrades(state) {
+    if (
+      state.pendingUpgrades &&
+      state.pendingUpgrades.length > 0 &&
+      typeof state.pendingUpgrades[0] === "string"
+    ) {
+      state.pendingUpgrades = state.pendingUpgrades.map((key) => ({
+        key,
+        orderedDay: state.day - 1,
+      }))
+    }
+  }
+
+  loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (!raw) {
+        return this.createInitialState()
+      }
+
+      const saved = JSON.parse(raw)
+      const base = this.createInitialState()
+
+      const merged = this.deepMerge(base, saved)
+
+      if (typeof merged.time !== "number" || isNaN(merged.time)) {
+        merged.time = GAME_CONSTANTS.INITIAL_TIME
+      }
+
+      this.migratePendingUpgrades(merged)
+
+      return merged
+    } catch (error) {
+      console.warn("[STATE] Не удалось загрузить сохранение:", error)
+      return this.createInitialState()
+    }
+  }
+
+  persistState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state))
+    } catch (error) {
+      console.warn("[STATE] Не удалось сохранить состояние:", error)
     }
   }
 
@@ -93,6 +174,7 @@ class GameState {
   updateState(newState) {
     this.state = { ...this.state, ...newState }
     this.updateUI()
+    this.persistState()
   }
 
   updateUI() {
@@ -121,6 +203,42 @@ class GameState {
     uiUpdates.forEach(({ selector, value }) => {
       this.updateElement(selector, value)
     })
+
+    this.updateStatColors()
+  }
+
+  updateStatColors() {
+    const satietyEl = document.getElementById(UI_SELECTORS.STAT_SATIETY)
+    if (satietyEl) {
+      satietyEl.classList.remove("low", "critical")
+      if (this.state.satiety === 0) {
+        satietyEl.classList.add("critical")
+      } else if (this.state.satiety < GAME_CONSTANTS.LOW_SATIETY_THRESHOLD) {
+        satietyEl.classList.add("low")
+      }
+    }
+
+    const energyEl = document.getElementById(UI_SELECTORS.STAT_ENERGY)
+    if (energyEl) {
+      energyEl.classList.remove("low", "critical")
+      if (this.state.energy === 0) {
+        energyEl.classList.add("critical")
+      } else if (this.state.energy < GAME_CONSTANTS.LOW_ENERGY_THRESHOLD) {
+        energyEl.classList.add("low")
+      }
+    }
+
+    const healthEl = document.getElementById(UI_SELECTORS.STAT_HEALTH)
+    if (healthEl) {
+      healthEl.classList.remove("low", "critical")
+      const maxHealth = this.state.maxHealth || GAME_CONSTANTS.INITIAL_HEALTH
+      const healthPercent = (this.state.health / maxHealth) * 100
+      if (healthPercent === 0) {
+        healthEl.classList.add("critical")
+      } else if (healthPercent < GAME_CONSTANTS.LOW_HEALTH_THRESHOLD) {
+        healthEl.classList.add("low")
+      }
+    }
   }
 
   updateElement(elementId, value) {
@@ -139,17 +257,6 @@ class GameState {
   padZero(num) {
     const minDigits = 2
     return num.toString().padStart(minDigits, "0")
-  }
-
-  addTime(hours) {
-    const newTime = this.state.time + hours
-    const daysToAdd = Math.floor(newTime / GAME_CONSTANTS.HOURS_IN_DAY)
-    const remainingTime = newTime % GAME_CONSTANTS.HOURS_IN_DAY
-
-    this.updateState({
-      time: remainingTime,
-      day: this.state.day + daysToAdd,
-    })
   }
 }
 

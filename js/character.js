@@ -1,4 +1,5 @@
 import { UIManager } from "./ui.js"
+import { STORAGE_KEY } from "./constants.js"
 
 export class CharacterManager {
   constructor(gameState) {
@@ -118,7 +119,27 @@ export class CharacterManager {
         <h3 style="margin: 1rem 0 0.5rem; font-size: 0.65rem;">Купленные улучшения:</h3>
         ${this.renderUpgrades()}
       </div>
+
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid rgba(255, 255, 255, 0.1);">
+        <button class="window-action" id="reset-progress-btn" style="background: var(--danger);">
+          Сбросить прогресс
+        </button>
+      </div>
     `
+
+    this.attachResetHandler()
+  }
+
+  attachResetHandler() {
+    const resetBtn = document.getElementById("reset-progress-btn")
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        if (confirm("Вы уверены? Весь прогресс будет удален!")) {
+          localStorage.clear()
+          location.reload()
+        }
+      })
+    }
   }
 
   renderUpgrades() {

@@ -29,7 +29,7 @@
         <div class="stat">Энергия: <span id="stat-energy">100%</span></div>
         <div class="stat">Здоровье: <span id="stat-health">100/100</span></div>
         <div class="stat">Сытость: <span id="stat-satiety">100%</span></div>
-        <div class="stat">Баланс: <span id="stat-money">5000 ₽</span></div>
+        <div class="stat">Баланс: <span id="stat-money">100000 ₽</span></div>
         <div class="stat">Репутация: <span id="stat-rep">0</span></div>
       </div>
 
@@ -65,6 +65,14 @@
         <button class="icon" data-app="character">
           <div class="icon-sprite"></div>
           <span class="icon-label">Персонаж</span>
+        </button>
+        <button class="icon" data-app="sidejob">
+          <div class="icon-sprite"></div>
+          <span class="icon-label">Подработка</span>
+        </button>
+        <button class="icon" data-app="bills">
+          <div class="icon-sprite"></div>
+          <span class="icon-label">Счета</span>
         </button>
       </div>
     </section>
@@ -138,6 +146,24 @@
         <button class="window-close">x</button>
       </div>
       <div class="window-body" id="character-body">
+      </div>
+    </div>
+
+    <div class="window hidden" id="sidejob-window">
+      <div class="window-header">
+        <span>Подработка</span>
+        <button class="window-close">x</button>
+      </div>
+      <div class="window-body" id="sidejob-body">
+      </div>
+    </div>
+
+    <div class="window hidden" id="bills-window">
+      <div class="window-header">
+        <span>Счета</span>
+        <button class="window-close">x</button>
+      </div>
+      <div class="window-body" id="bills-body">
       </div>
     </div>
 

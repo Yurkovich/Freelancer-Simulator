@@ -401,3 +401,61 @@ export const FOOD_ITEMS = {
     description: "Восстанавливает здоровье",
   },
 }
+
+export const SIDE_JOBS = {
+  courier: {
+    name: "Курьер",
+    time: 6,
+    energy: 35,
+    satiety: 10,
+    health: 0,
+    minPay: 1000,
+    maxPay: 2000,
+    description: "Развозить заказы по городу",
+  },
+  waiter: {
+    name: "Официант",
+    time: 7,
+    energy: 40,
+    satiety: 15,
+    health: 0,
+    minPay: 1500,
+    maxPay: 2500,
+    description: "Работа в кафе или ресторане",
+  },
+  loader: {
+    name: "Грузчик",
+    time: 8,
+    energy: 50,
+    satiety: 20,
+    health: 5,
+    minPay: 2000,
+    maxPay: 3000,
+    description: "Тяжелая физическая работа",
+  },
+  handyman: {
+    name: "Разнорабочий",
+    time: 6,
+    energy: 30,
+    satiety: 10,
+    health: 0,
+    minPay: 1000,
+    maxPay: 1800,
+    description: "Разная подсобная работа",
+  },
+}
+
+export const BILLS = {
+  rent: {
+    name: "Квартира",
+    amount: 10000,
+    period: 7,
+    description: "Оплата аренды квартиры",
+  },
+  internet: {
+    name: "Интернет",
+    amount: 1000,
+    period: 7,
+    description: "Оплата интернета",
+  },
+}

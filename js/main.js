@@ -53,6 +53,8 @@ class Game {
       "sleep",
       "telehlam",
       "character",
+      "sidejob",
+      "bills",
     ]
     return availableApps.includes(app)
   }

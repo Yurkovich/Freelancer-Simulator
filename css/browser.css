@@ -117,7 +117,8 @@
 }
 
 .marketplace-items,
-.delivery-items {
+.delivery-items,
+.sidejob-list {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
@@ -125,7 +126,8 @@
 }
 
 .marketplace-item,
-.delivery-item {
+.delivery-item,
+.sidejob-card {
   border: 4px solid rgba(255, 255, 255, 0.08);
   background: rgba(12, 22, 41, 0.85);
   padding: 1rem 1.2rem;
@@ -135,7 +137,8 @@
 }
 
 .marketplace-item-header,
-.delivery-item-header {
+.delivery-item-header,
+.sidejob-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -143,15 +146,23 @@
 }
 
 .marketplace-item-meta,
-.delivery-item-meta {
+.delivery-item-meta,
+.sidejob-meta {
   font-size: 0.6rem;
   color: var(--muted);
   line-height: 1.5;
 }
 
+.sidejob-cost {
+  font-size: 0.55rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
 .marketplace-buy-btn,
 .book-buy-btn,
-.delivery-buy-btn {
+.delivery-buy-btn,
+.sidejob-btn {
   margin-top: 0.4rem;
   align-self: flex-start;
 }
@@ -196,4 +207,75 @@
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Bills */
+.bills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.bill-card {
+  border: 4px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 22, 41, 0.85);
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.bill-card.bill-overdue {
+  border-color: var(--danger);
+  background: rgba(40, 22, 22, 0.85);
+}
+
+.bill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.65rem;
+}
+
+.bill-meta {
+  font-size: 0.6rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.bill-warning {
+  font-size: 0.6rem;
+  color: var(--danger);
+  padding: 0.5rem;
+  background: rgba(245, 91, 125, 0.1);
+  border-left: 3px solid var(--danger);
+}
+
+.bill-pay-btn {
+  margin-top: 0.4rem;
+  align-self: flex-start;
+}
+
+.bills-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/*
+ Sidejob and Bills windows */
+#sidejob-window,
+#bills-window {
+  width: clamp(320px, 45vw, 560px);
+}
+
+@media (max-width: 768px) {
+
+  #sidejob-window,
+  #bills-window {
+    width: 95vw !important;
+    height: auto !important;
+    max-height: 90vh !important;
+  }
 }

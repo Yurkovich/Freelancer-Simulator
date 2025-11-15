@@ -6,6 +6,8 @@ import { BrowserManager } from "./browser.js"
 import { TimeManager } from "./time.js"
 import { CharacterManager } from "./character.js"
 import { TelehlamManager } from "./telehlam.js"
+import { SideJobManager } from "./sidejob.js"
+import { BillsManager } from "./bills.js"
 import { UIManager } from "./ui.js"
 
 export class AppsManager {
@@ -13,16 +15,42 @@ export class AppsManager {
     this.gameState = gameState
     this.ui = new UIManager()
     this.skillsManager = new SkillsManager(gameState)
-    this.learningManager = new LearningManager(gameState, this.skillsManager)
-    this.browserManager = new BrowserManager(gameState, this)
     this.timeManager = new TimeManager(gameState)
+    this.timeManager.setAppsManager(this)
+    this.learningManager = new LearningManager(gameState, this.skillsManager)
+    this.learningManager.setTimeManager(this.timeManager)
+    this.browserManager = new BrowserManager(gameState, this)
     this.characterManager = new CharacterManager(gameState)
     this.telehlamManager = new TelehlamManager(gameState, this.skillsManager)
+    this.sideJobManager = new SideJobManager(
+      gameState,
+      this.ui,
+      this.timeManager
+    )
+    this.billsManager = new BillsManager(gameState, this.ui)
+    this.billsManager.setAppsManager(this)
     this.activeOrder = null
     this.availableOrders = [...ORDERS]
+    this.updateIconStates()
   }
 
   openApp(appName) {
+    const state = this.gameState.getState()
+
+    const rentOverdue = state.day > state.bills.rent.due
+    const internetOverdue = state.day > state.bills.internet.due
+    const hasDebt = rentOverdue || internetOverdue
+
+    if (
+      hasDebt &&
+      !["sidejob", "bills", "character", "sleep"].includes(appName)
+    ) {
+      this.ui.showToast(
+        "⚠️ Оплатите просроченные счета! Доступны только подработки."
+      )
+      return
+    }
+
     this.closeAllWindows()
     const window = this.getWindow(appName)
 
@@ -30,6 +58,30 @@ export class AppsManager {
       window.classList.remove("hidden")
       this.renderApp(appName)
     }
+  }
+
+  updateIconStates() {
+    const state = this.gameState.getState()
+
+    const rentOverdue = state.day > state.bills.rent.due
+    const internetOverdue = state.day > state.bills.internet.due
+    const hasDebt = rentOverdue || internetOverdue
+
+    document.querySelectorAll(".icon").forEach((icon) => {
+      const appName = icon.dataset.app
+      const isBlocked =
+        hasDebt && !["sidejob", "bills", "character", "sleep"].includes(appName)
+
+      if (isBlocked) {
+        icon.style.opacity = "0.4"
+        icon.style.filter = "grayscale(1)"
+        icon.style.cursor = "not-allowed"
+      } else {
+        icon.style.opacity = "1"
+        icon.style.filter = "none"
+        icon.style.cursor = "pointer"
+      }
+    })
   }
 
   closeAllWindows() {
@@ -42,6 +94,8 @@ export class AppsManager {
       UI_SELECTORS.TELEHLAM_WINDOW,
       UI_SELECTORS.SLEEP_WINDOW,
       UI_SELECTORS.CHARACTER_WINDOW,
+      "sidejob-window",
+      "bills-window",
     ]
 
     windowIds.forEach((id) => {
@@ -60,6 +114,8 @@ export class AppsManager {
       telehlam: UI_SELECTORS.TELEHLAM_WINDOW,
       sleep: UI_SELECTORS.SLEEP_WINDOW,
       character: UI_SELECTORS.CHARACTER_WINDOW,
+      sidejob: "sidejob-window",
+      bills: "bills-window",
     }
 
     const windowId = windowMap[appName]
@@ -76,6 +132,8 @@ export class AppsManager {
       sleep: () => this.renderSleep(),
       portfolio: () => this.renderPortfolio(),
       character: () => this.renderCharacter(),
+      sidejob: () => this.sideJobManager.render(),
+      bills: () => this.billsManager.render(),
     }
 
     const renderFunction = renderMap[appName]

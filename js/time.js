@@ -1,10 +1,17 @@
 import { GAME_CONSTANTS } from "./constants.js"
 import { UIManager } from "./ui.js"
+import { LifecycleManager } from "./lifecycle.js"
 
 export class TimeManager {
-  constructor(gameState) {
+  constructor(gameState, appsManager = null) {
     this.gameState = gameState
     this.ui = new UIManager()
+    this.lifecycleManager = new LifecycleManager(gameState, this.ui)
+    this.appsManager = appsManager
+  }
+
+  setAppsManager(appsManager) {
+    this.appsManager = appsManager
   }
 
   addTime(hours) {
@@ -12,12 +19,14 @@ export class TimeManager {
     this.validateTime(state)
 
     const timeData = this.calculateNewTime(state, hours)
-    this.updateSatiety(state, timeData.hoursPassed)
 
     this.gameState.updateState({
       time: timeData.newTime,
       day: timeData.newDay,
     })
+
+    this.lifecycleManager.checkSatiety()
+    this.lifecycleManager.checkDeliveries()
 
     if (timeData.isNewDay) {
       this.onNewDay()
@@ -50,27 +59,11 @@ export class TimeManager {
     return { newTime, newDay, isNewDay, hoursPassed }
   }
 
-  updateSatiety(state, hoursPassed) {
-    if (hoursPassed >= GAME_CONSTANTS.SATIETY_DECREASE_INTERVAL) {
-      const decreases = Math.floor(
-        hoursPassed / GAME_CONSTANTS.SATIETY_DECREASE_INTERVAL
-      )
-      state.satiety = Math.max(
-        0,
-        state.satiety - decreases * GAME_CONSTANTS.SATIETY_DECREASE_AMOUNT
-      )
-
-      if (state.satiety === 0) {
-        state.health = Math.max(
-          0,
-          state.health - GAME_CONSTANTS.HEALTH_PENALTY_ON_STARVATION
-        )
-      }
-    }
-  }
-
   onNewDay() {
-    console.log(`Новый день начался!`)
+    this.lifecycleManager.onNewDay()
+    if (this.appsManager) {
+      this.appsManager.updateIconStates()
+    }
   }
 
   canPerformAction(energyCost) {
@@ -83,6 +76,23 @@ export class TimeManager {
     this.validateTime(state)
 
     const timeData = this.calculateSleepTime(state, hours)
+
+    const decreases = Math.floor(
+      hours / GAME_CONSTANTS.SATIETY_DECREASE_INTERVAL
+    )
+    const oldSatiety = state.satiety
+    state.satiety = Math.max(
+      0,
+      state.satiety - decreases * GAME_CONSTANTS.SATIETY_DECREASE_AMOUNT
+    )
+
+    if (state.satiety === 0) {
+      state.health = Math.max(
+        0,
+        state.health - GAME_CONSTANTS.HEALTH_PENALTY_ON_STARVATION
+      )
+    }
+
     const restoredEnergy = Math.min(
       state.maxEnergy,
       state.energy + energyRestore
@@ -92,13 +102,37 @@ export class TimeManager {
       time: timeData.newTime,
       day: timeData.newDay,
       energy: restoredEnergy,
+      satiety: state.satiety,
+      health: state.health,
     })
+
+    this.lifecycleManager.lastSatietyCheck = timeData.newTime
 
     if (timeData.isNewDay) {
       this.onNewDay()
     }
 
-    this.ui.showToast(`Вы поспали ${hours} часов. Энергия: ${restoredEnergy}%`)
+    this.lifecycleManager.checkDeliveries()
+
+    let message = `Вы поспали ${hours} часов. Энергия: ${restoredEnergy}%`
+    if (state.satiety < oldSatiety) {
+      message += ` | Сытость: ${state.satiety}%`
+    }
+
+    this.ui.showToast(message)
+
+    if (state.satiety === 0) {
+      setTimeout(() => {
+        this.ui.showToast("⚠️ Вы голодаете! Здоровье падает!")
+      }, 500)
+    } else if (
+      state.satiety < GAME_CONSTANTS.LOW_SATIETY_THRESHOLD &&
+      oldSatiety >= GAME_CONSTANTS.LOW_SATIETY_THRESHOLD
+    ) {
+      setTimeout(() => {
+        this.ui.showToast("⚠️ Низкая сытость! Закажите еду.")
+      }, 500)
+    }
   }
 
   calculateSleepTime(state, hours) {

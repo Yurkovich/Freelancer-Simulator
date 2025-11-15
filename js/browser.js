@@ -278,6 +278,11 @@ export class BrowserManager {
   }
 
   acceptOrder(state, order) {
+    if (!state.hasInternet) {
+      this.ui.showToast("⚠️ Нет интернета! Оплатите счет.")
+      return
+    }
+
     order.acceptedDay = state.day
     state.activeOrder = order
     state.kworkOrders = state.kworkOrders.filter((o) => o.id !== order.id)
@@ -357,10 +362,11 @@ export class BrowserManager {
     const upgradesHtml = Object.entries(MARKETPLACE_ITEMS)
       .map(([key, item]) => {
         const owned = state.upgrades[key]
-        const isPending = state.pendingUpgrades.includes(key)
+        const isPending = state.pendingUpgrades.some((p) => p.key === key)
         const requirementMet = !item.requires || state.upgrades[item.requires]
         const requirementPending =
-          item.requires && state.pendingUpgrades.includes(item.requires)
+          item.requires &&
+          state.pendingUpgrades.some((p) => p.key === item.requires)
         const canBuy = !owned && !isPending && requirementMet
 
         let buttonText = "Купить"
@@ -431,7 +437,9 @@ export class BrowserManager {
 
     if (item.requires) {
       const hasRequired = state.upgrades[item.requires]
-      const isPending = state.pendingUpgrades.includes(item.requires)
+      const isPending = state.pendingUpgrades.some(
+        (p) => p.key === item.requires
+      )
 
       if (!hasRequired) {
         if (isPending) {
@@ -455,8 +463,11 @@ export class BrowserManager {
     state.money -= item.price
 
     if (item.category === "upgrade") {
-      state.pendingUpgrades.push(itemKey)
-      this.ui.showToast(`✅ Заказано: ${item.name}. Доставка завтра!`)
+      state.pendingUpgrades.push({
+        key: itemKey,
+        orderedDay: state.day,
+      })
+      this.ui.showToast(`✅ Заказано: ${item.name}. Доставка завтра в 9:00!`)
     } else {
       state.upgrades[itemKey] = true
 
@@ -531,6 +542,16 @@ export class BrowserManager {
   buyBook(bookKey) {
     const state = this.gameState.getState()
     const book = BOOKS[bookKey]
+
+    if (state.booksRead.includes(bookKey)) {
+      this.ui.showToast("Вы уже читали эту книгу!")
+      return
+    }
+
+    if (state.day === state.lastBookDay) {
+      this.ui.showToast("Можно купить только 1 книгу в день!")
+      return
+    }
 
     if (state.money < book.price) {
       this.ui.showToast("Недостаточно денег!")
