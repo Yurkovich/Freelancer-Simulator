@@ -41,6 +41,8 @@ class GameState {
       },
       hasRent: true,
       hasInternet: true,
+      tutorialCompleted: false,
+      tutorialStep: 0,
     }
   }
 

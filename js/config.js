@@ -459,3 +459,54 @@ export const BILLS = {
     description: "Оплата интернета",
   },
 }
+
+export const SHOP_ITEMS = {
+  bread: {
+    name: "Хлеб",
+    price: 80,
+    satiety: 15,
+    energy: 0,
+    health: 0,
+    description: "Базовый продукт для выживания",
+  },
+  water: {
+    name: "Вода",
+    price: 50,
+    satiety: 5,
+    energy: 0,
+    health: 0,
+    description: "Чистая питьевая вода",
+  },
+  cheapDoshik: {
+    name: "Дешевый дошик",
+    price: 100,
+    satiety: 15,
+    energy: 3,
+    health: -1,
+    description: "Самый дешевый вариант перекуса",
+  },
+  canned: {
+    name: "Консервы",
+    price: 200,
+    satiety: 20,
+    energy: 5,
+    health: 0,
+    description: "Тушенка или рыбные консервы",
+  },
+  snack: {
+    name: "Снеки",
+    price: 120,
+    satiety: 10,
+    energy: 8,
+    health: -2,
+    description: "Чипсы, сухарики - вредно, но быстро",
+  },
+  cheapCoffee: {
+    name: "Растворимый кофе",
+    price: 150,
+    satiety: 0,
+    energy: 10,
+    health: -1,
+    description: "Дешевый способ взбодриться",
+  },
+}

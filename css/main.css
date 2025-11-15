@@ -83,6 +83,8 @@ body {
 
 .screen.active {
   display: flex;
+  align-content: center;
+  justify-content: center;
 }
 
 .message {
@@ -206,5 +208,22 @@ body {
     font-size: 0.55rem;
     padding: 0.7rem 0.9rem;
     line-height: 1.4;
+  }
+}
+
+.tutorial-highlight {
+  box-shadow: 0 0 0 4px var(--accent), 0 0 20px rgba(83, 245, 200, 0.5);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px var(--accent), 0 0 20px rgba(83, 245, 200, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px var(--accent), 0 0 30px rgba(83, 245, 200, 0.8);
   }
 }

@@ -3,6 +3,24 @@ export class UIManager {
     this.toastQueue = []
     this.maxToasts = 1
     this.toastDuration = 3000
+    this.screens = {
+      menu: document.getElementById("menu-screen"),
+      dialog: document.getElementById("dialog-screen"),
+      desktop: document.getElementById("desktop-screen"),
+    }
+  }
+
+  switchScreen(screenName) {
+    Object.values(this.screens).forEach((screen) => {
+      if (screen) {
+        screen.classList.remove("active")
+      }
+    })
+
+    const targetScreen = this.screens[screenName]
+    if (targetScreen) {
+      targetScreen.classList.add("active")
+    }
   }
 
   showToast(message) {

@@ -8,6 +8,7 @@ import { CharacterManager } from "./character.js"
 import { TelehlamManager } from "./telehlam.js"
 import { SideJobManager } from "./sidejob.js"
 import { BillsManager } from "./bills.js"
+import { ShopManager } from "./shop.js"
 import { UIManager } from "./ui.js"
 
 export class AppsManager {
@@ -29,6 +30,7 @@ export class AppsManager {
     )
     this.billsManager = new BillsManager(gameState, this.ui)
     this.billsManager.setAppsManager(this)
+    this.shopManager = new ShopManager(gameState, this.ui, this.timeManager)
     this.activeOrder = null
     this.availableOrders = [...ORDERS]
     this.updateIconStates()
@@ -43,10 +45,10 @@ export class AppsManager {
 
     if (
       hasDebt &&
-      !["sidejob", "bills", "character", "sleep"].includes(appName)
+      !["sidejob", "bills", "character", "sleep", "shop"].includes(appName)
     ) {
       this.ui.showToast(
-        "⚠️ Оплатите просроченные счета! Доступны только подработки."
+        "⚠️ Оплатите просроченные счета! Доступны только подработки и магазин."
       )
       return
     }
@@ -70,7 +72,8 @@ export class AppsManager {
     document.querySelectorAll(".icon").forEach((icon) => {
       const appName = icon.dataset.app
       const isBlocked =
-        hasDebt && !["sidejob", "bills", "character", "sleep"].includes(appName)
+        hasDebt &&
+        !["sidejob", "bills", "character", "sleep", "shop"].includes(appName)
 
       if (isBlocked) {
         icon.style.opacity = "0.4"
@@ -96,6 +99,7 @@ export class AppsManager {
       UI_SELECTORS.CHARACTER_WINDOW,
       "sidejob-window",
       "bills-window",
+      "shop-window",
     ]
 
     windowIds.forEach((id) => {
@@ -116,6 +120,7 @@ export class AppsManager {
       character: UI_SELECTORS.CHARACTER_WINDOW,
       sidejob: "sidejob-window",
       bills: "bills-window",
+      shop: "shop-window",
     }
 
     const windowId = windowMap[appName]
@@ -134,6 +139,7 @@ export class AppsManager {
       character: () => this.renderCharacter(),
       sidejob: () => this.sideJobManager.render(),
       bills: () => this.billsManager.render(),
+      shop: () => this.shopManager.render(),
     }
 
     const renderFunction = renderMap[appName]
