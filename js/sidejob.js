@@ -75,6 +75,8 @@ export class SideJobManager {
       return
     }
 
+    const isNight = this.timeManager.isNightTime(state.time)
+
     state.energy -= job.energy
     state.satiety = Math.max(0, state.satiety - job.satiety)
     state.health = Math.max(0, state.health - job.health)
@@ -85,6 +87,11 @@ export class SideJobManager {
 
     this.gameState.updateState(state)
     this.timeManager.addTime(job.time)
+
+    if (isNight) {
+      this.timeManager.applyNightPenalty(job.time)
+    }
+
     this.ui.closeWindow("sidejob")
     this.ui.showToast(
       `💰 Заработано: ${earned.toLocaleString()}₽ на подработке`

@@ -475,11 +475,6 @@ export class AppsManager {
       return
     }
 
-    if (!this.hasEnoughTime(state)) {
-      this.ui.showToast("Недостаточно времени! Поспите.")
-      return
-    }
-
     this.processWork(state, workData.energyCost, workData.timeRequired)
     this.updateOrderProgress()
 
@@ -543,10 +538,16 @@ export class AppsManager {
   }
 
   processWork(state, energyCost, timeRequired) {
+    const isNight = this.timeManager.isNightTime(state.time)
+
     this.timeManager.addTime(timeRequired)
     this.gameState.updateState({
       energy: state.energy - energyCost,
     })
+
+    if (isNight) {
+      this.timeManager.applyNightPenalty(timeRequired)
+    }
   }
 
   updateOrderProgress() {
@@ -561,7 +562,8 @@ export class AppsManager {
 
   checkOrderCompletion(state) {
     if (this.activeOrder.progress >= GAME_CONSTANTS.PROGRESS_COMPLETE) {
-      this.completeOrder(state)
+      const freshState = this.gameState.getState()
+      this.completeOrder(freshState)
     }
   }
 

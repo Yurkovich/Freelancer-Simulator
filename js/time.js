@@ -168,4 +168,29 @@ export class TimeManager {
       .toString()
       .padStart(minDigits, "0")}`
   }
+
+  isNightTime(time) {
+    const hour = Math.floor(time)
+    return (
+      hour >= GAME_CONSTANTS.NIGHT_START_HOUR ||
+      hour < GAME_CONSTANTS.NIGHT_END_HOUR
+    )
+  }
+
+  calculateNightHealthPenalty(timeSpent) {
+    const hours = Math.ceil(timeSpent)
+    return hours * GAME_CONSTANTS.NIGHT_HEALTH_PENALTY_PER_HOUR
+  }
+
+  applyNightPenalty(timeSpent) {
+    const state = this.gameState.getState()
+    const penalty = this.calculateNightHealthPenalty(timeSpent)
+
+    state.health = Math.max(0, state.health - penalty)
+    this.gameState.updateState({ health: state.health })
+
+    this.ui.showToast(`🌙 Работа ночью: -${penalty} здоровья`)
+
+    return penalty
+  }
 }

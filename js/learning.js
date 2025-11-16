@@ -118,12 +118,18 @@ export class LearningManager {
 
     xpGain += xpBonus
 
+    const isNight = this.timeManager.isNightTime(state.time)
+
     this.gameState.updateState({
       energy: state.energy - activity.energy,
     })
 
     if (this.timeManager) {
       this.timeManager.addTime(activity.time)
+
+      if (isNight) {
+        this.timeManager.applyNightPenalty(activity.time)
+      }
     }
 
     if (window.game && window.game.lifecycleManager) {
