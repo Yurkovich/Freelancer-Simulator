@@ -218,8 +218,6 @@ export class AudioManager {
   }
 
   playMusic(musicName) {
-    // Музыка отключена из-за CORS ограничений
-    // В будущем можно добавить локальные аудиофайлы
     return
   }
 

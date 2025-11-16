@@ -1,11 +1,100 @@
 import { BILLS, MARKETPLACE_ITEMS } from "./config.js"
 import { GAME_CONSTANTS } from "./constants.js"
+import { HospitalDialog } from "./hospital-dialog.js"
 
 export class LifecycleManager {
   constructor(gameState, ui) {
     this.gameState = gameState
     this.ui = ui
     this.lastSatietyCheck = 0
+    this.hospitalDialog = new HospitalDialog()
+  }
+
+  checkHospital() {
+    try {
+      const state = this.gameState.getState()
+
+      if (state.health <= 0) {
+        this.sendToHospital()
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Error checking hospital:", error)
+      return false
+    }
+  }
+
+  sendToHospital() {
+    try {
+      const state = this.gameState.getState()
+      const penalties = this.calculateHospitalPenalties(state)
+
+      this.applyHospitalPenalties(state, penalties)
+      this.restoreHealthAfterHospital(state)
+      this.cancelActiveOrder(state)
+      this.resetSatietyCheck(state)
+
+      this.gameState.updateState(state)
+      this.showHospitalDialog(penalties.moneyCost, penalties.timePenalty)
+    } catch (error) {
+      console.error("Error sending to hospital:", error)
+    }
+  }
+
+  calculateHospitalPenalties(state) {
+    const moneyCost = Math.floor(
+      state.money * GAME_CONSTANTS.HOSPITAL_MONEY_PENALTY
+    )
+    const timePenalty = GAME_CONSTANTS.HOSPITAL_TIME_PENALTY_DAYS
+
+    return { moneyCost, timePenalty }
+  }
+
+  applyHospitalPenalties(state, penalties) {
+    state.money = Math.max(0, state.money - penalties.moneyCost)
+    state.day += penalties.timePenalty
+    state.time = GAME_CONSTANTS.HOSPITAL_MORNING_HOUR
+
+    Object.keys(state.skills).forEach((skillName) => {
+      const skill = state.skills[skillName]
+      if (skill && typeof skill === "object") {
+        skill.xp = Math.max(
+          0,
+          Math.floor(skill.xp * GAME_CONSTANTS.HOSPITAL_SKILL_PENALTY)
+        )
+      }
+    })
+  }
+
+  restoreHealthAfterHospital(state) {
+    const maxHealth = state.maxHealth || GAME_CONSTANTS.INITIAL_HEALTH
+    state.health = Math.floor(
+      maxHealth * GAME_CONSTANTS.HOSPITAL_HEALTH_RESTORE
+    )
+    state.energy = state.maxEnergy
+    state.satiety = GAME_CONSTANTS.HOSPITAL_SATIETY_RESTORE
+  }
+
+  cancelActiveOrder(state) {
+    if (state.activeOrder) {
+      state.activeOrder = null
+      state.kworkOrders = []
+    }
+  }
+
+  resetSatietyCheck(state) {
+    this.lastSatietyCheck = state.time
+  }
+
+  showHospitalDialog(moneyCost, timePenalty) {
+    this.hospitalDialog.show(moneyCost, timePenalty, () => {
+      this.ui.showToast("🏥 Вы выписаны из больницы")
+
+      if (window.game) {
+        window.game.updateAllUI()
+      }
+    })
   }
 
   checkSatiety() {

@@ -69,21 +69,27 @@ export class SkillsManager {
   }
 
   createSkillCard(skillName, skill) {
+    if (!skill || typeof skill !== "object") {
+      return ""
+    }
+
+    const level = skill.level || 0
+    const xp = skill.xp || 0
     const label = SKILL_LABELS[skillName]
-    const xpForNext = this.calculateXPForNextLevel(skill.level)
-    const progressPercent = (skill.xp / xpForNext) * 100
+    const xpForNext = this.calculateXPForNextLevel(level)
+    const progressPercent = (xp / xpForNext) * 100
 
     return `
       <div class="skill-item">
         <div class="skill-header">
           <strong>${label}</strong>
-          <span>Уровень ${skill.level}</span>
+          <span>Уровень ${level}</span>
         </div>
         <div class="skill-progress">
           <span style="width: ${progressPercent}%;"></span>
         </div>
         <div class="skill-meta">
-          XP: ${skill.xp} / ${xpForNext}
+          XP: ${xp} / ${xpForNext}
         </div>
       </div>
     `

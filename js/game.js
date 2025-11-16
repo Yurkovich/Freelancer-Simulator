@@ -4,6 +4,7 @@ import { DialogSystem } from "./dialog.js"
 import { AppsManager } from "./apps.js"
 import { TutorialManager } from "./tutorial.js"
 import { AudioManager } from "./audio.js"
+import { LifecycleManager } from "./lifecycle.js"
 
 export class Game {
   constructor() {
@@ -13,9 +14,11 @@ export class Game {
     this.dialogSystem = new DialogSystem(this.ui)
     this.appsManager = new AppsManager(this.gameState)
     this.tutorialManager = new TutorialManager(this.gameState, this.ui)
+    this.lifecycleManager = new LifecycleManager(this.gameState, this.ui)
 
     window.appManager = this.appsManager
     window.audio = this.audio
+    window.game = this
   }
 
   init() {
@@ -55,6 +58,13 @@ export class Game {
       setTimeout(() => {
         this.tutorialManager.start()
       }, 500)
+    }
+  }
+
+  updateAllUI() {
+    this.gameState.updateUI()
+    if (this.appsManager) {
+      this.appsManager.updateAllApps()
     }
   }
 }

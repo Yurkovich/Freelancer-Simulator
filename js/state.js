@@ -100,12 +100,49 @@ class GameState {
       }
 
       this.migratePendingUpgrades(merged)
+      this.migrateSkills(merged)
 
       return merged
     } catch (error) {
       console.warn("[STATE] Не удалось загрузить сохранение:", error)
       return this.createInitialState()
     }
+  }
+
+  migrateSkills(state) {
+    const skillNames = [
+      SKILL_NAMES.LAYOUT,
+      SKILL_NAMES.WORKPRESS,
+      SKILL_NAMES.FREELANCE,
+    ]
+
+    skillNames.forEach((skillName) => {
+      const skill = state.skills[skillName]
+
+      if (!skill || typeof skill !== "object") {
+        state.skills[skillName] = {
+          level: GAME_CONSTANTS.INITIAL_SKILL_LEVEL,
+          xp: GAME_CONSTANTS.INITIAL_SKILL_XP,
+        }
+        return
+      }
+
+      if (
+        typeof skill.level !== "number" ||
+        isNaN(skill.level) ||
+        skill.level === undefined
+      ) {
+        skill.level = GAME_CONSTANTS.INITIAL_SKILL_LEVEL
+      }
+
+      if (
+        typeof skill.xp !== "number" ||
+        isNaN(skill.xp) ||
+        skill.xp === undefined
+      ) {
+        skill.xp = GAME_CONSTANTS.INITIAL_SKILL_XP
+      }
+    })
   }
 
   persistState() {

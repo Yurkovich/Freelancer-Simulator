@@ -14,6 +14,10 @@ function attachIconListeners(game) {
   const icons = document.querySelectorAll(".icon")
   icons.forEach((icon) => {
     icon.addEventListener("click", (e) => {
+      if (game.lifecycleManager.checkHospital()) {
+        return
+      }
+
       const app = e.currentTarget.dataset.app
 
       if (isAppAvailable(app)) {

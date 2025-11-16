@@ -126,6 +126,13 @@ export class LearningManager {
       this.timeManager.addTime(activity.time)
     }
 
+    if (window.game && window.game.lifecycleManager) {
+      if (window.game.lifecycleManager.checkHospital()) {
+        this.closeWindow()
+        return
+      }
+    }
+
     const leveledUp = this.skillsManager.addXP(this.selectedSkill, xpGain)
 
     if (!leveledUp) {

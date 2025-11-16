@@ -89,5 +89,9 @@ export class SideJobManager {
     this.ui.showToast(
       `💰 Заработано: ${earned.toLocaleString()}₽ на подработке`
     )
+
+    if (window.game && window.game.lifecycleManager) {
+      window.game.lifecycleManager.checkHospital()
+    }
   }
 }

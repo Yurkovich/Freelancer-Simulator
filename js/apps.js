@@ -482,6 +482,13 @@ export class AppsManager {
 
     this.processWork(state, workData.energyCost, workData.timeRequired)
     this.updateOrderProgress()
+
+    if (window.game && window.game.lifecycleManager) {
+      if (window.game.lifecycleManager.checkHospital()) {
+        return
+      }
+    }
+
     this.checkOrderCompletion(state)
     this.renderWZCode()
   }
