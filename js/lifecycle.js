@@ -47,9 +47,6 @@ export class LifecycleManager {
       if (state.upgrades.apartment) {
         rentAmount = 20000
       }
-      if (state.upgrades.coworking) {
-        rentAmount += 2000
-      }
 
       if (state.money >= rentAmount) {
         state.money -= rentAmount
@@ -91,6 +88,33 @@ export class LifecycleManager {
       }
     }
 
+    if (state.upgrades.coworking) {
+      if (!state.bills.coworking) {
+        state.bills.coworking = {
+          lastPaid: state.day,
+          due: state.day + BILLS.coworking.period,
+        }
+      }
+
+      if (state.day >= state.bills.coworking.due) {
+        const isOverdue = state.day > state.bills.coworking.due
+        if (state.money >= BILLS.coworking.amount) {
+          state.money -= BILLS.coworking.amount
+          state.bills.coworking.lastPaid = state.day
+          state.bills.coworking.due = state.day + BILLS.coworking.period
+          this.ui.showToast(
+            `💸 Автоматически оплачен коворкинг: ${BILLS.coworking.amount.toLocaleString()}₽`
+          )
+          updated = true
+        } else {
+          if (!isOverdue) {
+            this.ui.showToast("⚠️ Нет денег на коворкинг!")
+          }
+          updated = true
+        }
+      }
+    }
+
     if (updated) {
       this.gameState.updateState(state)
     }
@@ -103,6 +127,15 @@ export class LifecycleManager {
     state.rejectedOrders = {}
 
     this.lastSatietyCheck = 0
+
+    if (state.upgrades.coffeeSubscription) {
+      const oldEnergy = state.energy
+      state.energy = Math.min(state.maxEnergy, state.energy + 5)
+      const energyGained = state.energy - oldEnergy
+      if (energyGained > 0) {
+        this.ui.showToast(`☕ Утренний кофе: +${energyGained} энергии`)
+      }
+    }
 
     this.gameState.updateState(state)
 

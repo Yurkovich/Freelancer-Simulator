@@ -167,7 +167,19 @@ export class CharacterManager {
     if (state.upgrades.headphones)
       upgrades.push("🎧 Наушники с шумоподавлением (+10 XP)")
     if (state.upgrades.desk) upgrades.push("🪑 Регулируемый стол (+5 здоровье)")
-    if (state.upgrades.lamp) upgrades.push("💡 Настольная лампа (+5% энергии)")
+    if (state.upgrades.lamp) upgrades.push("💡 Настольная лампа (+5 энергии)")
+    if (state.upgrades.webcam)
+      upgrades.push("📷 Профессиональная веб-камера (+5% репутации)")
+    if (state.upgrades.microphone)
+      upgrades.push("🎤 Студийный микрофон (+3% шанс заказа)")
+
+    if (state.upgrades.apartment) upgrades.push("🏠 Квартира в центре (+15 XP)")
+    if (state.upgrades.coworking)
+      upgrades.push("💼 Абонемент в коворкинг (+8 XP)")
+    if (state.upgrades.gym)
+      upgrades.push("💪 Абонемент в спортзал (+15 здоровье)")
+    if (state.upgrades.coffeeSubscription)
+      upgrades.push("☕ Подписка на кофе (+5 энергии каждое утро)")
 
     if (upgrades.length === 0) {
       return '<div style="color: var(--muted); font-size: 0.6rem;">Нет улучшений. Купите в Маркетплейсе!</div>'

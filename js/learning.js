@@ -108,6 +108,16 @@ export class LearningManager {
       return
     }
 
+    let xpGain = activity.xp
+    let xpBonus = 0
+    if (state.upgrades.monitorPro) xpBonus += 15
+    else if (state.upgrades.monitor) xpBonus += 5
+    if (state.upgrades.headphones) xpBonus += 10
+    if (state.upgrades.apartment) xpBonus += 15
+    if (state.upgrades.coworking) xpBonus += 8
+
+    xpGain += xpBonus
+
     this.gameState.updateState({
       energy: state.energy - activity.energy,
     })
@@ -116,11 +126,11 @@ export class LearningManager {
       this.timeManager.addTime(activity.time)
     }
 
-    const leveledUp = this.skillsManager.addXP(this.selectedSkill, activity.xp)
+    const leveledUp = this.skillsManager.addXP(this.selectedSkill, xpGain)
 
     if (!leveledUp) {
       this.ui.showToast(
-        `✅ Изучено! +${activity.xp} XP к навыку ${
+        `✅ Изучено! +${xpGain} XP к навыку ${
           SKILL_INFO[this.selectedSkill].label
         }`
       )

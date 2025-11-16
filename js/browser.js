@@ -209,8 +209,16 @@ export class BrowserManager {
       state.reputation * reputationMultiplier
     )
 
+    let microphoneBonus = 0
+    if (state.upgrades.microphone) {
+      microphoneBonus = 3
+    }
+
     const maxTotalChance = 100
-    const totalChance = Math.min(maxTotalChance, baseChance + reputationBonus)
+    const totalChance = Math.min(
+      maxTotalChance,
+      baseChance + reputationBonus + microphoneBonus
+    )
 
     return { baseChance, reputationBonus, totalChance }
   }
@@ -562,8 +570,18 @@ export class BrowserManager {
     state.booksRead.push(bookKey)
     state.lastBookDay = state.day
 
+    let xpGain = book.xp
+    let xpBonus = 0
+    if (state.upgrades.monitorPro) xpBonus += 15
+    else if (state.upgrades.monitor) xpBonus += 5
+    if (state.upgrades.headphones) xpBonus += 10
+    if (state.upgrades.apartment) xpBonus += 15
+    if (state.upgrades.coworking) xpBonus += 8
+
+    xpGain += xpBonus
+
     const skill = state.skills[book.skill]
-    skill.xp += book.xp
+    skill.xp += xpGain
 
     const xpForNextLevel = skill.level === 0 ? 150 : skill.level * 100
     if (skill.xp >= xpForNextLevel) {
@@ -575,7 +593,7 @@ export class BrowserManager {
         } уровня!`
       )
     } else {
-      this.ui.showToast(`✅ Прочитано: ${book.name}. +${book.xp} XP`)
+      this.ui.showToast(`✅ Прочитано: ${book.name}. +${xpGain} XP`)
     }
 
     this.gameState.updateState(state)

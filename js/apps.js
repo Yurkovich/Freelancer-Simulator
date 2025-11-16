@@ -487,6 +487,7 @@ export class AppsManager {
   }
 
   calculateWorkCost(order, levelDiff) {
+    const state = this.gameState.getState()
     let energyCost = order.energyCost
     let timeRequired = order.timeRequired
 
@@ -505,7 +506,22 @@ export class AppsManager {
       timeRequired = Math.round(timeRequired * 10) / 10
     }
 
-    timeRequired = Math.max(0.5, timeRequired)
+    let energyReduction = 0
+    if (state.upgrades.pcUltra) energyReduction = 0.3
+    else if (state.upgrades.pc) energyReduction = 0.15
+
+    energyCost = Math.floor(energyCost * (1 - energyReduction))
+
+    let timeReduction = 0
+    if (state.upgrades.keyboard) timeReduction += 10
+    if (state.upgrades.mouse) timeReduction += 10
+    if (state.upgrades.secondMonitor) timeReduction += 20
+
+    timeRequired = Math.max(
+      0.5,
+      timeRequired - timeReduction / GAME_CONSTANTS.MINUTES_IN_HOUR
+    )
+    timeRequired = Math.round(timeRequired * 10) / 10
 
     return { energyCost, timeRequired }
   }
@@ -570,10 +586,23 @@ export class AppsManager {
       )}%)`
     }
 
+    if (state.upgrades.webcam && daysLeft >= 0) {
+      reputationGain = Math.floor(reputationGain * 1.05)
+    }
+
     state.money += reward
     state.reputation += reputationGain
 
-    const xpGain = this.skillsManager.calculateXPGain(reward)
+    let xpGain = this.skillsManager.calculateXPGain(reward)
+
+    let xpBonus = 0
+    if (state.upgrades.monitorPro) xpBonus += 15
+    else if (state.upgrades.monitor) xpBonus += 5
+    if (state.upgrades.headphones) xpBonus += 10
+    if (state.upgrades.apartment) xpBonus += 15
+    if (state.upgrades.coworking) xpBonus += 8
+
+    xpGain += xpBonus
     this.skillsManager.addXP(order.skill, xpGain)
 
     state.portfolio.push({

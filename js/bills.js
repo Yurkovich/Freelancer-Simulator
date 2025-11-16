@@ -25,9 +25,11 @@ export class BillsManager {
     if (state.upgrades.apartment) {
       rentAmount = 20000
     }
-    if (state.upgrades.coworking) {
-      rentAmount += 2000
-    }
+
+    const coworkingDaysLeft = state.bills.coworking
+      ? state.bills.coworking.due - state.day
+      : 0
+    const coworkingOverdue = coworkingDaysLeft < 0
 
     billsBody.innerHTML = `
       <div class="message">
@@ -38,9 +40,7 @@ export class BillsManager {
       <div class="bills-list">
         <div class="bill-card ${rentOverdue ? "bill-overdue" : ""}">
           <div class="bill-header">
-            <strong>🏠 Квартира${
-              state.upgrades.coworking ? " + Коворкинг" : ""
-            }</strong>
+            <strong>🏠 Квартира</strong>
             <span style="color: var(--accent)">${rentAmount.toLocaleString()} ₽</span>
           </div>
           <div class="bill-meta">
@@ -99,6 +99,35 @@ export class BillsManager {
             } ${BILLS.internet.amount.toLocaleString()} ₽
           </button>
         </div>
+
+        ${
+          state.upgrades.coworking
+            ? `
+        <div class="bill-card ${coworkingOverdue ? "bill-overdue" : ""}">
+          <div class="bill-header">
+            <strong>💼 Коворкинг</strong>
+            <span style="color: var(--accent)">${BILLS.coworking.amount.toLocaleString()} ₽</span>
+          </div>
+          <div class="bill-meta">
+            ${
+              coworkingDaysLeft > 0
+                ? `Следующий платеж через: ${coworkingDaysLeft} дн.`
+                : coworkingDaysLeft === 0
+                ? `<span style="color: orange;">Сегодня день оплаты!</span>`
+                : `<span style="color: var(--danger);">Просрочен на ${Math.abs(
+                    coworkingDaysLeft
+                  )} дн.!</span>`
+            }
+          </div>
+          <button class="window-action bill-pay-btn" data-bill="coworking" ${
+            coworkingDaysLeft > 1 ? 'style="opacity: 0.7;"' : ""
+          }>
+            Оплатить ${BILLS.coworking.amount.toLocaleString()} ₽
+          </button>
+        </div>
+        `
+            : ""
+        }
       </div>
 
       <div class="bills-info">
@@ -128,9 +157,6 @@ export class BillsManager {
     if (billType === "rent") {
       if (state.upgrades.apartment) {
         billAmount = 20000
-      }
-      if (state.upgrades.coworking) {
-        billAmount += 2000
       }
     }
 

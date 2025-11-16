@@ -316,7 +316,15 @@ export class TelehlamManager {
       return
     }
 
-    const xpGain = 15
+    let xpGain = 15
+    let xpBonus = 0
+    if (state.upgrades.monitorPro) xpBonus += 15
+    else if (state.upgrades.monitor) xpBonus += 5
+    if (state.upgrades.headphones) xpBonus += 10
+    if (state.upgrades.apartment) xpBonus += 15
+    if (state.upgrades.coworking) xpBonus += 8
+
+    xpGain += xpBonus
 
     state.telehlamXPToday[skillKey] = today
     const leveledUp = this.skillsManager.addXP(skillKey, xpGain)
