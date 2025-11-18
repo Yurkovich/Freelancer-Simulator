@@ -9,6 +9,11 @@
   height: 100%;
 }
 
+#desktop-screen.active {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
 .hud {
   display: flex;
   justify-content: space-between;

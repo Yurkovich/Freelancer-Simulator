@@ -66,7 +66,21 @@ export class SettingsManager {
       resetProgressBtn.addEventListener("click", () => {
         if (confirm("Вы уверены? Весь прогресс будет удален!")) {
           localStorage.clear()
-          location.reload()
+          sessionStorage.clear()
+
+          if ("caches" in window) {
+            caches.keys().then((names) => {
+              names.forEach((name) => {
+                caches.delete(name)
+              })
+            })
+          }
+
+          const baseUrl = location.origin + location.pathname
+          const timestamp = Date.now()
+          location.replace(
+            `${baseUrl}?reset=${timestamp}&nocache=${timestamp}#${timestamp}`
+          )
         }
       })
     }

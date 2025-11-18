@@ -14,8 +14,8 @@ export class TutorialManager {
       },
       {
         target: '[data-app="browser"]',
-        title: "🌐 Браузер - Krork",
-        text: "Биржа фриланса. Здесь ты будешь брать заказы и зарабатывать деньги.",
+        title: "🌐 Браузер",
+        text: "Здесь ты будешь брать заказы, заказывать улучшения рабочего места и доставку еды.",
         action: "highlight",
       },
       {
@@ -148,17 +148,17 @@ export class TutorialManager {
       <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
         ${
           stepIndex > 0
-            ? '<button class="tutorial-btn tutorial-skip" style="background: var(--muted); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.5rem; cursor: pointer; color: var(--text-color);">Пропустить</button>'
+            ? '<button class="tutorial-btn tutorial-skip" style="background: var(--muted); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.6rem; cursor: pointer; color: var(--text-color);">Пропустить</button>'
             : ""
         }
         ${
           step.action === "next" || step.action === "highlight"
-            ? '<button class="tutorial-btn tutorial-next" style="background: var(--accent-strong); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.5rem; cursor: pointer; color: #0c182c;">Далее</button>'
+            ? '<button class="tutorial-btn tutorial-next" style="background: var(--accent-strong); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.6rem; cursor: pointer; color: #0c182c;">Далее</button>'
             : ""
         }
         ${
           step.action === "click"
-            ? '<button class="tutorial-btn tutorial-next" style="background: var(--accent-strong); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.5rem; cursor: pointer; color: #0c182c;">Понятно</button>'
+            ? '<button class="tutorial-btn tutorial-next" style="background: var(--accent-strong); padding: 0.5rem 1rem; border: none; font-family: inherit; font-size: 0.6rem; cursor: pointer; color: #0c182c;">Понятно</button>'
             : ""
         }
       </div>
@@ -240,9 +240,21 @@ export class TutorialManager {
     state.tutorialCompleted = true
     this.gameState.updateState(state)
 
-    if (this.overlay) this.overlay.remove()
-    if (this.tooltip) this.tooltip.remove()
-    if (this.developerPhoto) this.developerPhoto.remove()
+    if (this.overlay) {
+      try {
+        this.overlay.remove()
+      } catch (e) {}
+    }
+    if (this.tooltip) {
+      try {
+        this.tooltip.remove()
+      } catch (e) {}
+    }
+    if (this.developerPhoto) {
+      try {
+        this.developerPhoto.remove()
+      } catch (e) {}
+    }
 
     document.querySelectorAll(".tutorial-highlight").forEach((el) => {
       el.classList.remove("tutorial-highlight")
@@ -251,6 +263,10 @@ export class TutorialManager {
       el.style.zIndex = ""
     })
 
-    this.ui.showToast("🎉 Туториал завершен! Удачи!")
+    setTimeout(() => {
+      if (this.ui) {
+        this.ui.showToast("🎉 Туториал завершен! Удачи!")
+      }
+    }, 100)
   }
 }

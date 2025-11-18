@@ -19,6 +19,16 @@ export class UIManager {
     const targetScreen = this.screens[screenName]
     if (targetScreen) {
       targetScreen.classList.add("active")
+
+      if (screenName === "desktop") {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            targetScreen.style.display = ""
+            targetScreen.style.alignItems = ""
+            targetScreen.style.justifyContent = ""
+          })
+        })
+      }
     }
   }
 
@@ -26,8 +36,16 @@ export class UIManager {
     const container = document.getElementById("toast-container")
     if (!container) return
 
-    if (this.currentToast && this.currentToast.parentElement) {
-      this.removeToast(this.currentToast, true)
+    if (this.currentToast) {
+      try {
+        if (this.currentToast.parentElement) {
+          this.removeToast(this.currentToast, true)
+        } else {
+          this.currentToast = null
+        }
+      } catch (e) {
+        this.currentToast = null
+      }
     }
 
     this.playSoundForMessage(message)
@@ -45,12 +63,14 @@ export class UIManager {
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        toast.classList.add("show")
+        if (toast.parentElement && this.currentToast === toast) {
+          toast.classList.add("show")
+        }
       })
     })
 
     setTimeout(() => {
-      if (this.currentToast === toast) {
+      if (this.currentToast === toast && toast.parentElement) {
         this.removeToast(toast, false)
       }
     }, this.toastDuration)
@@ -71,22 +91,37 @@ export class UIManager {
   }
 
   removeToast(toast, immediate = false) {
-    if (!toast || !toast.parentElement) return
+    if (!toast) return
 
-    if (this.currentToast === toast) {
-      this.currentToast = null
-    }
-
-    toast.classList.remove("show")
-    toast.classList.add("hide")
-
-    const delay = immediate ? 100 : 300
-
-    setTimeout(() => {
-      if (toast.parentElement) {
-        toast.remove()
+    try {
+      if (!toast.parentElement) {
+        if (this.currentToast === toast) {
+          this.currentToast = null
+        }
+        return
       }
-    }, delay)
+
+      if (this.currentToast === toast) {
+        this.currentToast = null
+      }
+
+      toast.classList.remove("show")
+      toast.classList.add("hide")
+
+      const delay = immediate ? 100 : 300
+
+      setTimeout(() => {
+        try {
+          if (toast && toast.parentElement) {
+            toast.remove()
+          }
+        } catch (e) {}
+      }, delay)
+    } catch (e) {
+      if (this.currentToast === toast) {
+        this.currentToast = null
+      }
+    }
   }
 
   closeWindow(windowId) {

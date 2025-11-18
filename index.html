@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/browser.css">
   <link rel="stylesheet" href="css/telehlam.css">
   <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/jobs.css">
   <link rel="stylesheet" href="css/icons.css">
 </head>
 
@@ -104,6 +105,10 @@
         <button class="icon" data-app="settings">
           <div class="icon-sprite"></div>
           <span class="icon-label">Настройки</span>
+        </button>
+        <button class="icon" data-app="jobs" id="jobs-icon">
+          <div class="icon-sprite"></div>
+          <span class="icon-label">Вакансии</span>
         </button>
       </div>
     </section>
@@ -213,6 +218,15 @@
         <button class="window-close">x</button>
       </div>
       <div class="window-body" id="settings-body">
+      </div>
+    </div>
+
+    <div class="window hidden" id="jobs-window">
+      <div class="window-header">
+        <span>Вакансии</span>
+        <button class="window-close">x</button>
+      </div>
+      <div class="window-body" id="jobs-body">
       </div>
     </div>
 

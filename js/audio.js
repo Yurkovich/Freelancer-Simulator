@@ -59,6 +59,10 @@ export class AudioManager {
 
     if (!this.audioContext) return
 
+    if (this.audioContext.state === "suspended") {
+      this.audioContext.resume()
+    }
+
     if (soundName !== "textBlip") {
       const now = Date.now()
       if (now - this.lastSoundTime < this.minSoundInterval) {
@@ -220,6 +224,10 @@ export class AudioManager {
   playMusic(musicName) {
     if (!this.isInitialized) {
       this.initAudioContext()
+    }
+
+    if (this.audioContext && this.audioContext.state === "suspended") {
+      this.audioContext.resume()
     }
   }
 

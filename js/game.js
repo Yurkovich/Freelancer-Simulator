@@ -6,6 +6,7 @@ import { TutorialManager } from "./tutorial.js"
 import { AudioManager } from "./audio.js"
 import { LifecycleManager } from "./lifecycle.js"
 import { EventManager } from "./event-manager.js"
+import { GAME_CONSTANTS } from "./constants.js"
 
 export class Game {
   constructor() {
@@ -21,9 +22,23 @@ export class Game {
     window.appManager = this.appsManager
     window.audio = this.audio
     window.game = this
+
+    this.initEndingDialogs()
+  }
+
+  initEndingDialogs() {
+    if (
+      GAME_CONSTANTS.ENDING_DIALOGS &&
+      GAME_CONSTANTS.ENDING_DIALOGS.length > 0
+    ) {
+      this.setEndingDialogs(GAME_CONSTANTS.ENDING_DIALOGS)
+    }
   }
 
   init() {
+    this.audio.initAudioContext()
+    this.dialogSystem.reset()
+
     const state = this.gameState.getState()
 
     if (state.tutorialCompleted) {
@@ -41,6 +56,7 @@ export class Game {
       this.audio.initAudioContext()
       this.audio.playMusic("menu")
       this.audio.playSound("click")
+      this.dialogSystem.reset()
       this.ui.switchScreen("dialog")
       this.dialogSystem.showNextDialog()
     })
@@ -67,6 +83,13 @@ export class Game {
     this.gameState.updateUI()
     if (this.appsManager) {
       this.appsManager.updateAllApps()
+      this.appsManager.updateIconStates()
+    }
+  }
+
+  setEndingDialogs(dialogs) {
+    if (this.appsManager && this.appsManager.jobsManager) {
+      this.appsManager.jobsManager.setDialogs(dialogs)
     }
   }
 }

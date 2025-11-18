@@ -13,12 +13,19 @@ export class SkillsManager {
 
     if (!skill) return false
 
+    if (skill.level >= GAME_CONSTANTS.MAX_SKILL_LEVEL) {
+      return false
+    }
+
     skill.xp += amount
 
     const xpForNextLevel = this.calculateXPForNextLevel(skill.level)
 
     let leveledUp = false
-    if (skill.xp >= xpForNextLevel) {
+    if (
+      skill.xp >= xpForNextLevel &&
+      skill.level < GAME_CONSTANTS.MAX_SKILL_LEVEL
+    ) {
       this.levelUp(skill, skillName)
       leveledUp = true
     }
@@ -28,15 +35,27 @@ export class SkillsManager {
   }
 
   calculateXPForNextLevel(level) {
-    if (level === 0) {
-      return GAME_CONSTANTS.XP_FOR_FIRST_LEVEL
+    if (level >= GAME_CONSTANTS.MAX_SKILL_LEVEL) {
+      return 0
     }
-    return level * GAME_CONSTANTS.XP_PER_LEVEL_MULTIPLIER
+    return (
+      GAME_CONSTANTS.XP_FOR_FIRST_LEVEL +
+      level * GAME_CONSTANTS.XP_PER_LEVEL_INCREMENT
+    )
   }
 
   levelUp(skill, skillName) {
+    if (skill.level >= GAME_CONSTANTS.MAX_SKILL_LEVEL) {
+      return
+    }
+
+    const xpForCurrentLevel = this.calculateXPForNextLevel(skill.level)
     skill.level += 1
-    skill.xp = skill.xp - this.calculateXPForNextLevel(skill.level - 1)
+    skill.xp = skill.xp - xpForCurrentLevel
+
+    if (skill.level >= GAME_CONSTANTS.MAX_SKILL_LEVEL) {
+      skill.xp = 0
+    }
 
     if (window.audio) {
       window.audio.playSound("levelUp")
@@ -46,6 +65,14 @@ export class SkillsManager {
     this.ui.showToast(
       `${MESSAGES.LEVEL_UP} ${skillLabel} теперь ${skill.level} уровня!`
     )
+
+    if (
+      window.game &&
+      window.game.appsManager &&
+      window.game.appsManager.jobsManager
+    ) {
+      window.game.appsManager.updateIconStates()
+    }
   }
 
   calculateXPGain(reward) {
@@ -64,7 +91,7 @@ export class SkillsManager {
 
     return `
       <div class="message">
-        <strong>Прокачивай навыки, выполняя заказы!</strong><br>
+        <strong>Не забывай постоянно обучаться!</strong><br>
       </div>
       <div class="skill-list">
         ${skillsHtml}
@@ -80,8 +107,16 @@ export class SkillsManager {
     const level = skill.level || 0
     const xp = skill.xp || 0
     const label = SKILL_LABELS[skillName]
+    const isMaxLevel = level >= GAME_CONSTANTS.MAX_SKILL_LEVEL
     const xpForNext = this.calculateXPForNextLevel(level)
-    const progressPercent = (xp / xpForNext) * 100
+    const progressPercent = isMaxLevel ? 100 : (xp / xpForNext) * 100
+
+    let xpDisplay = ""
+    if (isMaxLevel) {
+      xpDisplay = "Макс. уровень"
+    } else {
+      xpDisplay = `XP: ${xp} / ${xpForNext}`
+    }
 
     return `
       <div class="skill-item">
@@ -93,7 +128,7 @@ export class SkillsManager {
           <span style="width: ${progressPercent}%;"></span>
         </div>
         <div class="skill-meta">
-          XP: ${xp} / ${xpForNext}
+          ${xpDisplay}
         </div>
       </div>
     `

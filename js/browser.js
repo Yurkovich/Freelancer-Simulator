@@ -116,7 +116,7 @@ export class BrowserManager {
 
   generateKworkOrders() {
     const state = this.gameState.getState()
-    const orders = []
+    const allTemplates = []
 
     const skillNames = [
       SKILL_NAMES.LAYOUT,
@@ -126,54 +126,70 @@ export class BrowserManager {
 
     skillNames.forEach((skillName) => {
       const skillLevel = state.skills[skillName].level
-      const ordersForSkill = this.generateOrdersForSkill(skillName, skillLevel)
-      orders.push(...ordersForSkill)
+      const templatesForSkill = this.getSuitableTemplates(skillName, skillLevel)
+      allTemplates.push(...templatesForSkill)
     })
 
-    const totalOrders = Math.min(
-      Math.max(orders.length, GAME_CONSTANTS.MIN_ORDERS_COUNT),
-      GAME_CONSTANTS.MAX_ORDERS_COUNT
+    if (allTemplates.length === 0) {
+      state.kworkOrders = []
+      this.gameState.updateState(state)
+      return
+    }
+
+    const shuffled = GameUtils.shuffleArray(allTemplates)
+    const uniqueTemplates = this.getUniqueTemplates(shuffled)
+
+    const minCount = GAME_CONSTANTS.MIN_ORDERS_COUNT
+    const maxCount = Math.min(
+      GAME_CONSTANTS.MAX_ORDERS_COUNT,
+      uniqueTemplates.length
     )
+    const ordersCount =
+      Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount
 
-    const shuffled = GameUtils.shuffleArray(orders)
-    state.kworkOrders = shuffled.slice(0, totalOrders)
+    const selectedTemplates = uniqueTemplates.slice(0, ordersCount)
+    const orders = this.createOrdersFromTemplates(selectedTemplates)
 
+    state.kworkOrders = orders
     this.gameState.updateState(state)
   }
 
-  generateOrdersForSkill(skillName, skillLevel) {
-    const minLevel = Math.max(1, skillLevel)
-    const maxLevel =
-      skillLevel === 0 ? 1 : skillLevel + GAME_CONSTANTS.ORDER_LEVEL_RANGE
+  getSuitableTemplates(skillName, skillLevel) {
+    const minLevel = Math.max(1, skillLevel - GAME_CONSTANTS.ORDER_LEVEL_RANGE)
+    const maxLevel = skillLevel + GAME_CONSTANTS.ORDER_LEVEL_RANGE
 
-    const suitableTemplates = ORDER_TEMPLATES.filter(
+    return ORDER_TEMPLATES.filter(
       (template) =>
         template.skill === skillName &&
         template.requiredLevel >= minLevel &&
         template.requiredLevel <= maxLevel
     )
+  }
 
-    if (suitableTemplates.length === 0) {
-      return []
+  getUniqueTemplates(templates) {
+    const seenTitles = new Set()
+    const unique = []
+
+    for (const template of templates) {
+      if (!seenTitles.has(template.title)) {
+        seenTitles.add(template.title)
+        unique.push(template)
+      }
     }
 
-    const ordersCount = Math.min(2, suitableTemplates.length)
-    const orders = []
+    return unique
+  }
 
-    for (let i = 0; i < ordersCount; i++) {
-      const template =
-        suitableTemplates[Math.floor(Math.random() * suitableTemplates.length)]
+  createOrdersFromTemplates(templates) {
+    return templates.map((template) => {
       const deadline = this.calculateDeadline(template.requiredLevel)
-
-      orders.push({
+      return {
         ...template,
         id: Date.now() * 1000 + Math.floor(Math.random() * 1000),
         deadline: deadline,
         progress: 0,
-      })
-    }
-
-    return orders
+      }
+    })
   }
 
   calculateDeadline(requiredLevel) {

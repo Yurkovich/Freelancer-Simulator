@@ -11,6 +11,7 @@ import { SideJobManager } from "./sidejob.js"
 import { BillsManager } from "./bills.js"
 import { ShopManager } from "./shop.js"
 import { SettingsManager } from "./settings.js"
+import { JobsManager } from "./jobs.js"
 import { UIManager } from "./ui.js"
 
 export class AppsManager {
@@ -35,6 +36,7 @@ export class AppsManager {
     this.billsManager.setAppsManager(this)
     this.shopManager = new ShopManager(gameState, this.ui, this.timeManager)
     this.settingsManager = new SettingsManager(gameState, this.ui, audioManager)
+    this.jobsManager = new JobsManager(gameState, this.ui)
     this.activeOrder = null
     this.updateIconStates()
   }
@@ -42,15 +44,30 @@ export class AppsManager {
   openApp(appName) {
     const state = this.gameState.getState()
 
+    if (appName === "jobs") {
+      if (!this.jobsManager.isUnlocked()) {
+        this.ui.showToast(
+          "⚠️ Вакансии доступны только когда все навыки достигли 3 уровня!"
+        )
+        return
+      }
+    }
+
     const rentOverdue = state.day > state.bills.rent.due
     const internetOverdue = state.day > state.bills.internet.due
     const hasDebt = rentOverdue || internetOverdue
 
     if (
       hasDebt &&
-      !["sidejob", "bills", "character", "sleep", "shop", "settings"].includes(
-        appName
-      )
+      ![
+        "sidejob",
+        "bills",
+        "character",
+        "sleep",
+        "shop",
+        "settings",
+        "jobs",
+      ].includes(appName)
     ) {
       this.ui.showToast(
         "⚠️ Оплатите просроченные счета! Доступны только подработки и магазин."
@@ -76,6 +93,12 @@ export class AppsManager {
 
     document.querySelectorAll(".icon").forEach((icon) => {
       const appName = icon.dataset.app
+
+      if (appName === "jobs") {
+        this.jobsManager.updateIconState()
+        return
+      }
+
       const isBlocked =
         hasDebt &&
         ![
@@ -85,6 +108,7 @@ export class AppsManager {
           "sleep",
           "shop",
           "settings",
+          "jobs",
         ].includes(appName)
 
       if (isBlocked) {
@@ -109,6 +133,7 @@ export class AppsManager {
       UI_SELECTORS.TELEHLAM_WINDOW,
       UI_SELECTORS.SLEEP_WINDOW,
       UI_SELECTORS.CHARACTER_WINDOW,
+      UI_SELECTORS.JOBS_WINDOW,
       "sidejob-window",
       "bills-window",
       "shop-window",
@@ -135,6 +160,7 @@ export class AppsManager {
       bills: "bills-window",
       shop: "shop-window",
       settings: "settings-window",
+      jobs: UI_SELECTORS.JOBS_WINDOW,
     }
 
     const windowId = windowMap[appName]
@@ -155,6 +181,7 @@ export class AppsManager {
       bills: () => this.billsManager.render(),
       shop: () => this.shopManager.render(),
       settings: () => this.settingsManager.render(),
+      jobs: () => this.jobsManager.render(),
     }
 
     const renderFunction = renderMap[appName]

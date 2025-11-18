@@ -50,6 +50,10 @@
   background: url('../img/icons/settings.png') center/contain no-repeat;
 }
 
+.icon[data-app="jobs"] .icon-sprite {
+  background: url('../img/icons/jobs.png') center/contain no-repeat;
+}
+
 .stat-icon {
   width: 25px;
   height: 25px;

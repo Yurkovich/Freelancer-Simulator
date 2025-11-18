@@ -1,13 +1,26 @@
 import { Game } from "./game.js"
 import { MESSAGES, AVAILABLE_APPS } from "./constants.js"
 
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initGame)
+} else {
+  initGame()
+}
+
+function initGame() {
+  if (window.game && window.game.gameState) {
+    window.game.audio?.initAudioContext()
+    window.game.dialogSystem?.reset()
+    window.game.init()
+    return
+  }
+
   const game = new Game()
   game.init()
 
   attachIconListeners(game)
   attachWindowCloseListeners()
-})
+}
 
 function attachIconListeners(game) {
   const icons = document.querySelectorAll(".icon")

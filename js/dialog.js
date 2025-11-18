@@ -22,6 +22,14 @@ export class DialogSystem {
     this.desktopReadyCallback = callback
   }
 
+  reset() {
+    this.currentDialogIndex = 0
+    this.isTyping = false
+    if (this.dialogTextEl) {
+      this.dialogTextEl.textContent = ""
+    }
+  }
+
   showNextDialog() {
     if (this.isTyping) return
 

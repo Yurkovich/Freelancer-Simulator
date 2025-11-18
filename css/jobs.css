@@ -1,0 +1,58 @@
+#jobs-window {
+  width: clamp(320px, 45vw, 560px);
+}
+
+@media (max-width: 768px) {
+  #jobs-window {
+    width: 95vw !important;
+    height: auto !important;
+    max-height: 90vh !important;
+  }
+}
+
+.jobs-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.job-requirement {
+  border: 4px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 22, 41, 0.85);
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.job-requirement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.65rem;
+}
+
+#jobs-apply-btn {
+  margin-top: 1rem;
+  align-self: flex-start;
+}
+
+.video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-overlay video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

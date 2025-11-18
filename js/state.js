@@ -21,7 +21,7 @@ class GameState {
       health: GAME_CONSTANTS.INITIAL_HEALTH,
       maxHealth: GAME_CONSTANTS.INITIAL_HEALTH,
       satiety: GAME_CONSTANTS.INITIAL_SATIETY,
-      reputation: 0,
+      reputation: GAME_CONSTANTS.INITIAL_REPUTATION,
       skills: this.createInitialSkills(),
       activeOrder: null,
       completedOrders: [],
