@@ -92,6 +92,10 @@ export class SideJobManager {
       this.timeManager.applyNightPenalty(job.time)
     }
 
+    if (window.game && window.game.eventManager) {
+      window.game.eventManager.applyBurningChairPenalty(job.time)
+    }
+
     this.ui.closeWindow("sidejob")
     this.ui.showToast(
       `💰 Заработано: ${earned.toLocaleString()}₽ на подработке`

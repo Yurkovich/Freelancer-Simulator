@@ -1,5 +1,5 @@
 import { Game } from "./game.js"
-import { MESSAGES } from "./constants.js"
+import { MESSAGES, AVAILABLE_APPS } from "./constants.js"
 
 document.addEventListener("DOMContentLoaded", () => {
   const game = new Game()
@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   attachIconListeners(game)
   attachWindowCloseListeners()
-  attachAudioToggle(game)
 })
 
 function attachIconListeners(game) {
@@ -20,30 +19,13 @@ function attachIconListeners(game) {
 
       const app = e.currentTarget.dataset.app
 
-      if (isAppAvailable(app)) {
+      if (AVAILABLE_APPS.includes(app)) {
         game.appsManager.openApp(app)
       } else {
         game.ui.showToast(MESSAGES.APP_IN_DEVELOPMENT)
       }
     })
   })
-}
-
-function isAppAvailable(app) {
-  const availableApps = [
-    "portfolio",
-    "wzcode",
-    "browser",
-    "skills",
-    "learning",
-    "sleep",
-    "telehlam",
-    "character",
-    "sidejob",
-    "bills",
-    "shop",
-  ]
-  return availableApps.includes(app)
 }
 
 function attachWindowCloseListeners() {
@@ -55,36 +37,5 @@ function attachWindowCloseListeners() {
         window.classList.add("hidden")
       }
     })
-  })
-}
-
-function attachAudioToggle(game) {
-  const audioToggle = document.getElementById("audio-toggle")
-  if (!audioToggle) return
-
-  const updateButton = () => {
-    const icon = audioToggle.querySelector(".audio-icon")
-    if (game.audio.isMuted) {
-      audioToggle.classList.add("muted")
-      if (icon) icon.style.opacity = "0.5"
-    } else {
-      audioToggle.classList.remove("muted")
-      if (icon) icon.style.opacity = "1"
-    }
-  }
-
-  updateButton()
-
-  audioToggle.addEventListener("click", () => {
-    game.audio.initAudioContext()
-    game.audio.toggleMute()
-    updateButton()
-
-    if (!game.audio.isMuted && game.audio.music === null) {
-      const state = game.gameState.getState()
-      if (state.tutorialCompleted) {
-        game.audio.playMusic("ambient")
-      }
-    }
   })
 }

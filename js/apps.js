@@ -1,5 +1,6 @@
-import { ORDERS, SLEEP_OPTIONS } from "./config.js"
+import { SLEEP_OPTIONS } from "./config.js"
 import { UI_SELECTORS, MESSAGES, GAME_CONSTANTS } from "./constants.js"
+import { GameUtils } from "./utils.js"
 import { SkillsManager } from "./skills.js"
 import { LearningManager } from "./learning.js"
 import { BrowserManager } from "./browser.js"
@@ -9,11 +10,13 @@ import { TelehlamManager } from "./telehlam.js"
 import { SideJobManager } from "./sidejob.js"
 import { BillsManager } from "./bills.js"
 import { ShopManager } from "./shop.js"
+import { SettingsManager } from "./settings.js"
 import { UIManager } from "./ui.js"
 
 export class AppsManager {
-  constructor(gameState) {
+  constructor(gameState, audioManager) {
     this.gameState = gameState
+    this.audioManager = audioManager
     this.ui = new UIManager()
     this.skillsManager = new SkillsManager(gameState)
     this.timeManager = new TimeManager(gameState)
@@ -31,8 +34,8 @@ export class AppsManager {
     this.billsManager = new BillsManager(gameState, this.ui)
     this.billsManager.setAppsManager(this)
     this.shopManager = new ShopManager(gameState, this.ui, this.timeManager)
+    this.settingsManager = new SettingsManager(gameState, this.ui, audioManager)
     this.activeOrder = null
-    this.availableOrders = [...ORDERS]
     this.updateIconStates()
   }
 
@@ -45,7 +48,9 @@ export class AppsManager {
 
     if (
       hasDebt &&
-      !["sidejob", "bills", "character", "sleep", "shop"].includes(appName)
+      !["sidejob", "bills", "character", "sleep", "shop", "settings"].includes(
+        appName
+      )
     ) {
       this.ui.showToast(
         "⚠️ Оплатите просроченные счета! Доступны только подработки и магазин."
@@ -73,7 +78,14 @@ export class AppsManager {
       const appName = icon.dataset.app
       const isBlocked =
         hasDebt &&
-        !["sidejob", "bills", "character", "sleep", "shop"].includes(appName)
+        ![
+          "sidejob",
+          "bills",
+          "character",
+          "sleep",
+          "shop",
+          "settings",
+        ].includes(appName)
 
       if (isBlocked) {
         icon.style.opacity = "0.4"
@@ -100,6 +112,7 @@ export class AppsManager {
       "sidejob-window",
       "bills-window",
       "shop-window",
+      "settings-window",
     ]
 
     windowIds.forEach((id) => {
@@ -121,6 +134,7 @@ export class AppsManager {
       sidejob: "sidejob-window",
       bills: "bills-window",
       shop: "shop-window",
+      settings: "settings-window",
     }
 
     const windowId = windowMap[appName]
@@ -140,6 +154,7 @@ export class AppsManager {
       sidejob: () => this.sideJobManager.render(),
       bills: () => this.billsManager.render(),
       shop: () => this.shopManager.render(),
+      settings: () => this.settingsManager.render(),
     }
 
     const renderFunction = renderMap[appName]
@@ -187,6 +202,21 @@ export class AppsManager {
 
     this.timeManager.validateTime(state)
     this.gameState.updateState(state)
+
+    const canSleep =
+      !window.game ||
+      !window.game.eventManager ||
+      window.game.eventManager.canSleep()
+
+    if (!canSleep) {
+      body.innerHTML = `
+        <div class="message" style="color: var(--danger);">
+          <strong>⚡ Фриланс-наркомания</strong><br>
+          Ты не можешь спать, пока не закончишь текущий заказ! Работа зовет!
+        </div>
+      `
+      return
+    }
 
     const currentHour = Math.floor(state.time)
     const isLate = this.timeManager.isLateSleep(currentHour)
@@ -243,9 +273,11 @@ export class AppsManager {
   attachSleepHandlers(body) {
     body.querySelectorAll(".sleep-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        const hours = parseFloat(e.target.dataset.hours)
-        const restore = parseInt(e.target.dataset.restore)
-        this.handleSleep(hours, restore)
+        const hours = GameUtils.parseHours(e.target.dataset.hours)
+        const restore = parseInt(e.target.dataset.restore, 10)
+        if (hours !== null && !isNaN(restore)) {
+          this.handleSleep(hours, restore)
+        }
       })
     })
   }
@@ -291,8 +323,10 @@ export class AppsManager {
   attachOrderHandlers() {
     document.querySelectorAll(".take-order-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        const orderId = parseInt(e.target.dataset.orderId)
-        this.takeOrder(orderId)
+        const orderId = GameUtils.parseOrderId(e.target.dataset.orderId)
+        if (orderId !== null) {
+          this.takeOrder(orderId)
+        }
       })
     })
   }
@@ -328,14 +362,6 @@ export class AppsManager {
     this.gameState.updateState(state)
     this.showOrderTakenMessage(order)
     this.closeBrowserWindow()
-  }
-
-  findOrder(orderId) {
-    return this.availableOrders.find((o) => o.id === orderId)
-  }
-
-  removeOrderFromAvailable(orderId) {
-    this.availableOrders = this.availableOrders.filter((o) => o.id !== orderId)
   }
 
   showOrderTakenMessage(order) {
@@ -525,6 +551,16 @@ export class AppsManager {
     )
     timeRequired = Math.round(timeRequired * 10) / 10
 
+    if (window.game && window.game.eventManager) {
+      const workSpeedModifier =
+        window.game.eventManager.getActiveEventModifier("workSpeed")
+      timeRequired = timeRequired / workSpeedModifier
+
+      const energyModifier =
+        window.game.eventManager.getActiveEventModifier("energy")
+      energyCost = Math.floor(energyCost * energyModifier)
+    }
+
     return { energyCost, timeRequired }
   }
 
@@ -547,6 +583,10 @@ export class AppsManager {
 
     if (isNight) {
       this.timeManager.applyNightPenalty(timeRequired)
+    }
+
+    if (window.game && window.game.eventManager) {
+      window.game.eventManager.applyBurningChairPenalty(timeRequired)
     }
   }
 
@@ -599,19 +639,27 @@ export class AppsManager {
       reputationGain = Math.floor(reputationGain * 1.05)
     }
 
+    if (window.game && window.game.eventManager) {
+      const moneyModifier =
+        window.game.eventManager.getActiveEventModifier("orderMoney")
+      reward = Math.floor(reward * moneyModifier)
+
+      if (state.activeEvent && state.activeEvent.id === "unexpectedBonus") {
+        state.activeEvent = null
+      }
+    }
+
     state.money += reward
     state.reputation += reputationGain
 
     let xpGain = this.skillsManager.calculateXPGain(reward)
+    xpGain += GameUtils.calculateXPBonus(state)
 
-    let xpBonus = 0
-    if (state.upgrades.monitorPro) xpBonus += 15
-    else if (state.upgrades.monitor) xpBonus += 5
-    if (state.upgrades.headphones) xpBonus += 10
-    if (state.upgrades.apartment) xpBonus += 15
-    if (state.upgrades.coworking) xpBonus += 8
+    if (window.game && window.game.eventManager) {
+      const xpModifier = window.game.eventManager.getActiveEventModifier("xp")
+      xpGain = Math.floor(xpGain * xpModifier)
+    }
 
-    xpGain += xpBonus
     this.skillsManager.addXP(order.skill, xpGain)
 
     state.portfolio.push({

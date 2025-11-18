@@ -1,6 +1,7 @@
 import { GAME_CONSTANTS } from "./constants.js"
 import { UIManager } from "./ui.js"
 import { LifecycleManager } from "./lifecycle.js"
+import { GameUtils } from "./utils.js"
 
 export class TimeManager {
   constructor(gameState, appsManager = null) {
@@ -161,12 +162,7 @@ export class TimeManager {
   }
 
   formatTime(time) {
-    const hours = Math.floor(time)
-    const minutes = Math.round((time - hours) * GAME_CONSTANTS.MINUTES_IN_HOUR)
-    const minDigits = 2
-    return `${hours.toString().padStart(minDigits, "0")}:${minutes
-      .toString()
-      .padStart(minDigits, "0")}`
+    return GameUtils.formatTime(time)
   }
 
   isNightTime(time) {

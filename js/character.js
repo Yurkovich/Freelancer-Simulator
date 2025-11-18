@@ -1,5 +1,6 @@
 import { UIManager } from "./ui.js"
-import { STORAGE_KEY } from "./constants.js"
+import { GAME_CONSTANTS } from "./constants.js"
+import { GameUtils } from "./utils.js"
 
 export class CharacterManager {
   constructor(gameState) {
@@ -11,26 +12,14 @@ export class CharacterManager {
     const state = this.gameState.getState()
     const characterBody = document.getElementById("character-body")
 
-    const maxHealth = state.maxHealth || 100
+    const maxHealth = state.maxHealth || GAME_CONSTANTS.INITIAL_HEALTH
     const healthPercent = (state.health / maxHealth) * 100
-    const healthColor =
-      healthPercent > 50
-        ? "var(--accent)"
-        : healthPercent > 20
-        ? "orange"
-        : "var(--danger)"
-    const satietyColor =
-      state.satiety > 50
-        ? "var(--accent)"
-        : state.satiety > 20
-        ? "orange"
-        : "var(--danger)"
-    const energyColor =
-      state.energy > 50
-        ? "var(--accent)"
-        : state.energy > 20
-        ? "orange"
-        : "var(--danger)"
+    const healthColor = GameUtils.getStatColor(state.health, maxHealth)
+    const satietyColor = GameUtils.getStatColor(state.satiety)
+    const energyColor = GameUtils.getStatColor(
+      state.energy,
+      state.maxEnergy || GAME_CONSTANTS.MAX_ENERGY
+    )
 
     characterBody.innerHTML = `
       <div class="message">
@@ -119,27 +108,7 @@ export class CharacterManager {
         <h3 style="margin: 1rem 0 0.5rem; font-size: 0.65rem;">Купленные улучшения:</h3>
         ${this.renderUpgrades()}
       </div>
-
-      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid rgba(255, 255, 255, 0.1);">
-        <button class="window-action" id="reset-progress-btn" style="background: var(--danger);">
-          Сбросить прогресс
-        </button>
-      </div>
     `
-
-    this.attachResetHandler()
-  }
-
-  attachResetHandler() {
-    const resetBtn = document.getElementById("reset-progress-btn")
-    if (resetBtn) {
-      resetBtn.addEventListener("click", () => {
-        if (confirm("Вы уверены? Весь прогресс будет удален!")) {
-          localStorage.clear()
-          location.reload()
-        }
-      })
-    }
   }
 
   renderUpgrades() {

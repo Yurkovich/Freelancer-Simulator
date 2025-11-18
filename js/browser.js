@@ -7,6 +7,7 @@ import {
 } from "./config.js"
 import { SKILL_NAMES, GAME_CONSTANTS } from "./constants.js"
 import { UIManager } from "./ui.js"
+import { GameUtils } from "./utils.js"
 
 export class BrowserManager {
   constructor(gameState, appsManager) {
@@ -115,39 +116,64 @@ export class BrowserManager {
 
   generateKworkOrders() {
     const state = this.gameState.getState()
-    const avgLevel = Math.floor(
-      (state.skills[SKILL_NAMES.LAYOUT].level +
-        state.skills[SKILL_NAMES.WORKPRESS].level +
-        state.skills[SKILL_NAMES.FREELANCE].level) /
-        3
-    )
-
-    const suitableOrders = ORDER_TEMPLATES.filter(
-      (order) =>
-        order.requiredLevel >= Math.max(1, avgLevel - 1) &&
-        order.requiredLevel <= avgLevel + 3
-    )
-
     const orders = []
-    const ordersCount = 5
+
+    const skillNames = [
+      SKILL_NAMES.LAYOUT,
+      SKILL_NAMES.WORKPRESS,
+      SKILL_NAMES.FREELANCE,
+    ]
+
+    skillNames.forEach((skillName) => {
+      const skillLevel = state.skills[skillName].level
+      const ordersForSkill = this.generateOrdersForSkill(skillName, skillLevel)
+      orders.push(...ordersForSkill)
+    })
+
+    const totalOrders = Math.min(
+      Math.max(orders.length, GAME_CONSTANTS.MIN_ORDERS_COUNT),
+      GAME_CONSTANTS.MAX_ORDERS_COUNT
+    )
+
+    const shuffled = GameUtils.shuffleArray(orders)
+    state.kworkOrders = shuffled.slice(0, totalOrders)
+
+    this.gameState.updateState(state)
+  }
+
+  generateOrdersForSkill(skillName, skillLevel) {
+    const minLevel = Math.max(1, skillLevel)
+    const maxLevel =
+      skillLevel === 0 ? 1 : skillLevel + GAME_CONSTANTS.ORDER_LEVEL_RANGE
+
+    const suitableTemplates = ORDER_TEMPLATES.filter(
+      (template) =>
+        template.skill === skillName &&
+        template.requiredLevel >= minLevel &&
+        template.requiredLevel <= maxLevel
+    )
+
+    if (suitableTemplates.length === 0) {
+      return []
+    }
+
+    const ordersCount = Math.min(2, suitableTemplates.length)
+    const orders = []
 
     for (let i = 0; i < ordersCount; i++) {
-      const templates =
-        suitableOrders.length > 0 ? suitableOrders : ORDER_TEMPLATES
-      const template = templates[Math.floor(Math.random() * templates.length)]
-
+      const template =
+        suitableTemplates[Math.floor(Math.random() * suitableTemplates.length)]
       const deadline = this.calculateDeadline(template.requiredLevel)
 
       orders.push({
         ...template,
-        id: Date.now() + i,
+        id: Date.now() * 1000 + Math.floor(Math.random() * 1000),
         deadline: deadline,
         progress: 0,
       })
     }
 
-    state.kworkOrders = orders
-    this.gameState.updateState(state)
+    return orders
   }
 
   calculateDeadline(requiredLevel) {
@@ -180,7 +206,9 @@ export class BrowserManager {
         <div class="kwork-order-meta">
           ${order.description}<br>
           <span style="color: var(--muted);">
-            Навык: ${SKILL_INFO[order.skill].label} (${requiredLevel} ур.)<br>
+            Навык: ${
+              SKILL_INFO[order.skill]?.label || "Неизвестно"
+            } (${requiredLevel} ур.)<br>
             Дедлайн: ${order.deadline} дн. | Шанс: ${chanceData.totalChance}%
             ${this.createReputationBonus(chanceData.reputationBonus)}
           </span>
@@ -197,26 +225,23 @@ export class BrowserManager {
   }
 
   calculateOrderChance(state) {
-    const freelanceLevel = state.skills[SKILL_NAMES.FREELANCE].level
-    const maxBaseChance = 75
-    const chancePerLevel = 15
-    const baseChance = Math.min(maxBaseChance, freelanceLevel * chancePerLevel)
-
-    const maxReputationBonus = 50
-    const reputationMultiplier = 0.5
-    const reputationBonus = Math.min(
-      maxReputationBonus,
-      state.reputation * reputationMultiplier
+    const freelanceLevel = state.skills[SKILL_NAMES.FREELANCE]?.level || 0
+    const baseChance = Math.min(
+      GAME_CONSTANTS.ORDER_CHANCE_MAX_BASE,
+      freelanceLevel * GAME_CONSTANTS.ORDER_CHANCE_PER_LEVEL
     )
 
-    let microphoneBonus = 0
-    if (state.upgrades.microphone) {
-      microphoneBonus = 3
-    }
+    const reputationBonus = Math.min(
+      GAME_CONSTANTS.ORDER_CHANCE_MAX_REPUTATION_BONUS,
+      state.reputation * GAME_CONSTANTS.ORDER_CHANCE_REPUTATION_MULTIPLIER
+    )
 
-    const maxTotalChance = 100
+    const microphoneBonus = state.upgrades?.microphone
+      ? GAME_CONSTANTS.ORDER_CHANCE_MICROPHONE_BONUS
+      : 0
+
     const totalChance = Math.min(
-      maxTotalChance,
+      GAME_CONSTANTS.ORDER_CHANCE_MAX_TOTAL,
       baseChance + reputationBonus + microphoneBonus
     )
 
@@ -224,8 +249,8 @@ export class BrowserManager {
   }
 
   calculateOrderReward(order, state) {
-    const reputationMultiplier = 0.01
-    const rewardBonus = state.reputation * reputationMultiplier
+    const rewardBonus =
+      state.reputation * GAME_CONSTANTS.ORDER_REWARD_REPUTATION_MULTIPLIER
     const finalReward = Math.floor(order.baseReward * (1 + rewardBonus))
 
     return { rewardBonus, finalReward }
@@ -244,10 +269,13 @@ export class BrowserManager {
   }
 
   attachKworkHandlers(container) {
-    container.querySelectorAll(".kwork-apply-btn").forEach((btn) => {
+    const buttons = container.querySelectorAll(".kwork-apply-btn")
+    buttons.forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        const orderId = parseInt(e.target.dataset.orderId)
-        this.applyToKworkOrder(orderId)
+        const orderId = GameUtils.parseOrderId(e.currentTarget.dataset.orderId)
+        if (orderId !== null) {
+          this.applyToKworkOrder(orderId)
+        }
       })
     })
   }
@@ -256,7 +284,9 @@ export class BrowserManager {
     const state = this.gameState.getState()
     const order = state.kworkOrders.find((o) => o.id === orderId)
 
-    if (!order) return
+    if (!order) {
+      return
+    }
 
     if (!state.rejectedOrders) state.rejectedOrders = {}
     const rejectedKey = `${state.day}_${orderId}`
@@ -296,9 +326,10 @@ export class BrowserManager {
     state.kworkOrders = state.kworkOrders.filter((o) => o.id !== order.id)
 
     this.appsManager.activeOrder = order
-    this.appsManager.availableOrders = this.appsManager.availableOrders.filter(
-      (o) => o.id !== order.id
-    )
+    if (this.appsManager.availableOrders) {
+      this.appsManager.availableOrders =
+        this.appsManager.availableOrders.filter((o) => o.id !== order.id)
+    }
 
     this.gameState.updateState(state)
     this.closeWindow()
@@ -571,14 +602,7 @@ export class BrowserManager {
     state.lastBookDay = state.day
 
     let xpGain = book.xp
-    let xpBonus = 0
-    if (state.upgrades.monitorPro) xpBonus += 15
-    else if (state.upgrades.monitor) xpBonus += 5
-    if (state.upgrades.headphones) xpBonus += 10
-    if (state.upgrades.apartment) xpBonus += 15
-    if (state.upgrades.coworking) xpBonus += 8
-
-    xpGain += xpBonus
+    xpGain += GameUtils.calculateXPBonus(state)
 
     const skill = state.skills[book.skill]
     skill.xp += xpGain

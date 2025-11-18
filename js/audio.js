@@ -218,7 +218,9 @@ export class AudioManager {
   }
 
   playMusic(musicName) {
-    return
+    if (!this.isInitialized) {
+      this.initAudioContext()
+    }
   }
 
   stopMusic() {

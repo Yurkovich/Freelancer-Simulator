@@ -46,6 +46,10 @@
   background: url('../img/icons/store.png') center/contain no-repeat;
 }
 
+.icon[data-app="settings"] .icon-sprite {
+  background: url('../img/icons/settings.png') center/contain no-repeat;
+}
+
 .stat-icon {
   width: 25px;
   height: 25px;

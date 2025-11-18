@@ -12,12 +12,14 @@
   <link rel="stylesheet" href="css/toast.css">
   <link rel="stylesheet" href="css/tutorial.css">
   <link rel="stylesheet" href="css/hospital.css">
+  <link rel="stylesheet" href="css/events.css">
   <link rel="stylesheet" href="css/desktop.css">
   <link rel="stylesheet" href="css/windows.css">
   <link rel="stylesheet" href="css/skills.css">
   <link rel="stylesheet" href="css/learning.css">
   <link rel="stylesheet" href="css/browser.css">
   <link rel="stylesheet" href="css/telehlam.css">
+  <link rel="stylesheet" href="css/settings.css">
   <link rel="stylesheet" href="css/icons.css">
 </head>
 
@@ -52,9 +54,6 @@
         <div class="stat">Сытость: <span id="stat-satiety">100%</span></div>
         <div class="stat">Баланс: <span id="stat-money">5000 ₽</span></div>
         <div class="stat">Репутация: <span id="stat-rep">0</span></div>
-        <button id="audio-toggle" class="audio-toggle" title="Вкл/Выкл звук">
-          <img src="img/icons/audio.png" alt="Звук" class="audio-icon">
-        </button>
       </div>
 
       <div class="desktop-area">
@@ -101,6 +100,10 @@
         <button class="icon" data-app="shop">
           <div class="icon-sprite"></div>
           <span class="icon-label">Магазин</span>
+        </button>
+        <button class="icon" data-app="settings">
+          <div class="icon-sprite"></div>
+          <span class="icon-label">Настройки</span>
         </button>
       </div>
     </section>
@@ -201,6 +204,15 @@
         <button class="window-close">x</button>
       </div>
       <div class="window-body" id="shop-body">
+      </div>
+    </div>
+
+    <div class="window hidden" id="settings-window">
+      <div class="window-header">
+        <span>Настройки</span>
+        <button class="window-close">x</button>
+      </div>
+      <div class="window-body" id="settings-body">
       </div>
     </div>
 

@@ -4,6 +4,7 @@ import {
   SKILL_NAMES,
   STORAGE_KEY,
 } from "./constants.js"
+import { GameUtils } from "./utils.js"
 
 class GameState {
   constructor() {
@@ -101,6 +102,7 @@ class GameState {
 
       this.migratePendingUpgrades(merged)
       this.migrateSkills(merged)
+      this.migrateOrders(merged)
 
       return merged
     } catch (error) {
@@ -116,11 +118,13 @@ class GameState {
       SKILL_NAMES.FREELANCE,
     ]
 
+    const validSkills = {}
+
     skillNames.forEach((skillName) => {
       const skill = state.skills[skillName]
 
       if (!skill || typeof skill !== "object") {
-        state.skills[skillName] = {
+        validSkills[skillName] = {
           level: GAME_CONSTANTS.INITIAL_SKILL_LEVEL,
           xp: GAME_CONSTANTS.INITIAL_SKILL_XP,
         }
@@ -142,7 +146,19 @@ class GameState {
       ) {
         skill.xp = GAME_CONSTANTS.INITIAL_SKILL_XP
       }
+
+      validSkills[skillName] = skill
     })
+
+    state.skills = validSkills
+  }
+
+  migrateOrders(state) {
+    if (state.kworkOrders && Array.isArray(state.kworkOrders)) {
+      state.kworkOrders = state.kworkOrders.filter(
+        (order) => order.skill && order.requiredLevel
+      )
+    }
   }
 
   persistState() {
@@ -288,14 +304,7 @@ class GameState {
   }
 
   formatTime(time) {
-    const hours = Math.floor(time)
-    const minutes = Math.floor((time - hours) * GAME_CONSTANTS.MINUTES_IN_HOUR)
-    return `${this.padZero(hours)}:${this.padZero(minutes)}`
-  }
-
-  padZero(num) {
-    const minDigits = 2
-    return num.toString().padStart(minDigits, "0")
+    return GameUtils.formatTime(time)
   }
 }
 

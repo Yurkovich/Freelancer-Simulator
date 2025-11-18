@@ -1,0 +1,29 @@
+.settings-section {
+  margin-bottom: 1.5rem;
+}
+
+.settings-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.settings-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.settings-item-description {
+  font-size: 0.6rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.settings-toggle {
+  min-width: 100px;
+  text-align: center;
+}

@@ -1,6 +1,7 @@
 import { LEARNING_ACTIVITIES, SKILL_INFO } from "./config.js"
 import { SKILL_NAMES } from "./constants.js"
 import { UIManager } from "./ui.js"
+import { GameUtils } from "./utils.js"
 
 export class LearningManager {
   constructor(gameState, skillsManager, timeManager = null) {
@@ -109,14 +110,12 @@ export class LearningManager {
     }
 
     let xpGain = activity.xp
-    let xpBonus = 0
-    if (state.upgrades.monitorPro) xpBonus += 15
-    else if (state.upgrades.monitor) xpBonus += 5
-    if (state.upgrades.headphones) xpBonus += 10
-    if (state.upgrades.apartment) xpBonus += 15
-    if (state.upgrades.coworking) xpBonus += 8
+    xpGain += GameUtils.calculateXPBonus(state)
 
-    xpGain += xpBonus
+    if (window.game && window.game.eventManager) {
+      const xpModifier = window.game.eventManager.getActiveEventModifier("xp")
+      xpGain = Math.floor(xpGain * xpModifier)
+    }
 
     const isNight = this.timeManager.isNightTime(state.time)
 
@@ -129,6 +128,10 @@ export class LearningManager {
 
       if (isNight) {
         this.timeManager.applyNightPenalty(activity.time)
+      }
+
+      if (window.game && window.game.eventManager) {
+        window.game.eventManager.applyBurningChairPenalty(activity.time)
       }
     }
 

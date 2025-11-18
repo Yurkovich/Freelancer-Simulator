@@ -55,6 +55,10 @@ export class SkillsManager {
   renderSkillsWindow() {
     const state = this.gameState.getState()
     const skillsHtml = Object.entries(state.skills)
+      .filter(
+        ([key, skill]) =>
+          SKILL_LABELS[key] && skill && typeof skill === "object"
+      )
       .map(([key, skill]) => this.createSkillCard(key, skill))
       .join("")
 

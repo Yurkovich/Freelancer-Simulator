@@ -5,6 +5,7 @@ import { AppsManager } from "./apps.js"
 import { TutorialManager } from "./tutorial.js"
 import { AudioManager } from "./audio.js"
 import { LifecycleManager } from "./lifecycle.js"
+import { EventManager } from "./event-manager.js"
 
 export class Game {
   constructor() {
@@ -12,9 +13,10 @@ export class Game {
     this.ui = new UIManager()
     this.audio = new AudioManager()
     this.dialogSystem = new DialogSystem(this.ui)
-    this.appsManager = new AppsManager(this.gameState)
+    this.appsManager = new AppsManager(this.gameState, this.audio)
     this.tutorialManager = new TutorialManager(this.gameState, this.ui)
     this.lifecycleManager = new LifecycleManager(this.gameState, this.ui)
+    this.eventManager = new EventManager(this.gameState, this.ui)
 
     window.appManager = this.appsManager
     window.audio = this.audio

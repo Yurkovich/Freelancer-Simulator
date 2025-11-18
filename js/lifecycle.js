@@ -229,6 +229,11 @@ export class LifecycleManager {
     this.gameState.updateState(state)
 
     this.checkBills()
+
+    if (window.game && window.game.eventManager) {
+      window.game.eventManager.checkEventExpiration()
+      window.game.eventManager.tryTriggerEvent()
+    }
   }
 
   checkDeliveries() {

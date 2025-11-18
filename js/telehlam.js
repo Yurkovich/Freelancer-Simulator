@@ -1,5 +1,7 @@
 import { SKILL_INFO } from "./config.js"
 import { UIManager } from "./ui.js"
+import { GAME_CONSTANTS } from "./constants.js"
+import { GameUtils } from "./utils.js"
 
 const CHATS = {
   course: {
@@ -79,6 +81,11 @@ export class TelehlamManager {
       btn.addEventListener("click", (e) => {
         const chatKey = e.target.dataset.chat
         state.activeChat = chatKey
+
+        if (chatKey === "course" && !state.activeModule) {
+          state.activeModule = SKILL_NAMES.LAYOUT
+        }
+
         this.gameState.updateState(state)
         this.render()
       })
@@ -316,15 +323,8 @@ export class TelehlamManager {
       return
     }
 
-    let xpGain = 15
-    let xpBonus = 0
-    if (state.upgrades.monitorPro) xpBonus += 15
-    else if (state.upgrades.monitor) xpBonus += 5
-    if (state.upgrades.headphones) xpBonus += 10
-    if (state.upgrades.apartment) xpBonus += 15
-    if (state.upgrades.coworking) xpBonus += 8
-
-    xpGain += xpBonus
+    let xpGain = GAME_CONSTANTS.TELEHLAM_BASE_XP
+    xpGain += GameUtils.calculateXPBonus(state)
 
     state.telehlamXPToday[skillKey] = today
     const leveledUp = this.skillsManager.addXP(skillKey, xpGain)
