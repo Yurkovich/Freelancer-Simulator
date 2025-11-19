@@ -249,19 +249,13 @@ export class EventManager {
         effects.push(`📚 Получаемый опыт: +${Math.floor(effect.value * 100)}%`)
         break
       case "instantEnergy":
-        effects.push(
-          GameUtils.replaceEmojiWithIcon(`⚡ Энергия: +${effect.value}`)
-        )
+        effects.push(`⚡ Энергия: +${effect.value}`)
         break
       case "maxEnergyBoost":
-        effects.push(
-          GameUtils.replaceEmojiWithIcon(
-            `⚡ Максимальная энергия: +${effect.value}`
-          )
-        )
+        effects.push(`⚡ Максимальная энергия: +${effect.value}`)
         break
       case "skipDay":
-        effects.push(GameUtils.replaceEmojiWithIcon(`⏭️ Пропуск дня`))
+        effects.push(`⏭️ Пропуск дня`)
         break
       case "workSpeedPenalty":
         effects.push(`📉 Скорость работы: ${Math.floor(effect.value * 100)}%`)
@@ -272,9 +266,7 @@ export class EventManager {
         }
         break
       case "energyPenalty":
-        effects.push(
-          GameUtils.replaceEmojiWithIcon(`⚡ Энергия: ${effect.value}`)
-        )
+        effects.push(`⚡ Энергия: ${effect.value}`)
         if (effect.workSpeedPenalty) {
           effects.push(
             `📉 Скорость работы: ${Math.floor(effect.workSpeedPenalty * 100)}%`
@@ -282,9 +274,7 @@ export class EventManager {
         }
         break
       case "healthPenalty":
-        effects.push(
-          GameUtils.replaceEmojiWithIcon(`❤️ Здоровье: ${effect.value}`)
-        )
+        effects.push(`❤️ Здоровье: ${effect.value}`)
         if (effect.xpPenalty) {
           effects.push(
             `📉 Получаемый опыт: ${Math.floor(effect.xpPenalty * 100)}%`
@@ -296,9 +286,7 @@ export class EventManager {
           `📈 Скорость работы: +${Math.floor(effect.workSpeedBoost * 100)}%`
         )
         effects.push(
-          GameUtils.replaceEmojiWithIcon(
-            `❤️ Здоровье: -${effect.healthPenaltyPerHour} за каждый час`
-          )
+          `❤️ Здоровье: -${effect.healthPenaltyPerHour} за каждый час`
         )
         break
       case "freelanceAddiction":
@@ -313,28 +301,16 @@ export class EventManager {
       case "burnoutRevelation":
         effects.push(`✅ Мгновенное завершение заказа`)
         effects.push(
-          GameUtils.replaceEmojiWithIcon(
-            `🔥 Выгорание на ${effect.burnoutDays} дня: ${Math.floor(
-              effect.burnoutPenalty * 100
-            )}% ко всем характеристикам`
-          )
+          `🔥 Выгорание на ${effect.burnoutDays} дня: ${Math.floor(
+            effect.burnoutPenalty * 100
+          )}% ко всем характеристикам`
         )
         break
       case "nightmareClient":
         effects.push(`💰 Награда: x${effect.moneyMultiplier}`)
-        effects.push(
-          GameUtils.replaceEmojiWithIcon(
-            `⏱️ Время работы: x${effect.timeMultiplier}`
-          )
-        )
-        effects.push(
-          GameUtils.replaceEmojiWithIcon(
-            `⚡ Энергия: x${effect.energyMultiplier}`
-          )
-        )
-        effects.push(
-          GameUtils.replaceEmojiWithIcon(`❤️ Здоровье: ${effect.healthPenalty}`)
-        )
+        effects.push(`⏱️ Время работы: x${effect.timeMultiplier}`)
+        effects.push(`⚡ Энергия: x${effect.energyMultiplier}`)
+        effects.push(`❤️ Здоровье: ${effect.healthPenalty}`)
         break
       case "creativeCrisis":
         effects.push(
@@ -350,7 +326,8 @@ export class EventManager {
         break
     }
 
-    return GameUtils.replaceEmojiWithIcon(`🎯 Эффект: ${effects.join(" | ")}`)
+    const effectsText = effects.join(" | ")
+    return GameUtils.replaceEmojiWithIcon(`🎯 Эффект: ${effectsText}`)
   }
 
   checkEventExpiration() {

@@ -28,10 +28,11 @@ export class GameUtils {
   static formatTime(time) {
     const hours = Math.floor(time)
     const minutes = Math.round((time - hours) * GAME_CONSTANTS.MINUTES_IN_HOUR)
-    const minDigits = 2
-    return `${hours.toString().padStart(minDigits, "0")}:${minutes
+    return `${hours
       .toString()
-      .padStart(minDigits, "0")}`
+      .padStart(GAME_CONSTANTS.TIME_FORMAT_MIN_DIGITS, "0")}:${minutes
+      .toString()
+      .padStart(GAME_CONSTANTS.TIME_FORMAT_MIN_DIGITS, "0")}`
   }
 
   static parseOrderId(value) {
@@ -76,93 +77,99 @@ export class GameUtils {
       return text
     }
 
-    const emojiMap = {
-      "⚡": "energy",
-      "⚠️": "warning",
-      "🔥": "fire",
-      "⭐": "star",
-      "💪": "muscle",
-      "🚀": "rocket",
-      "💎": "diamond",
-      "🎯": "target",
-      "✨": "sparks",
-      "🌟": "star",
-      "💼": "briefcase",
-      "🎓": "hat",
-      ℹ️: "information",
-      "📅": "calendar",
-      "❌": "cross",
-      "⏱️": "timer",
-      "⏭️": "reset",
-      "❤️": "heart",
-      "💡": "light",
-      "🖥️": "monitor",
-      "⌨️": "keyboard",
-      "🖱️": "mouse",
-      "⚕️": "medical",
-      "🔊": "energy",
-      "🔄": "reset",
-      "🏠": "house",
-      "🌐": "internet",
-      "📚": "book",
-      "💻": "laptop",
-      "💬": "message",
-      "💰": "moneybag",
-      "🔧": "wrench",
-      "🏪": "shop",
-      "👤": "human",
-      "😴": "sleeping",
-      "🎮": "gamepad",
-      "🎉": "firework",
-      "✅": "accept",
-      "💻": "laptop",
-      "🪑": "chair",
-      "🎧": "headphones",
-      "📷": "camera",
-      "🎤": "microphone",
-      "☕": "coffee",
-    }
+    try {
+      const emojiMap = {
+        "⚡": "energy",
+        "⚠️": "warning",
+        "🔥": "fire",
+        "⭐": "star",
+        "💪": "muscle",
+        "🚀": "rocket",
+        "💎": "diamond",
+        "🎯": "target",
+        "✨": "sparks",
+        "🌟": "star",
+        "💼": "briefcase",
+        "🎓": "hat",
+        ℹ️: "information",
+        "📅": "calendar",
+        "❌": "cross",
+        "⏱️": "timer",
+        "⏭️": "reset",
+        "❤️": "heart",
+        "💡": "light",
+        "🖥️": "monitor",
+        "⌨️": "keyboard",
+        "🖱️": "mouse",
+        "⚕️": "medical",
+        "🔊": "energy",
+        "🔄": "reset",
+        "🏠": "house",
+        "🌐": "internet",
+        "📚": "book",
+        "💻": "laptop",
+        "💬": "message",
+        "💰": "moneybag",
+        "🔧": "wrench",
+        "🏪": "shop",
+        "👤": "human",
+        "😴": "sleeping",
+        "🎮": "gamepad",
+        "🎉": "firework",
+        "✅": "accept",
+        "🪑": "chair",
+        "🎧": "headphones",
+        "📷": "camera",
+        "🎤": "microphone",
+        "☕": "coffee",
+      }
 
-    const allEmojis = Object.keys(emojiMap)
-      .map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-      .join("|")
-    const emojiPattern = `(?:${allEmojis})`
+      const allEmojis = Object.keys(emojiMap)
+        .map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join("|")
+      const emojiPattern = `(?:${allEmojis})`
 
-    let result = text
-    const sortedEmojis = Object.entries(emojiMap).sort(
-      (a, b) => b[0].length - a[0].length
-    )
-
-    sortedEmojis.forEach(([emoji, iconName]) => {
-      const escapedEmoji = emoji.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-      const regex = new RegExp(
-        `(${escapedEmoji})([\\s\\S]*?)(?=${emojiPattern}|<|$)`,
-        "gu"
+      let result = text
+      const sortedEmojis = Object.entries(emojiMap).sort(
+        (a, b) => b[0].length - a[0].length
       )
 
-      result = result.replace(regex, (match, emojiMatch, textAfter) => {
-        let finalIconName = iconName
+      sortedEmojis.forEach(([emoji, iconName]) => {
+        const escapedEmoji = emoji.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+        const regex = new RegExp(
+          `(${escapedEmoji})([\\s\\S]*?)(?=${emojiPattern}|<|$)`,
+          "gu"
+        )
 
-        if (emoji === "🪑" && textAfter) {
-          const text = textAfter.trim().toLowerCase()
-          if (text.includes("стол")) {
-            finalIconName = "stool"
-          } else {
-            finalIconName = "chair"
+        result = result.replace(regex, (match, emojiMatch, textAfter) => {
+          let finalIconName = iconName
+
+          if (emoji === "🪑" && textAfter) {
+            const text = textAfter.trim().toLowerCase()
+            if (text.includes("стол")) {
+              finalIconName = "stool"
+            } else {
+              finalIconName = "chair"
+            }
           }
-        }
 
-        const iconHtml = `<img src="img/icons/mini/${finalIconName}.webp" alt="${emojiMatch}" class="stat-icon" style="width: 16px; height: 16px; vertical-align: middle; display: inline-block;">`
+          const iconSize = GAME_CONSTANTS.ICON_SIZE_PX
+          const iconGap = GAME_CONSTANTS.ICON_TEXT_GAP_PX
+          const iconHtml = `<img src="img/icons/mini/${finalIconName}.webp" alt="${emojiMatch}" class="stat-icon" style="width: ${iconSize}px; height: ${iconSize}px; vertical-align: middle; display: inline-block;">`
 
-        if (textAfter && textAfter.trim()) {
-          const text = textAfter.trim()
-          return `<span style="display: inline-flex; align-items: center; gap: 10px;">${iconHtml}${text}</span>`
-        }
+          if (textAfter && textAfter.trim()) {
+            const text = textAfter.trim()
+            return `<span style="display: inline-flex; align-items: center; gap: ${iconGap}px;">${iconHtml}${text}</span>`
+          }
 
-        return iconHtml
+          return iconHtml
+        })
       })
-    })
 
-    return result
+      return result
+    } catch (error) {
+      console.error("Error replacing emoji with icon:", error)
+      return text
+    }
   }
 }

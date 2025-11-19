@@ -95,7 +95,7 @@
   color: var(--muted);
   font-family: inherit;
   font-size: 0.5rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer), pointer;
   transition: all 0.2s ease;
 }
 

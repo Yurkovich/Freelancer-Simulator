@@ -9,4 +9,5 @@
   --text-color: #e4f1ff;
   --muted: #8faad6;
   --shadow: rgba(0, 0, 0, 0.4);
+  --cursor-pointer: url('../img/cursorPointer2.png') 0 0;
 }

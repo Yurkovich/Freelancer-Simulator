@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  cursor: url('../img/cursor2.png') 0 0, auto;
 }
 
 html,

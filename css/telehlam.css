@@ -29,7 +29,7 @@
   font-family: inherit;
   font-size: 0.55rem;
   padding: 0.6rem 0.7rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer), pointer;
   text-align: left;
   transition: border 0.2s ease;
   white-space: nowrap;

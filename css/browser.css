@@ -30,7 +30,7 @@
   color: var(--muted);
   font-family: inherit;
   font-size: 0.6rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer), pointer;
   transition: all 0.2s ease;
   flex: 1;
 }
@@ -101,7 +101,7 @@
   color: var(--muted);
   font-family: inherit;
   font-size: 0.55rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer), pointer;
   transition: all 0.2s ease;
 }
 
