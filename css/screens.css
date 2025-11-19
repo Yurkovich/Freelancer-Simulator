@@ -91,7 +91,7 @@
 .dialog-text {
   font-size: 0.65rem;
   line-height: 1.8;
-  min-height: 120px;
+  min-height: 80px;
   margin-bottom: 1.5rem;
   flex: 1;
 }

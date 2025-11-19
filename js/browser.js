@@ -69,6 +69,9 @@ export class BrowserManager {
 
     tabsContainer.querySelectorAll(".browser-tab").forEach((btn) => {
       btn.addEventListener("click", (e) => {
+        if (window.game && window.game.audio) {
+          window.game.audio.playSound("uiClick")
+        }
         this.activeTab = e.target.dataset.tab
         this.render()
       })
@@ -392,6 +395,9 @@ export class BrowserManager {
 
     container.querySelectorAll(".browser-subtab").forEach((btn) => {
       btn.addEventListener("click", (e) => {
+        if (window.game && window.game.audio) {
+          window.game.audio.playSound("uiClick")
+        }
         this.marketplaceSubTab = e.target.dataset.subtab
         this.renderMarketplace(container)
       })
@@ -666,6 +672,9 @@ export class BrowserManager {
 
     container.querySelectorAll(".browser-subtab").forEach((btn) => {
       btn.addEventListener("click", (e) => {
+        if (window.game && window.game.audio) {
+          window.game.audio.playSound("uiClick")
+        }
         this.deliverySubTab = e.target.dataset.subtab
         this.renderDelivery(container)
       })

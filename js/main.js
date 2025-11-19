@@ -30,6 +30,11 @@ function attachIconListeners(game) {
         return
       }
 
+      const isBlocked = icon.classList.contains("blocked")
+      if (!isBlocked && game.audio) {
+        game.audio.playSound("uiClick")
+      }
+
       const app = e.currentTarget.dataset.app
 
       if (AVAILABLE_APPS.includes(app)) {
@@ -45,9 +50,12 @@ function attachWindowCloseListeners() {
   const closeButtons = document.querySelectorAll(".window-close")
   closeButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const window = e.target.closest(".window")
-      if (window) {
-        window.classList.add("hidden")
+      if (window.game && window.game.audio) {
+        window.game.audio.playSound("uiClick")
+      }
+      const windowElement = e.target.closest(".window")
+      if (windowElement) {
+        windowElement.classList.add("hidden")
       }
     })
   })

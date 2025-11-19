@@ -4,9 +4,9 @@ export class DialogSystem {
     this.dialogTextEl = document.getElementById("dialog-text")
     this.dialogNextEl = document.getElementById("dialog-next")
     this.dialogues = [
-      "Наконец-то я смог накопить на курс Арокена по веб-разработке.",
-      "Говорят, после него можно начать зарабатывать на фрилансе.",
-      "Пора начинать новую жизнь!",
+      "Я долго собирался... и наконец приобрел курс Арокен.ру.",
+      "Хочу не просто научиться — хочу изменить свою жизнь.",
+      "Сегодня начинается путь, который, возможно, приведёт меня к чему-то большему.",
     ]
     this.currentDialogIndex = 0
     this.isTyping = false
@@ -50,7 +50,7 @@ export class DialogSystem {
     this.dialogNextEl.style.cursor = "not-allowed"
 
     let charIndex = 0
-    const typingSpeed = 30
+    const typingSpeed = 25
     let timeoutId = null
 
     const skipTyping = () => {

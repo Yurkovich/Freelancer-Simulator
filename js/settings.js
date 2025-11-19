@@ -87,12 +87,12 @@ export class SettingsManager {
     }
 
     if (volumeSlider && volumePercent) {
+      volumeSlider.setAttribute("data-no-sound", "true")
       volumeSlider.addEventListener("input", (e) => {
         const value = parseInt(e.target.value)
         const normalizedValue = value / 100
         this.audioManager.setSfxVolume(normalizedValue)
         volumePercent.textContent = value
-        this.audioManager.playSound("click")
       })
     }
 

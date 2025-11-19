@@ -63,7 +63,7 @@ export class AudioManager {
       this.audioContext.resume()
     }
 
-    if (soundName !== "textBlip") {
+    if (soundName !== "textBlip" && soundName !== "uiClick") {
       const now = Date.now()
       if (now - this.lastSoundTime < this.minSoundInterval) {
         return
@@ -73,6 +73,7 @@ export class AudioManager {
 
     const soundGenerators = {
       click: () => this.generate8BitClick(),
+      uiClick: () => this.generate8BitUIClick(),
       success: () => this.generate8BitSuccess(),
       notification: () => this.generate8BitNotification(),
       error: () => this.generate8BitError(),
@@ -102,6 +103,24 @@ export class AudioManager {
 
     oscillator.start(ctx.currentTime)
     oscillator.stop(ctx.currentTime + 0.05)
+  }
+
+  generate8BitUIClick() {
+    const ctx = this.audioContext
+    const oscillator = ctx.createOscillator()
+    const gainNode = ctx.createGain()
+
+    oscillator.connect(gainNode)
+    gainNode.connect(ctx.destination)
+
+    oscillator.frequency.value = 600
+    oscillator.type = "square"
+
+    gainNode.gain.setValueAtTime(this.sfxVolume * 0.15, ctx.currentTime)
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.03)
+
+    oscillator.start(ctx.currentTime)
+    oscillator.stop(ctx.currentTime + 0.03)
   }
 
   generate8BitSuccess() {
