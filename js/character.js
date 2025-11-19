@@ -137,13 +137,26 @@ export class CharacterManager {
       )
 
     if (state.upgrades.pcUltra)
-      upgrades.push("💻 Топовая рабочая станция (-30% энергии)")
-    else if (state.upgrades.pc) upgrades.push("💻 Мощный ПК (-15% энергии)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon(
+          "💻 Топовая рабочая станция (-30% энергии)"
+        )
+      )
+    else if (state.upgrades.pc)
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("💻 Мощный ПК (-15% энергии)")
+      )
 
     if (state.upgrades.chairPremium)
-      upgrades.push("🪑 Премиум кресло Herman Miller (+50 энергии)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon(
+          "🪑 Премиум кресло Herman Miller (+50 энергии)"
+        )
+      )
     else if (state.upgrades.chair)
-      upgrades.push("🪑 Эргономичное кресло (+20 энергии)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("🪑 Эргономичное кресло (+20 энергии)")
+      )
 
     if (state.upgrades.keyboard)
       upgrades.push(
@@ -156,18 +169,34 @@ export class CharacterManager {
         GameUtils.replaceEmojiWithIcon("🖥️ Второй монитор (-20 мин)")
       )
     if (state.upgrades.headphones)
-      upgrades.push("🎧 Наушники с шумоподавлением (+10 XP)")
-    if (state.upgrades.desk) upgrades.push("🪑 Регулируемый стол (+5 здоровье)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("🎧 Наушники с шумоподавлением (+10 XP)")
+      )
+    if (state.upgrades.desk)
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("🪑 Регулируемый стол (+5 здоровье)")
+      )
     if (state.upgrades.lamp)
       upgrades.push(
         GameUtils.replaceEmojiWithIcon("💡 Настольная лампа (+5 энергии)")
       )
     if (state.upgrades.webcam)
-      upgrades.push("📷 Профессиональная веб-камера (+5% репутации)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon(
+          "📷 Профессиональная веб-камера (+5% репутации)"
+        )
+      )
     if (state.upgrades.microphone)
-      upgrades.push("🎤 Студийный микрофон (+3% шанс заказа)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon(
+          "🎤 Студийный микрофон (+3% шанс заказа)"
+        )
+      )
 
-    if (state.upgrades.apartment) upgrades.push("🏠 Квартира в центре (+15 XP)")
+    if (state.upgrades.apartment)
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("🏠 Квартира в центре (+15 XP)")
+      )
     if (state.upgrades.coworking)
       upgrades.push(
         GameUtils.replaceEmojiWithIcon("💼 Абонемент в коворкинг (+8 XP)")
@@ -177,7 +206,11 @@ export class CharacterManager {
         GameUtils.replaceEmojiWithIcon("💪 Абонемент в спортзал (+15 здоровье)")
       )
     if (state.upgrades.coffeeSubscription)
-      upgrades.push("☕ Подписка на кофе (+5 энергии каждое утро)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon(
+          "☕ Подписка на кофе (+5 энергии каждое утро)"
+        )
+      )
 
     if (upgrades.length === 0) {
       return '<div style="color: var(--muted); font-size: 0.6rem;">Нет улучшений. Купите в Маркетплейсе!</div>'
@@ -185,7 +218,7 @@ export class CharacterManager {
 
     return upgrades
       .map(
-        (u) => `<div style="font-size: 0.6rem; margin: 0.3rem 0;">${u}</div>`
+        (u) => `<div style="display: flex; font-size: 0.6rem; margin: 0.3rem 0;">${u}</div>`
       )
       .join("")
   }

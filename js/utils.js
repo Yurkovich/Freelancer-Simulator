@@ -115,15 +115,44 @@ export class GameUtils {
       "🎮": "gamepad",
       "🎉": "firework",
       "✅": "accept",
+      "💻": "laptop",
+      "🪑": "chair",
+      "🎧": "headphones",
+      "📷": "camera",
+      "🎤": "microphone",
+      "☕": "coffee",
     }
 
+    const allEmojis = Object.keys(emojiMap)
+      .map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("|")
+    const emojiPattern = `(?:${allEmojis})`
+
     let result = text
-    Object.entries(emojiMap).forEach(([emoji, iconName]) => {
+    const sortedEmojis = Object.entries(emojiMap).sort(
+      (a, b) => b[0].length - a[0].length
+    )
+
+    sortedEmojis.forEach(([emoji, iconName]) => {
       const escapedEmoji = emoji.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-      const regex = new RegExp(`(${escapedEmoji})(\\s+[^\\s<]+)?`, "gu")
+      const regex = new RegExp(
+        `(${escapedEmoji})([\\s\\S]*?)(?=${emojiPattern}|<|$)`,
+        "gu"
+      )
 
       result = result.replace(regex, (match, emojiMatch, textAfter) => {
-        const iconHtml = `<img src="img/icons/mini/${iconName}.webp" alt="${emojiMatch}" class="stat-icon" style="width: 16px; height: 16px; vertical-align: middle; display: inline-block;">`
+        let finalIconName = iconName
+
+        if (emoji === "🪑" && textAfter) {
+          const text = textAfter.trim().toLowerCase()
+          if (text.includes("стол")) {
+            finalIconName = "stool"
+          } else {
+            finalIconName = "chair"
+          }
+        }
+
+        const iconHtml = `<img src="img/icons/mini/${finalIconName}.webp" alt="${emojiMatch}" class="stat-icon" style="width: 16px; height: 16px; vertical-align: middle; display: inline-block;">`
 
         if (textAfter && textAfter.trim()) {
           const text = textAfter.trim()
