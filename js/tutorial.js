@@ -1,3 +1,5 @@
+import { GameUtils } from "./utils.js"
+
 export class TutorialManager {
   constructor(gameState, ui) {
     this.gameState = gameState
@@ -140,9 +142,9 @@ export class TutorialManager {
 
     this.tooltip.innerHTML = `
       <div style="margin-bottom: 1rem; flex: 1; display: flex; flex-direction: column;">
-        <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 0.5rem;">${
+        <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 0.5rem;">${GameUtils.replaceEmojiWithIcon(
           step.title
-        }</div>
+        )}</div>
         <div id="tutorial-text" style="min-height: 80px; flex: 1;"></div>
       </div>
       <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">

@@ -1,6 +1,6 @@
 import { SKILL_INFO } from "./config.js"
 import { UIManager } from "./ui.js"
-import { GAME_CONSTANTS } from "./constants.js"
+import { GAME_CONSTANTS, SKILL_NAMES } from "./constants.js"
 import { GameUtils } from "./utils.js"
 
 const CHATS = {
@@ -29,20 +29,31 @@ export class TelehlamManager {
     const state = this.gameState.getState()
     const telehlamBody = document.getElementById("telehlam-body")
 
+    let stateChanged = false
+
     if (!state.activeChat) {
-      state.activeChat = "course"
+      state.activeChat = "aroken"
+      stateChanged = true
     }
     if (!state.activeModule) {
-      state.activeModule = Object.keys(SKILL_INFO)[0]
+      state.activeModule = SKILL_NAMES.LAYOUT
+      stateChanged = true
     }
     if (!state.chatLogs) {
       state.chatLogs = { course: {}, mentor: [], aroken: [] }
+      stateChanged = true
     }
     if (!state.chatLogs.aroken) {
       state.chatLogs.aroken = []
+      stateChanged = true
     }
     if (!state.telehlamXPToday) {
       state.telehlamXPToday = {}
+      stateChanged = true
+    }
+
+    if (stateChanged) {
+      this.gameState.updateState(state)
     }
 
     telehlamBody.innerHTML = `
@@ -109,7 +120,9 @@ export class TelehlamManager {
             !canGetXP
               ? `
             <div style="padding: 0.6rem; background: rgba(255, 165, 0, 0.1); border: 2px solid orange; margin-bottom: 0.5rem; font-size: 0.55rem; color: orange;">
-              ℹ️ Вы уже получили опыт сегодня. Приходите завтра!
+              ${GameUtils.replaceEmojiWithIcon(
+                "ℹ️ Вы уже получили опыт сегодня. Приходите завтра!"
+              )}
             </div>
           `
               : ""
@@ -199,7 +212,7 @@ export class TelehlamManager {
       .map(
         (msg) => `
         <div class="telehlam-message ${msg.from === "player" ? "player" : ""}">
-          ${msg.text}
+          ${GameUtils.replaceEmojiWithIcon(msg.text)}
         </div>
       `
       )

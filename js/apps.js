@@ -238,7 +238,9 @@ export class AppsManager {
     if (!canSleep) {
       body.innerHTML = `
         <div class="message" style="color: var(--danger);">
-          <strong>⚡ Фриланс-наркомания</strong><br>
+          <strong>${GameUtils.replaceEmojiWithIcon(
+            "⚡ Фриланс-наркомания"
+          )}</strong><br>
           Ты не можешь спать, пока не закончишь текущий заказ! Работа зовет!
         </div>
       `
@@ -437,14 +439,18 @@ export class AppsManager {
 
     const acceptedDay = order.acceptedDay || state.day
     const daysLeft = acceptedDay + order.deadline - state.day
-    let deadlineText = `📅 Дедлайн: ${daysLeft} дн.`
+    let deadlineText = GameUtils.replaceEmojiWithIcon(
+      `📅 Дедлайн: ${daysLeft} дн.`
+    )
     let deadlineColor = "var(--text-color)"
 
     if (daysLeft === 0) {
-      deadlineText = `📅 Дедлайн: СЕГОДНЯ!`
+      deadlineText = GameUtils.replaceEmojiWithIcon(`📅 Дедлайн: СЕГОДНЯ!`)
       deadlineColor = "orange"
     } else if (daysLeft < 0) {
-      deadlineText = `📅 Дедлайн: ПРОСРОЧЕН на ${Math.abs(daysLeft)} дн.!`
+      deadlineText = GameUtils.replaceEmojiWithIcon(
+        `📅 Дедлайн: ПРОСРОЧЕН на ${Math.abs(daysLeft)} дн.!`
+      )
       deadlineColor = "var(--danger)"
     }
 
@@ -462,14 +468,14 @@ export class AppsManager {
     let warningText = ""
     if (levelDiff > 0) {
       warningText = `<div style="color: var(--danger); margin-top: 0.5rem;">
-        ⚠ Ваш уровень ниже требуемого!<br>
+        ${GameUtils.replaceEmojiWithIcon("⚠ Ваш уровень ниже требуемого!")}<br>
         Расход энергии: +${Math.floor(levelDiff * 50)}%
       </div>`
     } else if (levelDiff < 0) {
       const levelAdvantage = Math.abs(levelDiff)
       const minutesReduction = levelAdvantage * 10
       warningText = `<div style="color: var(--accent); margin-top: 0.5rem;">
-        ✨ Ваш уровень выше требуемого!<br>
+        ${GameUtils.replaceEmojiWithIcon("✨ Ваш уровень выше требуемого!")}<br>
         Время работы: -${minutesReduction} минут
       </div>`
     }

@@ -1,3 +1,5 @@
+import { GameUtils } from "./utils.js"
+
 export class UIManager {
   constructor() {
     this.currentToast = null
@@ -52,7 +54,7 @@ export class UIManager {
 
     const toast = document.createElement("div")
     toast.className = "toast"
-    toast.innerHTML = message
+    toast.innerHTML = GameUtils.replaceEmojiWithIcon(message)
 
     toast.addEventListener("click", () => {
       this.removeToast(toast, true)

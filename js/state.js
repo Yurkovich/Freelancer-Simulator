@@ -32,7 +32,7 @@ class GameState {
       lastBookDay: 0,
       kworkOrders: [],
       rejectedOrders: {},
-      activeChat: "course",
+      activeChat: null,
       activeModule: null,
       chatLogs: this.createInitialChatLogs(),
       telehlamXPToday: {},

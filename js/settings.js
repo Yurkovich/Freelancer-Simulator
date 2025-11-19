@@ -1,3 +1,5 @@
+import { GameUtils } from "./utils.js"
+
 export class SettingsManager {
   constructor(gameState, ui, audioManager) {
     this.gameState = gameState
@@ -18,7 +20,9 @@ export class SettingsManager {
         
         <div class="settings-item">
           <div class="settings-item-header">
-            <span>🔊 Звуковые эффекты</span>
+            <span>${GameUtils.replaceEmojiWithIcon(
+              "🔊 Звуковые эффекты"
+            )}</span>
             <button id="toggle-sound" class="window-action settings-toggle">
               ${this.audioManager.isMuted ? "Выключено" : "Включено"}
             </button>
@@ -34,7 +38,9 @@ export class SettingsManager {
         
         <div class="settings-item">
           <div class="settings-item-header">
-            <span>🔄 Сбросить прогресс</span>
+            <span>${GameUtils.replaceEmojiWithIcon(
+              "🔄 Сбросить прогресс"
+            )}</span>
             <button id="reset-progress" class="window-action" style="background: var(--danger);">
               Сбросить
             </button>

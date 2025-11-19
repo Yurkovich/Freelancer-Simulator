@@ -1,4 +1,5 @@
 import { BILLS } from "./config.js"
+import { GameUtils } from "./utils.js"
 
 export class BillsManager {
   constructor(gameState, ui, appsManager = null) {
@@ -40,7 +41,7 @@ export class BillsManager {
       <div class="bills-list">
         <div class="bill-card ${rentOverdue ? "bill-overdue" : ""}">
           <div class="bill-header">
-            <strong>🏠 Квартира</strong>
+            <strong>${GameUtils.replaceEmojiWithIcon("🏠 Квартира")}</strong>
             <span style="color: var(--accent)">${rentAmount.toLocaleString()} ₽</span>
           </div>
           <div class="bill-meta">
@@ -56,7 +57,9 @@ export class BillsManager {
           </div>
           ${
             !state.hasRent
-              ? `<div class="bill-warning">⚠️ Без оплаты квартиры доступны только подработки!</div>`
+              ? GameUtils.replaceEmojiWithIcon(
+                  `<div class="bill-warning">⚠️ Без оплаты квартиры доступны только подработки!</div>`
+                )
               : ""
           }
           <button class="window-action bill-pay-btn" data-bill="rent" ${
@@ -70,7 +73,7 @@ export class BillsManager {
 
         <div class="bill-card ${internetOverdue ? "bill-overdue" : ""}">
           <div class="bill-header">
-            <strong>🌐 Интернет</strong>
+            <strong>${GameUtils.replaceEmojiWithIcon("🌐 Интернет")}</strong>
             <span style="color: var(--accent)">${BILLS.internet.amount.toLocaleString()} ₽</span>
           </div>
           <div class="bill-meta">
@@ -86,7 +89,9 @@ export class BillsManager {
           </div>
           ${
             !state.hasInternet
-              ? `<div class="bill-warning">⚠️ Без интернета нельзя учиться и работать удаленно!</div>`
+              ? GameUtils.replaceEmojiWithIcon(
+                  `<div class="bill-warning">⚠️ Без интернета нельзя учиться и работать удаленно!</div>`
+                )
               : ""
           }
           <button class="window-action bill-pay-btn" data-bill="internet" ${
@@ -105,7 +110,7 @@ export class BillsManager {
             ? `
         <div class="bill-card ${coworkingOverdue ? "bill-overdue" : ""}">
           <div class="bill-header">
-            <strong>💼 Коворкинг</strong>
+            <strong>${GameUtils.replaceEmojiWithIcon("💼 Коворкинг")}</strong>
             <span style="color: var(--accent)">${BILLS.coworking.amount.toLocaleString()} ₽</span>
           </div>
           <div class="bill-meta">

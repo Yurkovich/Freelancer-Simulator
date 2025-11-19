@@ -79,27 +79,37 @@ export class CharacterManager {
       <div class="character-warnings">
         ${
           state.health === 0
-            ? '<div style="color: var(--danger);">⚠️ Критическое состояние! Вы попадете в больницу!</div>'
+            ? GameUtils.replaceEmojiWithIcon(
+                '<div style="color: var(--danger);">⚠️ Критическое состояние! Вы попадете в больницу!</div>'
+              )
             : ""
         }
         ${
           healthPercent < 30
-            ? '<div style="color: orange;">⚠️ Низкое здоровье! Купите витамины или отдохните.</div>'
+            ? GameUtils.replaceEmojiWithIcon(
+                '<div style="color: orange;">⚠️ Низкое здоровье! Купите витамины или отдохните.</div>'
+              )
             : ""
         }
         ${
           state.satiety === 0
-            ? '<div style="color: var(--danger);">⚠️ Вы голодаете! Здоровье падает!</div>'
+            ? GameUtils.replaceEmojiWithIcon(
+                '<div style="color: var(--danger);">⚠️ Вы голодаете! Здоровье падает!</div>'
+              )
             : ""
         }
         ${
           state.satiety < 30
-            ? '<div style="color: orange;">⚠️ Низкая сытость! Закажите еду.</div>'
+            ? GameUtils.replaceEmojiWithIcon(
+                '<div style="color: orange;">⚠️ Низкая сытость! Закажите еду.</div>'
+              )
             : ""
         }
         ${
           state.energy < 20
-            ? '<div style="color: orange;">⚠️ Низкая энергия! Пора спать.</div>'
+            ? GameUtils.replaceEmojiWithIcon(
+                '<div style="color: orange;">⚠️ Низкая энергия! Пора спать.</div>'
+              )
             : ""
         }
       </div>
@@ -116,8 +126,15 @@ export class CharacterManager {
     const upgrades = []
 
     if (state.upgrades.monitorPro)
-      upgrades.push("🖥️ Профессиональный монитор 4K (+15 XP)")
-    else if (state.upgrades.monitor) upgrades.push("🖥️ Игровой монитор (+5 XP)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon(
+          "🖥️ Профессиональный монитор 4K (+15 XP)"
+        )
+      )
+    else if (state.upgrades.monitor)
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("🖥️ Игровой монитор (+5 XP)")
+      )
 
     if (state.upgrades.pcUltra)
       upgrades.push("💻 Топовая рабочая станция (-30% энергии)")
@@ -129,14 +146,22 @@ export class CharacterManager {
       upgrades.push("🪑 Эргономичное кресло (+20 энергии)")
 
     if (state.upgrades.keyboard)
-      upgrades.push("⌨️ Механическая клавиатура (-10 мин)")
-    if (state.upgrades.mouse) upgrades.push("🖱️ Игровая мышь (-10 мин)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("⌨️ Механическая клавиатура (-10 мин)")
+      )
+    if (state.upgrades.mouse)
+      upgrades.push(GameUtils.replaceEmojiWithIcon("🖱️ Игровая мышь (-10 мин)"))
     if (state.upgrades.secondMonitor)
-      upgrades.push("🖥️ Второй монитор (-20 мин)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("🖥️ Второй монитор (-20 мин)")
+      )
     if (state.upgrades.headphones)
       upgrades.push("🎧 Наушники с шумоподавлением (+10 XP)")
     if (state.upgrades.desk) upgrades.push("🪑 Регулируемый стол (+5 здоровье)")
-    if (state.upgrades.lamp) upgrades.push("💡 Настольная лампа (+5 энергии)")
+    if (state.upgrades.lamp)
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("💡 Настольная лампа (+5 энергии)")
+      )
     if (state.upgrades.webcam)
       upgrades.push("📷 Профессиональная веб-камера (+5% репутации)")
     if (state.upgrades.microphone)
@@ -144,9 +169,13 @@ export class CharacterManager {
 
     if (state.upgrades.apartment) upgrades.push("🏠 Квартира в центре (+15 XP)")
     if (state.upgrades.coworking)
-      upgrades.push("💼 Абонемент в коворкинг (+8 XP)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("💼 Абонемент в коворкинг (+8 XP)")
+      )
     if (state.upgrades.gym)
-      upgrades.push("💪 Абонемент в спортзал (+15 здоровье)")
+      upgrades.push(
+        GameUtils.replaceEmojiWithIcon("💪 Абонемент в спортзал (+15 здоровье)")
+      )
     if (state.upgrades.coffeeSubscription)
       upgrades.push("☕ Подписка на кофе (+5 энергии каждое утро)")
 

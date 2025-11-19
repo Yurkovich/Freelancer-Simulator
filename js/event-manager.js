@@ -1,5 +1,6 @@
 import { EVENTS, EVENT_TYPES } from "./events.js"
 import { GAME_CONSTANTS } from "./constants.js"
+import { GameUtils } from "./utils.js"
 
 export class EventManager {
   constructor(gameState, ui) {
@@ -136,7 +137,9 @@ export class EventManager {
     dialog.className = `event-dialog event-${event.type}`
     dialog.innerHTML = `
       <div class="event-header">
-        <span class="event-icon">${this.getEventIcon(event.type)}</span>
+        <span class="event-icon">${GameUtils.replaceEmojiWithIcon(
+          this.getEventIcon(event.type)
+        )}</span>
         <h2 class="event-title">${event.name}</h2>
       </div>
       
@@ -154,34 +157,58 @@ export class EventManager {
     overlay.appendChild(dialog)
     document.body.appendChild(overlay)
 
-    this.typeText(event.lore, "event-lore-text", () => {
-      this.typeText(event.comment, "event-comment-text", () => {
-        const effectText = this.getEffectDescription(event)
-        this.typeText(effectText, "event-effect-text", () => {
-          const button = document.getElementById("event-ok-btn")
-          button.disabled = false
-          button.style.opacity = "1"
-          button.style.cursor = "pointer"
+    this.typeText(
+      GameUtils.replaceEmojiWithIcon(event.lore),
+      "event-lore-text",
+      () => {
+        this.typeText(
+          GameUtils.replaceEmojiWithIcon(event.comment),
+          "event-comment-text",
+          () => {
+            const effectText = this.getEffectDescription(event)
+            this.typeText(effectText, "event-effect-text", () => {
+              const button = document.getElementById("event-ok-btn")
+              button.disabled = false
+              button.style.opacity = "1"
+              button.style.cursor = "pointer"
 
-          button.addEventListener("click", () => {
-            document.body.removeChild(overlay)
-          })
-        })
-      })
-    })
+              button.addEventListener("click", () => {
+                document.body.removeChild(overlay)
+              })
+            })
+          }
+        )
+      }
+    )
   }
 
   typeText(text, elementId, onComplete) {
     const element = document.getElementById(elementId)
     if (!element) return
 
-    element.textContent = ""
+    element.innerHTML = ""
     let charIndex = 0
     const typingSpeed = 20
+    let currentHtml = ""
 
     const typeChar = () => {
       if (charIndex < text.length) {
-        element.textContent += text[charIndex]
+        const char = text[charIndex]
+
+        if (char === "<") {
+          const tagEnd = text.indexOf(">", charIndex)
+          if (tagEnd !== -1) {
+            const tag = text.substring(charIndex, tagEnd + 1)
+            currentHtml += tag
+            charIndex = tagEnd + 1
+            element.innerHTML = currentHtml
+            setTimeout(typeChar, typingSpeed)
+            return
+          }
+        }
+
+        currentHtml += char
+        element.innerHTML = currentHtml
         charIndex++
         setTimeout(typeChar, typingSpeed)
       } else {
@@ -222,13 +249,19 @@ export class EventManager {
         effects.push(`📚 Получаемый опыт: +${Math.floor(effect.value * 100)}%`)
         break
       case "instantEnergy":
-        effects.push(`⚡ Энергия: +${effect.value}`)
+        effects.push(
+          GameUtils.replaceEmojiWithIcon(`⚡ Энергия: +${effect.value}`)
+        )
         break
       case "maxEnergyBoost":
-        effects.push(`⚡ Максимальная энергия: +${effect.value}`)
+        effects.push(
+          GameUtils.replaceEmojiWithIcon(
+            `⚡ Максимальная энергия: +${effect.value}`
+          )
+        )
         break
       case "skipDay":
-        effects.push(`⏭️ Пропуск дня`)
+        effects.push(GameUtils.replaceEmojiWithIcon(`⏭️ Пропуск дня`))
         break
       case "workSpeedPenalty":
         effects.push(`📉 Скорость работы: ${Math.floor(effect.value * 100)}%`)
@@ -239,7 +272,9 @@ export class EventManager {
         }
         break
       case "energyPenalty":
-        effects.push(`⚡ Энергия: ${effect.value}`)
+        effects.push(
+          GameUtils.replaceEmojiWithIcon(`⚡ Энергия: ${effect.value}`)
+        )
         if (effect.workSpeedPenalty) {
           effects.push(
             `📉 Скорость работы: ${Math.floor(effect.workSpeedPenalty * 100)}%`
@@ -247,7 +282,9 @@ export class EventManager {
         }
         break
       case "healthPenalty":
-        effects.push(`❤️ Здоровье: ${effect.value}`)
+        effects.push(
+          GameUtils.replaceEmojiWithIcon(`❤️ Здоровье: ${effect.value}`)
+        )
         if (effect.xpPenalty) {
           effects.push(
             `📉 Получаемый опыт: ${Math.floor(effect.xpPenalty * 100)}%`
@@ -259,7 +296,9 @@ export class EventManager {
           `📈 Скорость работы: +${Math.floor(effect.workSpeedBoost * 100)}%`
         )
         effects.push(
-          `❤️ Здоровье: -${effect.healthPenaltyPerHour} за каждый час`
+          GameUtils.replaceEmojiWithIcon(
+            `❤️ Здоровье: -${effect.healthPenaltyPerHour} за каждый час`
+          )
         )
         break
       case "freelanceAddiction":
@@ -274,16 +313,28 @@ export class EventManager {
       case "burnoutRevelation":
         effects.push(`✅ Мгновенное завершение заказа`)
         effects.push(
-          `🔥 Выгорание на ${effect.burnoutDays} дня: ${Math.floor(
-            effect.burnoutPenalty * 100
-          )}% ко всем характеристикам`
+          GameUtils.replaceEmojiWithIcon(
+            `🔥 Выгорание на ${effect.burnoutDays} дня: ${Math.floor(
+              effect.burnoutPenalty * 100
+            )}% ко всем характеристикам`
+          )
         )
         break
       case "nightmareClient":
         effects.push(`💰 Награда: x${effect.moneyMultiplier}`)
-        effects.push(`⏱️ Время работы: x${effect.timeMultiplier}`)
-        effects.push(`⚡ Энергия: x${effect.energyMultiplier}`)
-        effects.push(`❤️ Здоровье: ${effect.healthPenalty}`)
+        effects.push(
+          GameUtils.replaceEmojiWithIcon(
+            `⏱️ Время работы: x${effect.timeMultiplier}`
+          )
+        )
+        effects.push(
+          GameUtils.replaceEmojiWithIcon(
+            `⚡ Энергия: x${effect.energyMultiplier}`
+          )
+        )
+        effects.push(
+          GameUtils.replaceEmojiWithIcon(`❤️ Здоровье: ${effect.healthPenalty}`)
+        )
         break
       case "creativeCrisis":
         effects.push(
@@ -299,7 +350,7 @@ export class EventManager {
         break
     }
 
-    return `🎯 Эффект: ${effects.join(" | ")}`
+    return GameUtils.replaceEmojiWithIcon(`🎯 Эффект: ${effects.join(" | ")}`)
   }
 
   checkEventExpiration() {
@@ -398,7 +449,9 @@ export class EventManager {
     this.gameState.updateState({ health: state.health })
 
     if (penalty > 0) {
-      this.ui.showToast(`🔥 Горящий стул: -${penalty} здоровья`)
+      this.ui.showToast(
+        GameUtils.replaceEmojiWithIcon(`🔥 Горящий стул: -${penalty} здоровья`)
+      )
     }
   }
 

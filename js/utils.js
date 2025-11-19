@@ -70,4 +70,70 @@ export class GameUtils {
       return "var(--danger)"
     }
   }
+
+  static replaceEmojiWithIcon(text) {
+    if (!text || typeof text !== "string") {
+      return text
+    }
+
+    const emojiMap = {
+      "⚡": "energy",
+      "⚠️": "warning",
+      "🔥": "fire",
+      "⭐": "star",
+      "💪": "muscle",
+      "🚀": "rocket",
+      "💎": "diamond",
+      "🎯": "target",
+      "✨": "sparks",
+      "🌟": "star",
+      "💼": "briefcase",
+      "🎓": "hat",
+      ℹ️: "information",
+      "📅": "calendar",
+      "❌": "cross",
+      "⏱️": "timer",
+      "⏭️": "reset",
+      "❤️": "heart",
+      "💡": "light",
+      "🖥️": "monitor",
+      "⌨️": "keyboard",
+      "🖱️": "mouse",
+      "⚕️": "medical",
+      "🔊": "energy",
+      "🔄": "reset",
+      "🏠": "house",
+      "🌐": "internet",
+      "📚": "book",
+      "💻": "laptop",
+      "💬": "message",
+      "💰": "moneybag",
+      "🔧": "wrench",
+      "🏪": "shop",
+      "👤": "human",
+      "😴": "sleeping",
+      "🎮": "gamepad",
+      "🎉": "firework",
+      "✅": "accept",
+    }
+
+    let result = text
+    Object.entries(emojiMap).forEach(([emoji, iconName]) => {
+      const escapedEmoji = emoji.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      const regex = new RegExp(`(${escapedEmoji})(\\s+[^\\s<]+)?`, "gu")
+
+      result = result.replace(regex, (match, emojiMatch, textAfter) => {
+        const iconHtml = `<img src="img/icons/mini/${iconName}.webp" alt="${emojiMatch}" class="stat-icon" style="width: 16px; height: 16px; vertical-align: middle; display: inline-block;">`
+
+        if (textAfter && textAfter.trim()) {
+          const text = textAfter.trim()
+          return `<span style="display: inline-flex; align-items: center; gap: 10px;">${iconHtml}${text}</span>`
+        }
+
+        return iconHtml
+      })
+    })
+
+    return result
+  }
 }

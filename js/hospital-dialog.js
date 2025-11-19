@@ -1,3 +1,5 @@
+import { GameUtils } from "./utils.js"
+
 export class HospitalDialog {
   constructor() {
     this.overlay = null
@@ -30,7 +32,7 @@ export class HospitalDialog {
       
       <div class="hospital-body">
         <div class="hospital-alert">
-          <strong style="color: var(--danger);">⚠️ КРИТИЧЕСКОЕ СОСТОЯНИЕ</strong><br>
+          <strong style="color: var(--danger);">${GameUtils.replaceEmojiWithIcon("⚠️ КРИТИЧЕСКОЕ СОСТОЯНИЕ")}</strong><br>
           Вы потеряли сознание от истощения и были доставлены в больницу.
         </div>
 
@@ -41,7 +43,7 @@ export class HospitalDialog {
           </div>
 
           <div class="hospital-stat">
-            <span>⏱️ Время в больнице</span>
+            <span>${GameUtils.replaceEmojiWithIcon("⏱️ Время в больнице")}</span>
             <strong style="color: var(--danger);">${timePenalty} дня</strong>
           </div>
 
@@ -51,13 +53,13 @@ export class HospitalDialog {
           </div>
 
           <div class="hospital-stat positive">
-            <span>❤️ Здоровье восстановлено</span>
+            <span>${GameUtils.replaceEmojiWithIcon("❤️ Здоровье восстановлено")}</span>
             <strong style="color: var(--accent);">50%</strong>
           </div>
         </div>
 
         <div class="hospital-warning">
-          ⚕️ Следите за своим состоянием! Не допускайте истощения.
+          ${GameUtils.replaceEmojiWithIcon("⚕️ Следите за своим состоянием! Не допускайте истощения.")}
         </div>
 
         <button id="hospital-ok-btn" class="window-action" style="width: 100%; background: var(--danger); color: white;">
