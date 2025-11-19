@@ -124,7 +124,7 @@
 
 .event-button:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+  cursor: var(--cursor-not-allowed), not-allowed;
 }
 
 .event-button:not(:disabled):hover {

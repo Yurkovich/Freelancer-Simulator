@@ -10,4 +10,5 @@
   --muted: #8faad6;
   --shadow: rgba(0, 0, 0, 0.4);
   --cursor-pointer: url('../img/cursorPointer2.png') 0 0;
+  --cursor-not-allowed: url('../img/cursorNotAllowed.png') 0 0;
 }

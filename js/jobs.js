@@ -348,13 +348,13 @@ export class JobsManager {
     const isUnlocked = this.isUnlocked()
 
     if (!isUnlocked) {
+      jobsIcon.classList.add("blocked")
       jobsIcon.style.opacity = "0.4"
       jobsIcon.style.filter = "grayscale(1)"
-      jobsIcon.style.cursor = "not-allowed"
     } else {
+      jobsIcon.classList.remove("blocked")
       jobsIcon.style.opacity = "1"
       jobsIcon.style.filter = "none"
-      jobsIcon.style.cursor = "pointer"
     }
   }
 }

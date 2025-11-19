@@ -112,13 +112,13 @@ export class AppsManager {
         ].includes(appName)
 
       if (isBlocked) {
+        icon.classList.add("blocked")
         icon.style.opacity = "0.4"
         icon.style.filter = "grayscale(1)"
-        icon.style.cursor = "not-allowed"
       } else {
+        icon.classList.remove("blocked")
         icon.style.opacity = "1"
         icon.style.filter = "none"
-        icon.style.cursor = "pointer"
       }
     })
   }

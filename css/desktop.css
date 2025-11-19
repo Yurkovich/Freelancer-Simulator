@@ -77,6 +77,14 @@
   position: relative;
 }
 
+.icon.blocked {
+  cursor: var(--cursor-not-allowed), not-allowed !important;
+}
+
+.icon.blocked .icon-sprite {
+  cursor: var(--cursor-not-allowed), not-allowed !important;
+}
+
 .icon-label {
   font-family: 'Press Start 2P', monospace;
   font-size: 1rem;

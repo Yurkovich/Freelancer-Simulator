@@ -30,6 +30,22 @@ export class SettingsManager {
           <div class="settings-item-description">
             Звуки кликов, уведомлений и действий
           </div>
+          <div class="settings-volume-control">
+            <input 
+              type="range" 
+              id="volume-slider" 
+              class="volume-slider" 
+              min="0" 
+              max="100" 
+              value="${Math.round(this.audioManager.sfxVolume * 100)}"
+              ${this.audioManager.isMuted ? "disabled" : ""}
+            />
+            <div class="volume-value">
+              <span id="volume-percent">${Math.round(
+                this.audioManager.sfxVolume * 100
+              )}</span>%
+            </div>
+          </div>
         </div>
       </div>
 
@@ -58,6 +74,8 @@ export class SettingsManager {
   attachEventHandlers() {
     const toggleSoundBtn = document.getElementById("toggle-sound")
     const resetProgressBtn = document.getElementById("reset-progress")
+    const volumeSlider = document.getElementById("volume-slider")
+    const volumePercent = document.getElementById("volume-percent")
 
     if (toggleSoundBtn) {
       toggleSoundBtn.addEventListener("click", () => {
@@ -65,6 +83,16 @@ export class SettingsManager {
         this.audioManager.toggleMute()
         this.audioManager.playSound("click")
         this.render()
+      })
+    }
+
+    if (volumeSlider && volumePercent) {
+      volumeSlider.addEventListener("input", (e) => {
+        const value = parseInt(e.target.value)
+        const normalizedValue = value / 100
+        this.audioManager.setSfxVolume(normalizedValue)
+        volumePercent.textContent = value
+        this.audioManager.playSound("click")
       })
     }
 
