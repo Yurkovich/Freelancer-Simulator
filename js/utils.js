@@ -155,7 +155,7 @@ export class GameUtils {
 
           const iconSize = GAME_CONSTANTS.ICON_SIZE_PX
           const iconGap = GAME_CONSTANTS.ICON_TEXT_GAP_PX
-          const iconHtml = `<img src="img/icons/mini/${finalIconName}.webp" alt="${emojiMatch}" class="stat-icon" style="width: ${iconSize}px; height: ${iconSize}px; vertical-align: middle; display: inline-block;">`
+          const iconHtml = `<img src="img/icons/mini/${finalIconName}.webp" alt="${emojiMatch}" class="stat-icon" style="width: ${iconSize}px !important; height: ${iconSize}px !important; max-width: ${iconSize}px !important; max-height: ${iconSize}px !important; vertical-align: middle; display: inline-block;">`
 
           if (textAfter && textAfter.trim()) {
             const text = textAfter.trim()

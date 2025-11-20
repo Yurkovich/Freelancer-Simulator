@@ -426,9 +426,7 @@ export class EventManager {
     this.gameState.updateState({ health: state.health })
 
     if (penalty > 0) {
-      this.ui.showToast(
-        GameUtils.replaceEmojiWithIcon(`🔥 Горящий стул: -${penalty} здоровья`)
-      )
+      this.ui.showToast(`🔥 Горящий стул: -${penalty} здоровья`)
     }
   }
 
