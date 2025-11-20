@@ -84,6 +84,22 @@
   color: var(--muted);
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hospital-window {
+    width: 85%;
+    max-width: 550px;
+  }
+
+  .hospital-body {
+    padding: 1.5rem 1.3rem 1.8rem;
+    font-size: 0.7rem;
+  }
+
+  .hospital-header {
+    font-size: 0.7rem;
+  }
+}
+
 @media (max-width: 768px) {
   .hospital-window {
     width: 90%;
@@ -97,5 +113,31 @@
 
   .hospital-header {
     font-size: 0.65rem;
+  }
+
+  .hospital-window .window-action {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hospital-window {
+    width: 95%;
+    max-width: none;
+  }
+
+  .hospital-body {
+    padding: 1rem 0.9rem 1.2rem;
+    font-size: 0.6rem;
+  }
+
+  .hospital-header {
+    font-size: 0.6rem;
+  }
+
+  .hospital-stat {
+    padding: 0.6rem;
+    font-size: 0.55rem;
   }
 }

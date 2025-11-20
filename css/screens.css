@@ -45,6 +45,26 @@
   line-height: 1.6;
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .menu-title {
+    font-size: 1.2rem;
+  }
+
+  .menu-subtitle {
+    font-size: 0.55rem;
+  }
+
+  .menu-content {
+    gap: 1.8rem;
+    padding: 1.5rem;
+  }
+
+  .play-button {
+    font-size: 0.65rem;
+    padding: 0.9rem 1.8rem;
+  }
+}
+
 @media (max-width: 768px) {
   .menu-title {
     font-size: 1rem;
@@ -59,6 +79,14 @@
     gap: 1.5rem;
     padding: 1rem;
   }
+
+  .play-button {
+    font-size: 0.65rem;
+    padding: 0.8rem 1.5rem;
+    min-height: 44px;
+    width: 100%;
+    max-width: 300px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -68,6 +96,12 @@
 
   .menu-subtitle {
     font-size: 0.45rem;
+  }
+
+  .play-button {
+    font-size: 0.6rem;
+    padding: 0.7rem 1.2rem;
+    min-height: 44px;
   }
 }
 
@@ -96,6 +130,24 @@
   flex: 1;
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dialog-container {
+    padding: 1.8rem;
+    max-width: 650px;
+  }
+
+  .dialog-text {
+    font-size: 0.6rem;
+    line-height: 1.75;
+  }
+
+  .dialog-next-btn {
+    font-size: 0.58rem;
+    padding: 0.7rem 1rem;
+    min-height: 44px;
+  }
+}
+
 @media (max-width: 768px) {
   .dialog-container {
     padding: 1.5rem;
@@ -106,6 +158,13 @@
     line-height: 1.7;
     min-height: 80px;
   }
+
+  .dialog-next-btn {
+    font-size: 0.55rem;
+    padding: 0.7rem 1rem;
+    min-height: 44px;
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -115,11 +174,19 @@
 
   .dialog-container {
     padding: 1.2rem;
+    border-width: 3px;
   }
 
   .dialog-text {
     font-size: 0.5rem;
     min-height: 70px;
+    line-height: 1.6;
+  }
+
+  .dialog-next-btn {
+    font-size: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    min-height: 44px;
   }
 }
 

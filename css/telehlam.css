@@ -173,16 +173,105 @@
   min-height: 0;
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .telehlam-layout {
+    grid-template-columns: 180px 1fr;
+  }
+
+  .telehlam-sidebar {
+    padding: 0.9rem;
+  }
+
+  .telehlam-chat-button {
+    font-size: 0.5rem;
+    padding: 0.55rem 0.65rem;
+  }
+
+  .telehlam-module-bar {
+    padding: 0.8rem 1rem 0.4rem;
+  }
+
+  .telehlam-chat-panel {
+    padding: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
   .telehlam-layout {
-    grid-template-columns: 140px 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .telehlam-sidebar {
+    border-right: none;
+    border-bottom: 4px solid rgba(255, 255, 255, 0.05);
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.6rem;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .telehlam-chat-button {
+    font-size: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    white-space: nowrap;
+    min-width: fit-content;
+    min-height: 40px;
+  }
+
+  .telehlam-main {
+    min-height: 0;
   }
 
   .telehlam-module-bar {
     padding: 0.6rem 0.8rem 0.3rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
   }
 
   .telehlam-chat-panel {
     padding: 0.8rem;
+    gap: 0.8rem;
+  }
+
+  .telehlam-input {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .telehlam-input input {
+    width: 100%;
+    min-height: 44px;
+    font-size: 0.6rem;
+    padding: 0.6rem;
+  }
+
+  .telehlam-input button {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .telehlam-sidebar {
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .telehlam-chat-button {
+    font-size: 0.45rem;
+    padding: 0.45rem 0.55rem;
+    min-height: 36px;
+  }
+
+  .telehlam-module-bar {
+    padding: 0.5rem 0.6rem 0.3rem;
+  }
+
+  .telehlam-chat-panel {
+    padding: 0.6rem;
+    gap: 0.6rem;
   }
 }

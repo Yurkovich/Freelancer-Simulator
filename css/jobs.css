@@ -2,11 +2,50 @@
   width: clamp(320px, 45vw, 560px);
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  #jobs-window {
+    width: clamp(450px, 55vw, 650px);
+  }
+
+  .job-requirement {
+    padding: 0.9rem 1rem;
+  }
+
+  .job-requirement-header {
+    font-size: 0.6rem;
+  }
+}
+
 @media (max-width: 768px) {
   #jobs-window {
     width: 95vw !important;
     height: auto !important;
     max-height: 90vh !important;
+  }
+
+  .job-requirement {
+    padding: 0.9rem 1rem;
+  }
+
+  .job-requirement-header {
+    font-size: 0.6rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  #jobs-apply-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .job-requirement {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .job-requirement-header {
+    font-size: 0.55rem;
   }
 }
 

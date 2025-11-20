@@ -43,6 +43,21 @@
   font-family: 'Press Start 2P', monospace;
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .tutorial-developer {
+    transform: translate(-50%, -50%) translateX(-280px);
+  }
+
+  .tutorial-developer-photo {
+    width: 120px;
+    height: 160px;
+  }
+
+  .tutorial-developer-label {
+    font-size: 0.6rem;
+  }
+}
+
 @media (max-width: 768px) {
   .tutorial-developer {
     top: auto;
@@ -57,5 +72,45 @@
 
   .tutorial-developer-label {
     font-size: 0.5rem;
+  }
+
+  #tutorial-tooltip {
+    max-width: 90vw;
+    padding: 1.2rem;
+    font-size: 0.55rem;
+  }
+
+  .tutorial-btn {
+    min-height: 40px;
+    padding: 0.5rem 0.9rem !important;
+    font-size: 0.55rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .tutorial-developer {
+    bottom: calc(50% + 160px);
+  }
+
+  .tutorial-developer-photo {
+    width: 70px;
+    height: 95px;
+  }
+
+  .tutorial-developer-label {
+    font-size: 0.45rem;
+  }
+
+  #tutorial-tooltip {
+    max-width: 95vw;
+    padding: 1rem;
+    font-size: 0.5rem;
+    min-height: 150px;
+  }
+
+  .tutorial-btn {
+    min-height: 44px;
+    padding: 0.5rem 0.8rem !important;
+    font-size: 0.5rem !important;
   }
 }

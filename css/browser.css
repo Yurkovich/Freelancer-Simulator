@@ -3,11 +3,74 @@
   height: clamp(400px, 75vh, 700px);
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  #browser-window {
+    width: clamp(500px, 70vw, 750px);
+    height: clamp(500px, 80vh, 650px);
+  }
+
+  .browser-tab {
+    padding: 0.7rem 1rem;
+    font-size: 0.55rem;
+  }
+
+  .browser-content {
+    padding: 1rem;
+    font-size: 0.65rem;
+  }
+}
+
 @media (max-width: 768px) {
   #browser-window {
     width: 95vw !important;
     height: auto !important;
     max-height: 90vh !important;
+  }
+
+  .browser-tabs {
+    flex-wrap: wrap;
+  }
+
+  .browser-tab {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.55rem;
+    min-height: 44px;
+    flex: 1 1 auto;
+  }
+
+  .browser-content {
+    padding: 0.9rem;
+    font-size: 0.6rem;
+  }
+
+  .browser-subtabs {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .browser-subtab {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.5rem;
+    min-height: 40px;
+  }
+
+  .kwork-order {
+    padding: 0.9rem 1rem;
+  }
+
+  .kwork-order-header {
+    font-size: 0.6rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .kwork-order-meta {
+    font-size: 0.55rem;
+  }
+
+  .kwork-apply-btn {
+    width: 100%;
+    min-height: 44px;
   }
 }
 
@@ -267,6 +330,34 @@
   width: clamp(320px, 45vw, 560px);
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  #sidejob-window,
+  #bills-window {
+    width: clamp(450px, 55vw, 650px);
+  }
+
+  .bill-card,
+  .sidejob-card {
+    padding: 0.9rem 1rem;
+  }
+
+  .bill-header,
+  .sidejob-header {
+    font-size: 0.6rem;
+  }
+
+  .marketplace-item,
+  .delivery-item {
+    padding: 0.9rem 1rem;
+  }
+
+  .marketplace-item-header,
+  .delivery-item-header {
+    font-size: 0.6rem;
+  }
+}
+
 @media (max-width: 768px) {
 
   #sidejob-window,
@@ -274,6 +365,90 @@
     width: 95vw !important;
     height: auto !important;
     max-height: 90vh !important;
+  }
+
+  .bill-card,
+  .sidejob-card {
+    padding: 0.9rem 1rem;
+  }
+
+  .bill-header,
+  .sidejob-header {
+    font-size: 0.6rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .bill-meta,
+  .sidejob-meta {
+    font-size: 0.55rem;
+  }
+
+  .bill-pay-btn,
+  .sidejob-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .marketplace-items,
+  .delivery-items {
+    gap: 0.8rem;
+  }
+
+  .marketplace-item,
+  .delivery-item {
+    padding: 0.9rem 1rem;
+  }
+
+  .marketplace-item-header,
+  .delivery-item-header {
+    font-size: 0.6rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .marketplace-item-meta,
+  .delivery-item-meta {
+    font-size: 0.55rem;
+  }
+
+  .marketplace-buy-btn,
+  .delivery-buy-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .bill-card,
+  .sidejob-card {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .bill-header,
+  .sidejob-header {
+    font-size: 0.55rem;
+  }
+
+  .bill-meta,
+  .sidejob-meta {
+    font-size: 0.5rem;
+  }
+
+  .marketplace-item,
+  .delivery-item {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .marketplace-item-header,
+  .delivery-item-header {
+    font-size: 0.55rem;
+  }
+
+  .marketplace-item-meta,
+  .delivery-item-meta {
+    font-size: 0.5rem;
   }
 }
 

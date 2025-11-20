@@ -150,7 +150,7 @@ export class LifecycleManager {
         state.hasRent = false
         if (!isOverdue) {
           this.ui.showToast(
-            "⚠️ Нет денег на квартиру! Только подработки доступны."
+            "⚠️ Нет денег на квартиру! Доступны только подработки."
           )
         }
         updated = true

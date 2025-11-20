@@ -157,6 +157,22 @@
   }
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .event-dialog {
+    width: 85%;
+    max-width: 600px;
+  }
+
+  .event-body {
+    padding: 1.8rem 1.5rem;
+    font-size: 0.75rem;
+  }
+
+  .event-title {
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
   .event-dialog {
     width: 90%;
@@ -170,5 +186,32 @@
 
   .event-title {
     font-size: 0.85rem;
+  }
+
+  .event-button {
+    min-height: 44px;
+    width: 100%;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-dialog {
+    width: 95%;
+    max-width: none;
+  }
+
+  .event-body {
+    padding: 1.2rem 0.9rem;
+    font-size: 0.65rem;
+  }
+
+  .event-title {
+    font-size: 0.75rem;
+  }
+
+  .event-button {
+    min-height: 44px;
+    font-size: 0.6rem;
   }
 }

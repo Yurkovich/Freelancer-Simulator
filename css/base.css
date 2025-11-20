@@ -66,6 +66,12 @@ body {
   line-height: 1.6;
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .game-container {
+    filter: contrast(1.03) saturate(1.05);
+  }
+}
+
 @media (max-width: 768px) {
   * {
     touch-action: manipulation;
@@ -90,5 +96,31 @@ body {
 
   body {
     background: #0a101d;
+  }
+
+  button,
+  .window-action,
+  .icon {
+    -webkit-tap-highlight-color: rgba(83, 245, 200, 0.3);
+  }
+}
+
+@media (max-width: 480px) {
+
+  html,
+  body {
+    font-size: 14px;
+  }
+
+  .game-container {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 360px) {
+
+  html,
+  body {
+    font-size: 12px;
   }
 }

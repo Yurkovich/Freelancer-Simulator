@@ -116,6 +116,25 @@
   margin-bottom: 1rem;
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  #learning-window,
+  #sleep-window {
+    width: clamp(400px, 50vw, 600px);
+  }
+
+  .learning-activity-card,
+  .sleep-option {
+    padding: 0.9rem 1rem;
+  }
+
+  .skill-selector-button {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.55rem;
+    min-height: 40px;
+  }
+}
+
 @media (max-width: 768px) {
   .developer-card {
     padding: 0.8rem;
@@ -134,6 +153,41 @@
   .developer-subtitle {
     font-size: 0.5rem;
   }
+
+  .learning-activity-card,
+  .sleep-option {
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .learning-activity-header,
+  .sleep-option-header {
+    font-size: 0.6rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .learning-activity-meta,
+  .sleep-option-meta {
+    font-size: 0.55rem;
+  }
+
+  .learning-activity-card button,
+  .sleep-option button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .skill-selector {
+    gap: 0.5rem;
+  }
+
+  .skill-selector-button {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.5rem;
+    min-height: 40px;
+    flex: 1 1 auto;
+  }
 }
 
 @media (max-width: 480px) {
@@ -148,5 +202,26 @@
 
   .developer-subtitle {
     font-size: 0.45rem;
+  }
+
+  .learning-activity-card,
+  .sleep-option {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .learning-activity-header,
+  .sleep-option-header {
+    font-size: 0.55rem;
+  }
+
+  .learning-activity-meta,
+  .sleep-option-meta {
+    font-size: 0.5rem;
+  }
+
+  .skill-selector-button {
+    font-size: 0.45rem;
+    padding: 0.45rem 0.6rem;
+    min-height: 36px;
   }
 }

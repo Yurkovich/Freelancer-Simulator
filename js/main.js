@@ -1,27 +1,6 @@
 import { Game } from "./game.js"
 import { MESSAGES, AVAILABLE_APPS } from "./constants.js"
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initGame)
-} else {
-  initGame()
-}
-
-const initGame = () => {
-  if (window.game && window.game.gameState) {
-    window.game.audio?.initAudioContext()
-    window.game.dialogSystem?.reset()
-    window.game.init()
-    return
-  }
-
-  const game = new Game()
-  game.init()
-
-  attachIconListeners(game)
-  attachWindowCloseListeners()
-}
-
 const attachIconListeners = (game) => {
   const icons = document.querySelectorAll(".icon")
   icons.forEach((icon) => {
@@ -59,4 +38,25 @@ const attachWindowCloseListeners = () => {
       }
     })
   })
+}
+
+const initGame = () => {
+  if (window.game && window.game.gameState) {
+    window.game.audio?.initAudioContext()
+    window.game.dialogSystem?.reset()
+    window.game.init()
+    return
+  }
+
+  const game = new Game()
+  game.init()
+
+  attachIconListeners(game)
+  attachWindowCloseListeners()
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initGame)
+} else {
+  initGame()
 }

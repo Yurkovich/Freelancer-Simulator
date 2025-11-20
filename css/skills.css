@@ -93,3 +93,59 @@
 #skills-window {
   width: clamp(280px, 32vw, 420px);
 }
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  #skills-window {
+    width: clamp(350px, 40vw, 500px);
+  }
+
+  .skill-item {
+    padding: 0.9rem 1rem;
+  }
+
+  .skill-header {
+    font-size: 0.55rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #skills-window {
+    width: 95vw !important;
+  }
+
+  .skill-item {
+    padding: 0.9rem 1rem;
+  }
+
+  .skill-header {
+    font-size: 0.55rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .skill-progress {
+    height: 16px;
+  }
+
+  .skill-meta {
+    font-size: 0.45rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .skill-item {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .skill-header {
+    font-size: 0.5rem;
+  }
+
+  .skill-progress {
+    height: 14px;
+  }
+
+  .skill-meta {
+    font-size: 0.4rem;
+  }
+}
