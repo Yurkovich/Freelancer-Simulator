@@ -1,5 +1,6 @@
 import { BILLS } from "./config.js"
 import { GameUtils } from "./utils.js"
+import { GAME_CONSTANTS } from "./constants.js"
 
 export class BillsManager {
   constructor(gameState, ui, appsManager = null) {
@@ -24,7 +25,7 @@ export class BillsManager {
 
     let rentAmount = BILLS.rent.amount
     if (state.upgrades.apartment) {
-      rentAmount = 20000
+      rentAmount = GAME_CONSTANTS.PREMIUM_APARTMENT_RENT
     }
 
     const coworkingDaysLeft = state.bills.coworking
@@ -161,7 +162,7 @@ export class BillsManager {
     let billAmount = bill.amount
     if (billType === "rent") {
       if (state.upgrades.apartment) {
-        billAmount = 20000
+        billAmount = GAME_CONSTANTS.PREMIUM_APARTMENT_RENT
       }
     }
 

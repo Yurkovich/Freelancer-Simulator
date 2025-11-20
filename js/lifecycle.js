@@ -134,7 +134,7 @@ export class LifecycleManager {
       const isOverdue = state.day > state.bills.rent.due
       let rentAmount = BILLS.rent.amount
       if (state.upgrades.apartment) {
-        rentAmount = 20000
+        rentAmount = GAME_CONSTANTS.PREMIUM_APARTMENT_RENT
       }
 
       if (state.money >= rentAmount) {

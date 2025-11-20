@@ -1,3 +1,5 @@
+import { GAME_CONSTANTS } from "./constants.js"
+
 export class DialogSystem {
   constructor(ui) {
     this.ui = ui
@@ -51,7 +53,7 @@ export class DialogSystem {
 
     const textChars = Array.from(text)
     let charIndex = 0
-    const typingSpeed = 25
+    const typingSpeed = GAME_CONSTANTS.TYPING_SPEED_DIALOG_MS
     let timeoutId = null
 
     const skipTyping = () => {

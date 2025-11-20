@@ -203,7 +203,7 @@ export class JobsManager {
       width: 100%;
       height: 100%;
       background: #000;
-      z-index: 20000;
+      z-index: ${GAME_CONSTANTS.VIDEO_OVERLAY_Z_INDEX};
       display: flex;
       align-items: center;
       justify-content: center;
@@ -298,7 +298,7 @@ export class JobsManager {
 
     const textChars = Array.from(dialogText)
     let charIndex = 0
-    const typingSpeed = 30
+    const typingSpeed = GAME_CONSTANTS.TYPING_SPEED_ENDING_MS
     let timeoutId = null
 
     const typeChar = () => {

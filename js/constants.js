@@ -70,6 +70,13 @@ export const GAME_CONSTANTS = {
   JOBS_REQUIRED_SKILL_LEVEL: 7,
   JOBS_REQUIRED_REPUTATION: 50,
   ENDING_VIDEO_PATH: "video/end.mp4",
+  TYPING_SPEED_DIALOG_MS: 25,
+  TYPING_SPEED_ENDING_MS: 30,
+  TYPING_SPEED_TUTORIAL_MS: 20,
+  TOAST_DURATION_MS: 2000,
+  PREMIUM_APARTMENT_RENT: 20000,
+  VIDEO_OVERLAY_Z_INDEX: 20000,
+  EVENT_DIALOG_Z_INDEX: 10001,
   ENDING_DIALOGS: [
     "Когда я только начал учиться на Арокен.ру, я был уверен, что веб-разработка — это когда делаешь кнопку, и она просто… работает.",
     "Ха. Ха. Ха.",

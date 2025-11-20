@@ -1,9 +1,10 @@
 import { GameUtils } from "./utils.js"
+import { GAME_CONSTANTS } from "./constants.js"
 
 export class UIManager {
   constructor() {
     this.currentToast = null
-    this.toastDuration = 2000
+    this.toastDuration = GAME_CONSTANTS.TOAST_DURATION_MS
     this.screens = {
       menu: document.getElementById("menu-screen"),
       dialog: document.getElementById("dialog-screen"),

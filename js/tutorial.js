@@ -1,4 +1,5 @@
 import { GameUtils } from "./utils.js"
+import { GAME_CONSTANTS } from "./constants.js"
 
 export class TutorialManager {
   constructor(gameState, ui) {
@@ -216,12 +217,13 @@ export class TutorialManager {
     }
 
     textEl.textContent = ""
+    const textChars = Array.from(text)
     let charIndex = 0
-    const typingSpeed = 20
+    const typingSpeed = GAME_CONSTANTS.TYPING_SPEED_TUTORIAL_MS
 
     const typeChar = () => {
-      if (charIndex < text.length) {
-        textEl.textContent += text[charIndex]
+      if (charIndex < textChars.length) {
+        textEl.textContent += textChars[charIndex]
 
         if (text[charIndex] !== " " && window.audio) {
           window.audio.playSound("textBlip")

@@ -7,7 +7,7 @@ if (document.readyState === "loading") {
   initGame()
 }
 
-function initGame() {
+const initGame = () => {
   if (window.game && window.game.gameState) {
     window.game.audio?.initAudioContext()
     window.game.dialogSystem?.reset()
@@ -22,7 +22,7 @@ function initGame() {
   attachWindowCloseListeners()
 }
 
-function attachIconListeners(game) {
+const attachIconListeners = (game) => {
   const icons = document.querySelectorAll(".icon")
   icons.forEach((icon) => {
     icon.addEventListener("click", (e) => {
@@ -46,7 +46,7 @@ function attachIconListeners(game) {
   })
 }
 
-function attachWindowCloseListeners() {
+const attachWindowCloseListeners = () => {
   const closeButtons = document.querySelectorAll(".window-close")
   closeButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {

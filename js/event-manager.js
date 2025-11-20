@@ -127,7 +127,7 @@ export class EventManager {
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.9);
-      z-index: 10001;
+      z-index: ${GAME_CONSTANTS.EVENT_DIALOG_Z_INDEX};
       display: flex;
       align-items: center;
       justify-content: center;
