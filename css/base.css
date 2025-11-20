@@ -91,11 +91,19 @@ body {
   }
 
   .game-container {
+    height: 100dvh;
     background: linear-gradient(135deg, #101a31, #090f1e);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
   }
 
   body {
     background: #0a101d;
+    height: 100dvh;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   button,
