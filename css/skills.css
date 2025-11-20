@@ -109,9 +109,6 @@
 }
 
 @media (max-width: 768px) {
-  #skills-window {
-    width: 95vw !important;
-  }
 
   .skill-item {
     padding: 0.9rem 1rem;

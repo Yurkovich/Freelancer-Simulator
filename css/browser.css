@@ -22,15 +22,20 @@
 
 @media (max-width: 768px) {
   #browser-window {
-    width: 95vw !important;
-    max-width: 95vw !important;
-    height: auto !important;
-    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 120px) !important;
-    top: calc(50% + env(safe-area-inset-top, 0px) / 2) !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%);
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    top: env(safe-area-inset-top, 0px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+    transform: none;
     margin: 0;
     box-sizing: border-box;
+    border-width: 0;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
   }
 
   .browser-tabs {
@@ -48,9 +53,9 @@
     padding: 0.9rem;
     padding-left: calc(0.9rem + env(safe-area-inset-left, 0px));
     padding-right: calc(0.9rem + env(safe-area-inset-right, 0px));
-    padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px) + 120px);
+    padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
     font-size: 0.7rem;
-    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 200px);
+    max-height: none;
   }
 
   .browser-subtabs {
@@ -373,9 +378,17 @@
 
   #sidejob-window,
   #bills-window {
-    width: 95vw !important;
-    height: auto !important;
-    max-height: 90vh !important;
+    width: 100vw !important;
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    top: env(safe-area-inset-top, 0px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+    transform: none;
+    border-width: 0;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
   }
 
   .bill-card,
@@ -434,10 +447,12 @@
   #browser-window {
     width: 100vw !important;
     max-width: 100vw !important;
-    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 110px) !important;
-    top: calc(env(safe-area-inset-top, 0px) + 2px) !important;
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    top: env(safe-area-inset-top, 0px) !important;
     left: 0 !important;
     right: 0 !important;
+    bottom: env(safe-area-inset-bottom, 0px) !important;
     transform: none;
     margin: 0;
   }
@@ -446,8 +461,8 @@
     padding: 0.8rem;
     padding-left: calc(0.8rem + env(safe-area-inset-left, 0px));
     padding-right: calc(0.8rem + env(safe-area-inset-right, 0px));
-    padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px) + 110px);
-    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 180px);
+    padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px));
+    max-height: none;
   }
 
   .bill-card,
@@ -527,9 +542,17 @@
 
 @media (max-width: 768px) {
   #shop-window {
-    width: 95vw !important;
-    height: auto !important;
-    max-height: 90vh !important;
+    width: 100vw !important;
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    top: env(safe-area-inset-top, 0px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+    transform: none;
+    border-width: 0;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
   }
 
   .shop-grid {

@@ -197,6 +197,20 @@
 }
 
 @media (max-width: 768px) {
+  #telehlam-window {
+    width: 100vw !important;
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    top: env(safe-area-inset-top, 0px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+    transform: none;
+    border-width: 0;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+  }
+
   .telehlam-layout {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
