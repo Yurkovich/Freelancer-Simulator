@@ -49,6 +49,7 @@ export class DialogSystem {
     this.dialogNextEl.style.opacity = "0.5"
     this.dialogNextEl.style.cursor = "not-allowed"
 
+    const textChars = Array.from(text)
     let charIndex = 0
     const typingSpeed = 25
     let timeoutId = null
@@ -68,10 +69,10 @@ export class DialogSystem {
     this.dialogTextEl.addEventListener("click", skipTyping, { once: true })
 
     const typeChar = () => {
-      if (charIndex < text.length) {
-        this.dialogTextEl.textContent += text[charIndex]
+      if (charIndex < textChars.length) {
+        this.dialogTextEl.textContent += textChars[charIndex]
 
-        if (text[charIndex] !== " " && window.audio) {
+        if (textChars[charIndex] !== " " && window.audio) {
           window.audio.playSound("textBlip")
         }
 

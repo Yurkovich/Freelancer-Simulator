@@ -287,14 +287,19 @@ export class JobsManager {
       return
     }
 
+    const clonedButton = dialogNextEl.cloneNode(true)
+    dialogNextEl.parentNode.replaceChild(clonedButton, dialogNextEl)
+    const newDialogNextEl = clonedButton
+
     dialogTextEl.textContent = ""
-    dialogNextEl.disabled = true
-    dialogNextEl.style.opacity = "0.5"
-    dialogNextEl.style.cursor = "not-allowed"
+    newDialogNextEl.disabled = true
+    newDialogNextEl.style.opacity = "0.5"
+    newDialogNextEl.style.cursor = "not-allowed"
 
     const textChars = Array.from(dialogText)
     let charIndex = 0
     const typingSpeed = 30
+    let timeoutId = null
 
     const typeChar = () => {
       if (charIndex < textChars.length) {
@@ -305,31 +310,34 @@ export class JobsManager {
         }
 
         charIndex++
-        setTimeout(typeChar, typingSpeed)
+        timeoutId = setTimeout(typeChar, typingSpeed)
       } else {
-        dialogNextEl.disabled = false
-        dialogNextEl.style.opacity = "1"
-        dialogNextEl.style.cursor = "pointer"
+        newDialogNextEl.disabled = false
+        newDialogNextEl.style.opacity = "1"
+        newDialogNextEl.style.cursor = "pointer"
       }
     }
 
     typeChar()
 
     const handleNext = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       if (charIndex < textChars.length) {
         dialogTextEl.textContent = dialogText
         charIndex = textChars.length
-        dialogNextEl.disabled = false
-        dialogNextEl.style.opacity = "1"
-        dialogNextEl.style.cursor = "pointer"
+        newDialogNextEl.disabled = false
+        newDialogNextEl.style.opacity = "1"
+        newDialogNextEl.style.cursor = "pointer"
         return
       }
-      dialogNextEl.removeEventListener("click", handleNext)
+      newDialogNextEl.removeEventListener("click", handleNext)
       this.dialogIndex++
       this.showNextDialog()
     }
 
-    dialogNextEl.addEventListener("click", handleNext)
+    newDialogNextEl.addEventListener("click", handleNext)
   }
 
   completeEnding() {
