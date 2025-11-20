@@ -292,14 +292,15 @@ export class JobsManager {
     dialogNextEl.style.opacity = "0.5"
     dialogNextEl.style.cursor = "not-allowed"
 
+    const textChars = Array.from(dialogText)
     let charIndex = 0
     const typingSpeed = 30
 
     const typeChar = () => {
-      if (charIndex < dialogText.length) {
-        dialogTextEl.textContent += dialogText[charIndex]
+      if (charIndex < textChars.length) {
+        dialogTextEl.textContent += textChars[charIndex]
 
-        if (dialogText[charIndex] !== " " && window.audio) {
+        if (textChars[charIndex] !== " " && window.audio) {
           window.audio.playSound("textBlip")
         }
 
@@ -315,9 +316,9 @@ export class JobsManager {
     typeChar()
 
     const handleNext = () => {
-      if (charIndex < dialogText.length) {
+      if (charIndex < textChars.length) {
         dialogTextEl.textContent = dialogText
-        charIndex = dialogText.length
+        charIndex = textChars.length
         dialogNextEl.disabled = false
         dialogNextEl.style.opacity = "1"
         dialogNextEl.style.cursor = "pointer"
