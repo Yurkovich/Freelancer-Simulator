@@ -24,7 +24,9 @@
   #browser-window {
     width: 95vw !important;
     height: auto !important;
-    max-height: 90vh !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 120px) !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%);
   }
 
   .browser-tabs {
@@ -40,7 +42,9 @@
 
   .browser-content {
     padding: 0.9rem;
+    padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px) + 120px);
     font-size: 0.6rem;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 200px);
   }
 
   .browser-subtabs {
@@ -113,6 +117,7 @@
   overflow-y: auto;
   max-height: calc(75vh - 100px);
   padding-top: 0;
+  padding-bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
 }
 
 .kwork-orders {
@@ -420,6 +425,14 @@
 }
 
 @media (max-width: 480px) {
+  #browser-window {
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 110px) !important;
+  }
+
+  .browser-content {
+    padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px) + 110px);
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 180px);
+  }
 
   .bill-card,
   .sidejob-card {

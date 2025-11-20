@@ -105,7 +105,7 @@
 
 @media (max-width: 768px) and (orientation: portrait) {
   .toast-container {
-    bottom: 110px;
+    bottom: calc(110px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -126,6 +126,6 @@
 
 @media (max-width: 480px) and (orientation: portrait) {
   .toast-container {
-    bottom: 105px;
+    bottom: calc(105px + env(safe-area-inset-bottom, 0px));
   }
 }
