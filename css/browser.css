@@ -39,7 +39,7 @@
 
   .browser-tab {
     padding: 0.6rem 0.8rem;
-    font-size: 0.55rem;
+    font-size: 0.65rem;
     min-height: 44px;
     flex: 1 1 auto;
   }
@@ -49,7 +49,7 @@
     padding-left: calc(0.9rem + env(safe-area-inset-left, 0px));
     padding-right: calc(0.9rem + env(safe-area-inset-right, 0px));
     padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px) + 120px);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 200px);
   }
 
@@ -60,7 +60,7 @@
 
   .browser-subtab {
     padding: 0.5rem 0.8rem;
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     min-height: 40px;
   }
 
@@ -69,13 +69,13 @@
   }
 
   .kwork-order-header {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     flex-wrap: wrap;
     gap: 0.4rem;
   }
 
   .kwork-order-meta {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
   }
 
   .kwork-apply-btn {
@@ -457,12 +457,12 @@
 
   .bill-header,
   .sidejob-header {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
   }
 
   .bill-meta,
   .sidejob-meta {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
   }
 
   .marketplace-item,

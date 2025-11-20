@@ -71,19 +71,19 @@
   }
 
   .tutorial-developer-label {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
   }
 
   #tutorial-tooltip {
     max-width: 90vw;
     padding: 1.2rem;
-    font-size: 0.55rem;
+    font-size: 0.65rem;
   }
 
   .tutorial-btn {
     min-height: 40px;
     padding: 0.5rem 0.9rem !important;
-    font-size: 0.55rem !important;
+    font-size: 0.65rem !important;
   }
 }
 
@@ -98,19 +98,19 @@
   }
 
   .tutorial-developer-label {
-    font-size: 0.45rem;
+    font-size: 0.55rem;
   }
 
   #tutorial-tooltip {
     max-width: 95vw;
     padding: 1rem;
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     min-height: 150px;
   }
 
   .tutorial-btn {
     min-height: 44px;
     padding: 0.5rem 0.8rem !important;
-    font-size: 0.5rem !important;
+    font-size: 0.6rem !important;
   }
 }

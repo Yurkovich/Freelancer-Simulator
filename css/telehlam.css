@@ -183,7 +183,7 @@
   }
 
   .telehlam-chat-button {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     padding: 0.55rem 0.65rem;
   }
 
@@ -214,7 +214,7 @@
   }
 
   .telehlam-chat-button {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     padding: 0.5rem 0.6rem;
     white-space: nowrap;
     min-width: fit-content;
@@ -244,7 +244,7 @@
   .telehlam-input input {
     width: 100%;
     min-height: 44px;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     padding: 0.6rem;
   }
 

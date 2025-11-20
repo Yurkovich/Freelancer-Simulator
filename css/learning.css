@@ -147,11 +147,11 @@
   }
 
   .developer-name {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
   }
 
   .developer-subtitle {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
   }
 
   .learning-activity-card,
@@ -162,14 +162,14 @@
 
   .learning-activity-header,
   .sleep-option-header {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     flex-wrap: wrap;
     gap: 0.4rem;
   }
 
   .learning-activity-meta,
   .sleep-option-meta {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
   }
 
   .learning-activity-card button,
@@ -184,7 +184,7 @@
 
   .skill-selector-button {
     padding: 0.5rem 0.7rem;
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     min-height: 40px;
     flex: 1 1 auto;
   }
@@ -197,11 +197,11 @@
   }
 
   .developer-name {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
   }
 
   .developer-subtitle {
-    font-size: 0.45rem;
+    font-size: 0.55rem;
   }
 
   .learning-activity-card,
@@ -211,16 +211,16 @@
 
   .learning-activity-header,
   .sleep-option-header {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
   }
 
   .learning-activity-meta,
   .sleep-option-meta {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
   }
 
   .skill-selector-button {
-    font-size: 0.45rem;
+    font-size: 0.55rem;
     padding: 0.45rem 0.6rem;
     min-height: 36px;
   }
