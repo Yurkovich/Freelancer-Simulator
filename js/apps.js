@@ -1,5 +1,10 @@
 import { SLEEP_OPTIONS } from "./config.js"
-import { UI_SELECTORS, MESSAGES, GAME_CONSTANTS } from "./constants.js"
+import {
+  UI_SELECTORS,
+  MESSAGES,
+  GAME_CONSTANTS,
+  SKILL_NAMES,
+} from "./constants.js"
 import { GameUtils } from "./utils.js"
 import { SkillsManager } from "./skills.js"
 import { LearningManager } from "./learning.js"
@@ -38,7 +43,71 @@ export class AppsManager {
     this.settingsManager = new SettingsManager(gameState, this.ui, audioManager)
     this.jobsManager = new JobsManager(gameState, this.ui)
     this.activeOrder = null
+    this.syncActiveOrder()
     this.updateIconStates()
+  }
+
+  syncActiveOrder() {
+    const state = this.gameState.getState()
+
+    if (!state || !state.skills) {
+      this.activeOrder = null
+      return
+    }
+
+    if (state.activeOrder) {
+      const order = state.activeOrder
+      const validSkills = [
+        SKILL_NAMES.LAYOUT,
+        SKILL_NAMES.WORKPRESS,
+        SKILL_NAMES.FREELANCE,
+      ]
+
+      if (!order || typeof order !== "object" || !order.skill) {
+        state.activeOrder = null
+        this.gameState.updateState(state)
+        this.activeOrder = null
+        return
+      }
+
+      if (!validSkills.includes(order.skill)) {
+        state.activeOrder = null
+        this.gameState.updateState(state)
+        this.activeOrder = null
+        return
+      }
+
+      if (!state.skills || typeof state.skills !== "object") {
+        state.activeOrder = null
+        this.gameState.updateState(state)
+        this.activeOrder = null
+        return
+      }
+
+      const orderSkill = state.skills[order.skill]
+      if (!orderSkill || typeof orderSkill !== "object") {
+        state.activeOrder = null
+        this.gameState.updateState(state)
+        this.activeOrder = null
+        return
+      }
+
+      if (!("level" in orderSkill) || typeof orderSkill.level !== "number") {
+        state.activeOrder = null
+        this.gameState.updateState(state)
+        this.activeOrder = null
+        return
+      }
+
+      this.activeOrder = {
+        ...order,
+        progress: order.progress !== undefined ? order.progress : 0,
+        acceptedDay: order.acceptedDay || state.day,
+        deadline: order.deadline || GAME_CONSTANTS.DEFAULT_ORDER_DEADLINE,
+      }
+    } else {
+      this.activeOrder = null
+    }
   }
 
   openApp(appName) {
@@ -371,7 +440,10 @@ export class AppsManager {
     const order = this.findOrder(orderId)
     if (!order) return
 
-    const playerLevel = state.skills[order.skill].level
+    const skill = state.skills[order.skill]
+    if (!skill) return
+
+    const playerLevel = skill.level || 0
 
     if (playerLevel === 0) {
       this.ui.showToast("Нужен хотя бы 1 уровень навыка!")
@@ -403,13 +475,90 @@ export class AppsManager {
 
   renderWZCode() {
     const body = document.getElementById(UI_SELECTORS.WZCODE_BODY)
+    if (!body) return
+
     const state = this.gameState.getState()
 
-    if (state.activeOrder && !this.activeOrder) {
-      this.activeOrder = state.activeOrder
+    if (!state || !state.skills || typeof state.skills !== "object") {
+      this.activeOrder = null
+      body.innerHTML = this.createNoActiveOrderMessage()
+      return
+    }
+
+    if (!state.activeOrder) {
+      this.activeOrder = null
+      body.innerHTML = this.createNoActiveOrderMessage()
+      return
     }
 
     if (!this.activeOrder) {
+      const orderFromState = state.activeOrder
+      if (orderFromState && typeof orderFromState === "object") {
+        this.activeOrder = {
+          ...orderFromState,
+          progress: orderFromState.progress !== undefined ? orderFromState.progress : 0,
+          acceptedDay: orderFromState.acceptedDay !== undefined ? orderFromState.acceptedDay : state.day,
+          deadline: orderFromState.deadline || GAME_CONSTANTS.DEFAULT_ORDER_DEADLINE,
+        }
+      } else {
+        this.activeOrder = null
+        state.activeOrder = null
+        this.gameState.updateState(state)
+        body.innerHTML = this.createNoActiveOrderMessage()
+        return
+      }
+    }
+
+    const validSkills = [
+      SKILL_NAMES.LAYOUT,
+      SKILL_NAMES.WORKPRESS,
+      SKILL_NAMES.FREELANCE,
+    ]
+
+    if (!this.activeOrder) {
+      state.activeOrder = null
+      this.gameState.updateState(state)
+      body.innerHTML = this.createNoActiveOrderMessage()
+      return
+    }
+
+    if (typeof this.activeOrder !== "object" || !this.activeOrder.skill) {
+      this.activeOrder = null
+      state.activeOrder = null
+      this.gameState.updateState(state)
+      body.innerHTML = this.createNoActiveOrderMessage()
+      return
+    }
+
+    if (!validSkills.includes(this.activeOrder.skill)) {
+      this.activeOrder = null
+      state.activeOrder = null
+      this.gameState.updateState(state)
+      body.innerHTML = this.createNoActiveOrderMessage()
+      return
+    }
+
+    if (!state.skills || typeof state.skills !== "object") {
+      this.activeOrder = null
+      state.activeOrder = null
+      this.gameState.updateState(state)
+      body.innerHTML = this.createNoActiveOrderMessage()
+      return
+    }
+
+    const orderSkill = state.skills[this.activeOrder.skill]
+    if (!orderSkill || typeof orderSkill !== "object") {
+      this.activeOrder = null
+      state.activeOrder = null
+      this.gameState.updateState(state)
+      body.innerHTML = this.createNoActiveOrderMessage()
+      return
+    }
+
+    if (!("level" in orderSkill) || typeof orderSkill.level !== "number") {
+      this.activeOrder = null
+      state.activeOrder = null
+      this.gameState.updateState(state)
       body.innerHTML = this.createNoActiveOrderMessage()
       return
     }
@@ -428,8 +577,47 @@ export class AppsManager {
   }
 
   createWZCodeContent() {
-    const order = this.activeOrder
     const state = this.gameState.getState()
+    const order = state.activeOrder || this.activeOrder
+
+    if (!order || !order.skill) {
+      return this.createNoActiveOrderMessage()
+    }
+
+    const validSkills = [
+      SKILL_NAMES.LAYOUT,
+      SKILL_NAMES.WORKPRESS,
+      SKILL_NAMES.FREELANCE,
+    ]
+
+    if (!validSkills.includes(order.skill)) {
+      state.activeOrder = null
+      this.activeOrder = null
+      this.gameState.updateState(state)
+      return this.createNoActiveOrderMessage()
+    }
+
+    const skill = state.skills[order.skill]
+    if (!skill) {
+      state.activeOrder = null
+      this.activeOrder = null
+      this.gameState.updateState(state)
+      return this.createNoActiveOrderMessage()
+    }
+
+    if (typeof skill !== "object") {
+      state.activeOrder = null
+      this.activeOrder = null
+      this.gameState.updateState(state)
+      return this.createNoActiveOrderMessage()
+    }
+
+    if (!("level" in skill) || typeof skill.level !== "number") {
+      state.activeOrder = null
+      this.activeOrder = null
+      this.gameState.updateState(state)
+      return this.createNoActiveOrderMessage()
+    }
 
     const formatTime = (hours) => {
       const h = Math.floor(hours)
@@ -454,7 +642,7 @@ export class AppsManager {
       deadlineColor = "var(--danger)"
     }
 
-    const playerLevel = state.skills[order.skill].level
+    const playerLevel = skill.level || 0
     const requiredLevel = order.requiredLevel || 1
     const levelDiff = requiredLevel - playerLevel
 
@@ -519,7 +707,10 @@ export class AppsManager {
 
     if (!order) return
 
-    const playerLevel = state.skills[order.skill].level
+    const skill = state.skills[order.skill]
+    if (!skill) return
+
+    const playerLevel = skill.level || 0
 
     if (playerLevel === 0) {
       this.ui.showToast("⚠️ Нужен хотя бы 1 уровень навыка! Учитесь сначала.")
@@ -624,11 +815,16 @@ export class AppsManager {
   }
 
   updateOrderProgress() {
+    if (!this.activeOrder) return
+
     this.activeOrder.progress += GAME_CONSTANTS.WORK_PROGRESS_STEP
 
     const state = this.gameState.getState()
     if (state.activeOrder) {
-      state.activeOrder.progress = this.activeOrder.progress
+      state.activeOrder = {
+        ...state.activeOrder,
+        progress: this.activeOrder.progress,
+      }
       this.gameState.updateState(state)
     }
   }

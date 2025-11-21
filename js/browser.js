@@ -340,11 +340,17 @@ export class BrowserManager {
       return
     }
 
-    order.acceptedDay = state.day
-    state.activeOrder = order
+    const activeOrder = {
+      ...order,
+      progress: order.progress !== undefined ? order.progress : 0,
+      acceptedDay: state.day,
+      deadline: order.deadline || GAME_CONSTANTS.DEFAULT_ORDER_DEADLINE,
+    }
+
+    state.activeOrder = activeOrder
     state.kworkOrders = state.kworkOrders.filter((o) => o.id !== order.id)
 
-    this.appsManager.activeOrder = order
+    this.appsManager.activeOrder = activeOrder
     if (this.appsManager.availableOrders) {
       this.appsManager.availableOrders =
         this.appsManager.availableOrders.filter((o) => o.id !== order.id)
