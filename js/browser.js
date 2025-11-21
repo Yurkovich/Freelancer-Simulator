@@ -529,6 +529,9 @@ export class BrowserManager {
       return
     }
 
+    const browserContent = document.getElementById("browser-content")
+    const scrollPosition = browserContent ? browserContent.scrollTop : 0
+
     state.money -= item.price
 
     if (item.category === "upgrade") {
@@ -550,6 +553,15 @@ export class BrowserManager {
 
     this.gameState.updateState(state)
     this.render()
+
+    if (scrollPosition > 0) {
+      requestAnimationFrame(() => {
+        const newBrowserContent = document.getElementById("browser-content")
+        if (newBrowserContent) {
+          newBrowserContent.scrollTop = scrollPosition
+        }
+      })
+    }
   }
 
   renderMarketplaceBooks(container) {
@@ -837,6 +849,9 @@ export class BrowserManager {
       return
     }
 
+    const browserContent = document.getElementById("browser-content")
+    const scrollPosition = browserContent ? browserContent.scrollTop : 0
+
     state.money -= item.price
     state.satiety = Math.min(100, state.satiety + item.satiety)
     state.energy = Math.min(state.maxEnergy, state.energy + item.energy)
@@ -847,5 +862,14 @@ export class BrowserManager {
       `<img src="img/icons/food.png" alt="🍔" class="stat-icon"> Заказано: ${item.name}`
     )
     this.render()
+
+    if (scrollPosition > 0) {
+      requestAnimationFrame(() => {
+        const newBrowserContent = document.getElementById("browser-content")
+        if (newBrowserContent) {
+          newBrowserContent.scrollTop = scrollPosition
+        }
+      })
+    }
   }
 }

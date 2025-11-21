@@ -105,7 +105,7 @@ export class JobsManager {
 
     jobsBody.innerHTML = `
       <div class="message">
-        <strong>Требования для трудоустройства</strong><br>
+        <strong>Ваша цель — устроиться в Google</strong><br>
         Достигните всех целей, чтобы подать резюме
       </div>
 

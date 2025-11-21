@@ -89,6 +89,9 @@ export class ShopManager {
       return
     }
 
+    const shopBody = document.getElementById("shop-body")
+    const scrollPosition = shopBody ? shopBody.scrollTop : 0
+
     state.money -= item.price
     state.satiety = Math.min(100, state.satiety + item.satiety)
     state.energy = Math.min(state.maxEnergy, state.energy + item.energy)
@@ -100,5 +103,14 @@ export class ShopManager {
     this.gameState.updateState(state)
     this.ui.showToast(`✅ Куплено: ${item.name}`)
     this.render()
+
+    if (scrollPosition > 0) {
+      requestAnimationFrame(() => {
+        const newShopBody = document.getElementById("shop-body")
+        if (newShopBody) {
+          newShopBody.scrollTop = scrollPosition
+        }
+      })
+    }
   }
 }
