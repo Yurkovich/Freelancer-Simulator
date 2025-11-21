@@ -657,11 +657,15 @@ export class AppsManager {
     if (levelDiff > 0) {
       warningText = `<div style="color: var(--danger); margin-top: 0.5rem;">
         ${GameUtils.replaceEmojiWithIcon("⚠ Ваш уровень ниже требуемого!")}<br>
-        Расход энергии: +${Math.floor(levelDiff * 50)}%
+        Расход энергии: +${Math.floor(
+          levelDiff * GAME_CONSTANTS.ENERGY_PENALTY_PERCENT_PER_LEVEL
+        )}%
       </div>`
     } else if (levelDiff < 0) {
       const levelAdvantage = Math.abs(levelDiff)
-      const minutesReduction = levelAdvantage * 10
+      const minutesReduction =
+        levelAdvantage *
+        GAME_CONSTANTS.TIME_REDUCTION_MINUTES_PER_LEVEL_ADVANTAGE
       warningText = `<div style="color: var(--accent); margin-top: 0.5rem;">
         ${GameUtils.replaceEmojiWithIcon("✨ Ваш уровень выше требуемого!")}<br>
         Время работы: -${minutesReduction} минут
@@ -669,6 +673,41 @@ export class AppsManager {
     }
 
     const reward = order.baseReward || order.reward || 0
+    const hasHalfWorkOption =
+      requiredLevel >= GAME_CONSTANTS.MIN_ORDER_LEVEL_FOR_HALF_WORK
+
+    const halfWorkData = hasHalfWorkOption
+      ? this.calculateWorkCost(order, levelDiff, true)
+      : null
+
+    const halfEnergyText = halfWorkData
+      ? `<img src="img/icons/energy.png" alt="⚡" class="stat-icon">&nbsp;${halfWorkData.energyCost}&nbsp;энергии`
+      : ""
+    const halfTimeText = halfWorkData
+      ? `<img src="img/icons/clock.png" alt="⏱" class="stat-icon">&nbsp;${formatTime(
+          halfWorkData.timeRequired
+        )}`
+      : ""
+
+    const halfProgressStep = Math.round(
+      GAME_CONSTANTS.WORK_PROGRESS_STEP *
+        GAME_CONSTANTS.HALF_WORK_PROGRESS_MULTIPLIER
+    )
+
+    const buttonsHtml = hasHalfWorkOption
+      ? `
+        <button class="window-action" id="work-btn-full">
+          Работать полностью (${timeText}, ${energyText}) - +${GAME_CONSTANTS.WORK_PROGRESS_STEP}%
+        </button>
+        <button class="window-action" id="work-btn-half">
+          Работать наполовину (${halfTimeText}, ${halfEnergyText}) - +${halfProgressStep}%
+        </button>
+      `
+      : `
+        <button class="window-action" id="work-btn-full">
+          Работать (${timeText}, ${energyText})
+        </button>
+      `
 
     return `
       <div class="message">
@@ -680,9 +719,7 @@ export class AppsManager {
         ${warningText}
       </div>
       ${this.createProgressBar(order.progress)}
-      <button class="window-action" id="work-btn">
-        Работать (${timeText}, ${energyText})
-      </button>
+      ${buttonsHtml}
     `
   }
 
@@ -695,13 +732,18 @@ export class AppsManager {
   }
 
   attachWorkHandler() {
-    const workBtn = document.getElementById("work-btn")
-    if (workBtn) {
-      workBtn.addEventListener("click", () => this.workOnOrder())
+    const workBtnFull = document.getElementById("work-btn-full")
+    if (workBtnFull) {
+      workBtnFull.addEventListener("click", () => this.workOnOrder(false))
+    }
+
+    const workBtnHalf = document.getElementById("work-btn-half")
+    if (workBtnHalf) {
+      workBtnHalf.addEventListener("click", () => this.workOnOrder(true))
     }
   }
 
-  workOnOrder() {
+  workOnOrder(isHalfWork = false) {
     const state = this.gameState.getState()
     const order = this.activeOrder
 
@@ -717,8 +759,19 @@ export class AppsManager {
       return
     }
 
-    const levelDiff = order.requiredLevel - playerLevel
-    const workData = this.calculateWorkCost(order, levelDiff)
+    const requiredLevel = order.requiredLevel || 1
+    if (
+      isHalfWork &&
+      requiredLevel < GAME_CONSTANTS.MIN_ORDER_LEVEL_FOR_HALF_WORK
+    ) {
+      this.ui.showToast(
+        `⚠️ Работа наполовину доступна только для заказов ${GAME_CONSTANTS.MIN_ORDER_LEVEL_FOR_HALF_WORK} уровня и выше!`
+      )
+      return
+    }
+
+    const levelDiff = requiredLevel - playerLevel
+    const workData = this.calculateWorkCost(order, levelDiff, isHalfWork)
 
     if (state.energy < workData.energyCost) {
       this.ui.showToast(MESSAGES.NO_ENERGY)
@@ -726,7 +779,7 @@ export class AppsManager {
     }
 
     this.processWork(state, workData.energyCost, workData.timeRequired)
-    this.updateOrderProgress()
+    this.updateOrderProgress(isHalfWork)
 
     if (window.game && window.game.lifecycleManager) {
       if (window.game.lifecycleManager.checkHospital()) {
@@ -738,42 +791,67 @@ export class AppsManager {
     this.renderWZCode()
   }
 
-  calculateWorkCost(order, levelDiff) {
+  calculateWorkCost(order, levelDiff, isHalfWork = false) {
     const state = this.gameState.getState()
-    let energyCost = order.energyCost
+    const requiredLevel = order.requiredLevel || 1
+    const baseEnergy = order.energyCost || GameUtils.calculateOrderEnergy(requiredLevel)
+    let energyCost = baseEnergy
     let timeRequired = order.timeRequired
+
+    if (isHalfWork) {
+      energyCost = baseEnergy * GAME_CONSTANTS.HALF_WORK_ENERGY_MULTIPLIER
+      timeRequired =
+        timeRequired * GAME_CONSTANTS.HALF_WORK_TIME_MULTIPLIER
+    }
 
     if (levelDiff > 0) {
       energyCost = Math.floor(
-        order.energyCost *
+        energyCost *
           (1 + levelDiff * GAME_CONSTANTS.ENERGY_PENALTY_PER_LEVEL_DIFF)
       )
     } else if (levelDiff < 0) {
       const levelAdvantage = Math.abs(levelDiff)
-      const minutesReduction = levelAdvantage * 10
+      const minutesReduction =
+        levelAdvantage *
+        GAME_CONSTANTS.TIME_REDUCTION_MINUTES_PER_LEVEL_ADVANTAGE
       timeRequired = Math.max(
-        0.5,
-        order.timeRequired - minutesReduction / GAME_CONSTANTS.MINUTES_IN_HOUR
+        GAME_CONSTANTS.MIN_WORK_TIME_HOURS,
+        timeRequired - minutesReduction / GAME_CONSTANTS.MINUTES_IN_HOUR
       )
-      timeRequired = Math.round(timeRequired * 10) / 10
+      timeRequired =
+        Math.round(
+          timeRequired * GAME_CONSTANTS.TIME_ROUNDING_PRECISION
+        ) / GAME_CONSTANTS.TIME_ROUNDING_PRECISION
     }
 
     let energyReduction = 0
-    if (state.upgrades.pcUltra) energyReduction = 0.3
-    else if (state.upgrades.pc) energyReduction = 0.15
+    if (state.upgrades.pcUltra) {
+      energyReduction = GAME_CONSTANTS.PC_ULTRA_ENERGY_REDUCTION
+    } else if (state.upgrades.pc) {
+      energyReduction = GAME_CONSTANTS.PC_ENERGY_REDUCTION
+    }
 
     energyCost = Math.floor(energyCost * (1 - energyReduction))
 
     let timeReduction = 0
-    if (state.upgrades.keyboard) timeReduction += 10
-    if (state.upgrades.mouse) timeReduction += 10
-    if (state.upgrades.secondMonitor) timeReduction += 20
+    if (state.upgrades.keyboard) {
+      timeReduction += GAME_CONSTANTS.KEYBOARD_TIME_REDUCTION_MINUTES
+    }
+    if (state.upgrades.mouse) {
+      timeReduction += GAME_CONSTANTS.MOUSE_TIME_REDUCTION_MINUTES
+    }
+    if (state.upgrades.secondMonitor) {
+      timeReduction += GAME_CONSTANTS.SECOND_MONITOR_TIME_REDUCTION_MINUTES
+    }
 
     timeRequired = Math.max(
-      0.5,
+      GAME_CONSTANTS.MIN_WORK_TIME_HOURS,
       timeRequired - timeReduction / GAME_CONSTANTS.MINUTES_IN_HOUR
     )
-    timeRequired = Math.round(timeRequired * 10) / 10
+    timeRequired =
+      Math.round(
+        timeRequired * GAME_CONSTANTS.TIME_ROUNDING_PRECISION
+      ) / GAME_CONSTANTS.TIME_ROUNDING_PRECISION
 
     if (window.game && window.game.eventManager) {
       const workSpeedModifier =
@@ -814,10 +892,15 @@ export class AppsManager {
     }
   }
 
-  updateOrderProgress() {
+  updateOrderProgress(isHalfWork = false) {
     if (!this.activeOrder) return
 
-    this.activeOrder.progress += GAME_CONSTANTS.WORK_PROGRESS_STEP
+    const progressStep = isHalfWork
+      ? GAME_CONSTANTS.WORK_PROGRESS_STEP *
+        GAME_CONSTANTS.HALF_WORK_PROGRESS_MULTIPLIER
+      : GAME_CONSTANTS.WORK_PROGRESS_STEP
+
+    this.activeOrder.progress += progressStep
 
     const state = this.gameState.getState()
     if (state.activeOrder) {
@@ -837,7 +920,17 @@ export class AppsManager {
   }
 
   completeOrder(state) {
+    this.completeOrderInternal(state, true)
+  }
+
+  completeOrderFromEvent(state) {
+    this.completeOrderInternal(state, false)
+  }
+
+  completeOrderInternal(state, shouldAddXP) {
     const order = this.activeOrder
+    if (!order) return
+
     const acceptedDay = order.acceptedDay || state.day
     const daysLeft = acceptedDay + order.deadline - state.day
 
@@ -878,33 +971,48 @@ export class AppsManager {
       }
     }
 
-    state.money += reward
-    state.reputation += reputationGain
-
-    let xpGain = this.skillsManager.calculateXPGain(reward)
-    xpGain += GameUtils.calculateXPBonus(state)
-
-    if (window.game && window.game.eventManager) {
-      const xpModifier = window.game.eventManager.getActiveEventModifier("xp")
-      xpGain = Math.floor(xpGain * xpModifier)
+    const updatedState = {
+      ...state,
+      money: state.money + reward,
+      reputation: state.reputation + reputationGain,
+      activeOrder: null,
     }
 
-    this.skillsManager.addXP(order.skill, xpGain)
-
-    state.portfolio.push({
+    const portfolio = [...(state.portfolio || [])]
+    portfolio.push({
       title: order.title,
       description: `Выполнен заказ: ${order.description}`,
     })
+    updatedState.portfolio = portfolio
 
-    if (!state.completedOrders) {
-      state.completedOrders = []
+    const completedOrders = [...(state.completedOrders || [])]
+    completedOrders.push(order)
+    updatedState.completedOrders = completedOrders
+
+    if (shouldAddXP) {
+      let xpGain = this.skillsManager.calculateXPGain(reward)
+      xpGain += GameUtils.calculateXPBonus(state)
+
+      if (window.game && window.game.eventManager) {
+        const xpModifier = window.game.eventManager.getActiveEventModifier("xp")
+        xpGain = Math.floor(xpGain * xpModifier)
+      }
+
+      this.skillsManager.addXP(order.skill, xpGain)
     }
-    state.completedOrders.push(order)
 
-    state.activeOrder = null
     this.activeOrder = null
 
-    this.gameState.updateState(state)
+    this.gameState.updateState(updatedState)
     this.ui.showToast(message)
+
+    if (window.game && window.game.updateAllUI) {
+      window.game.updateAllUI()
+    }
+
+    const wzCodeBody = document.getElementById(UI_SELECTORS.WZCODE_BODY)
+    if (wzCodeBody) {
+      this.renderWZCode()
+    }
   }
 }

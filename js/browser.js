@@ -186,11 +186,13 @@ export class BrowserManager {
   createOrdersFromTemplates(templates) {
     return templates.map((template) => {
       const deadline = this.calculateDeadline(template.requiredLevel)
+      const energyCost = GameUtils.calculateOrderEnergy(template.requiredLevel)
       return {
         ...template,
         id: Date.now() * 1000 + Math.floor(Math.random() * 1000),
         deadline: deadline,
         progress: 0,
+        energyCost: energyCost,
       }
     })
   }

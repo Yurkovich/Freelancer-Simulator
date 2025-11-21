@@ -25,6 +25,14 @@ export class GameUtils {
     return xpBonus
   }
 
+  static calculateOrderEnergy(requiredLevel) {
+    if (!requiredLevel || requiredLevel < 1 || requiredLevel > 10) {
+      return 15
+    }
+
+    return GAME_CONSTANTS.ORDER_ENERGY_BY_LEVEL[requiredLevel] || 15
+  }
+
   static formatTime(time) {
     const hours = Math.floor(time)
     const minutes = Math.round((time - hours) * GAME_CONSTANTS.MINUTES_IN_HOUR)
