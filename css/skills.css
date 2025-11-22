@@ -145,4 +145,8 @@
   .skill-meta {
     font-size: 0.5rem;
   }
+
+  .toast {
+    right: 0;
+  }
 }

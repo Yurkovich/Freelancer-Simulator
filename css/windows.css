@@ -211,6 +211,7 @@
   }
 
   .window-body {
+    flex: 0.9;
     padding-left: calc(0.9rem + env(safe-area-inset-left, 0px));
     padding-right: calc(0.9rem + env(safe-area-inset-right, 0px));
     padding-bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
