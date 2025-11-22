@@ -113,9 +113,9 @@ export class EventManager {
     }
 
     if (effect.type === "burnoutRevelation" && state.activeOrder) {
-      if (window.game && window.game.appsManager) {
+      if (window.game && window.game.appsManager && window.game.appsManager.orderManager) {
         const freshState = this.gameState.getState()
-        window.game.appsManager.completeOrderFromEvent(freshState)
+        window.game.appsManager.orderManager.completeOrderFromEvent(freshState)
       }
     }
   }

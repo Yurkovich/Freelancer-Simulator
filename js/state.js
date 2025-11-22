@@ -312,33 +312,24 @@ class GameState {
     const satietyEl = document.getElementById(UI_SELECTORS.STAT_SATIETY)
     if (satietyEl) {
       satietyEl.classList.remove("low", "critical")
-      if (this.state.satiety === 0) {
-        satietyEl.classList.add("critical")
-      } else if (this.state.satiety < GAME_CONSTANTS.LOW_SATIETY_THRESHOLD) {
-        satietyEl.classList.add("low")
-      }
+      const satietyColor = GameUtils.getStatColor(this.state.satiety)
+      satietyEl.style.color = satietyColor
     }
 
     const energyEl = document.getElementById(UI_SELECTORS.STAT_ENERGY)
     if (energyEl) {
       energyEl.classList.remove("low", "critical")
-      if (this.state.energy === 0) {
-        energyEl.classList.add("critical")
-      } else if (this.state.energy < GAME_CONSTANTS.LOW_ENERGY_THRESHOLD) {
-        energyEl.classList.add("low")
-      }
+      const maxEnergy = this.state.maxEnergy || GAME_CONSTANTS.MAX_ENERGY
+      const energyColor = GameUtils.getStatColor(this.state.energy, maxEnergy)
+      energyEl.style.color = energyColor
     }
 
     const healthEl = document.getElementById(UI_SELECTORS.STAT_HEALTH)
     if (healthEl) {
       healthEl.classList.remove("low", "critical")
       const maxHealth = this.state.maxHealth || GAME_CONSTANTS.INITIAL_HEALTH
-      const healthPercent = (this.state.health / maxHealth) * 100
-      if (healthPercent === 0) {
-        healthEl.classList.add("critical")
-      } else if (healthPercent < GAME_CONSTANTS.LOW_HEALTH_THRESHOLD) {
-        healthEl.classList.add("low")
-      }
+      const healthColor = GameUtils.getStatColor(this.state.health, maxHealth)
+      healthEl.style.color = healthColor
     }
   }
 

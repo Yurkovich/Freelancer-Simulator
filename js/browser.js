@@ -342,25 +342,23 @@ export class BrowserManager {
       return
     }
 
-    const activeOrder = {
-      ...order,
-      progress: order.progress !== undefined ? order.progress : 0,
-      acceptedDay: state.day,
-      deadline: order.deadline || GAME_CONSTANTS.DEFAULT_ORDER_DEADLINE,
+    if (this.appsManager.orderManager) {
+      this.appsManager.orderManager.takeOrder(order.id)
+      this.closeWindow()
+    } else {
+      const activeOrder = {
+        ...order,
+        progress: order.progress !== undefined ? order.progress : 0,
+        acceptedDay: state.day,
+        deadline: order.deadline || GAME_CONSTANTS.DEFAULT_ORDER_DEADLINE,
+      }
+
+      state.activeOrder = activeOrder
+      state.kworkOrders = state.kworkOrders.filter((o) => o.id !== order.id)
+      this.gameState.updateState(state)
+      this.closeWindow()
+      this.ui.showToast(`✅ Заказ получен! Приступайте к работе в WZ Code`)
     }
-
-    state.activeOrder = activeOrder
-    state.kworkOrders = state.kworkOrders.filter((o) => o.id !== order.id)
-
-    this.appsManager.activeOrder = activeOrder
-    if (this.appsManager.availableOrders) {
-      this.appsManager.availableOrders =
-        this.appsManager.availableOrders.filter((o) => o.id !== order.id)
-    }
-
-    this.gameState.updateState(state)
-    this.closeWindow()
-    this.ui.showToast(`✅ Заказ получен! Приступайте к работе в WZ Code`)
   }
 
   rejectOrder(state, rejectedKey) {
