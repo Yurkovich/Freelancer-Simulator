@@ -435,7 +435,7 @@ export class OrderManager {
   calculateWorkCost(order, levelDiff, isHalfWork = false) {
     const state = this.gameState.getState()
     const requiredLevel = order.requiredLevel || 1
-    const baseEnergy = order.energyCost || GameUtils.calculateOrderEnergy(requiredLevel)
+    const baseEnergy = GameUtils.calculateOrderEnergy(requiredLevel)
     let energyCost = baseEnergy
     let timeRequired = order.timeRequired
 
